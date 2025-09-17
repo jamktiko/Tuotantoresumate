@@ -2,6 +2,9 @@ body {
   background: linear-gradient(to top, #00acb51e, #eeeeee);
 }
 
-.min-h-screen {
-  min-height: 100vh;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
