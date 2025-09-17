@@ -3,34 +3,74 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
 const cors = require('cors');
+const multer = require('multer');
+const path = require('path');
 
 const app = express();
-app.use(cors()); // sallii frontin kutsut
+app.use(cors());
 app.use(bodyParser.json());
-app.use('/pdfs', express.static('pdfs')); // kansio PDF-tiedostoille
+app.use('/pdfs', express.static('pdfs'));
+app.use('/uploads', express.static('uploads')); // palvellaan kuvat ulos
 
-// Luo yksinkertainen API CV:n tekemiseen
-app.post('/create-cv', (req, res) => {
-  const { name, email, experience } = req.body;
+// varmistetaan että kansiot on olemassa
+if (!fs.existsSync('pdfs')) fs.mkdirSync('pdfs');
+if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
 
-  if (!name || !email) {
-    return res.status(400).json({ error: 'Nimi ja sähköposti vaaditaan!' });
+// multer konfiguraatio kuville
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage });
+
+// Luo CV (tekstit + kuva)
+app.post('/create-cv', upload.single('photo'), (req, res) => {
+  const { title, firstName, lastName, email, phone, postalCode, city } =
+    req.body;
+  const photoPath = req.file ? req.file.path : null;
+
+  if (!firstName || !lastName || !email) {
+    return res
+      .status(400)
+      .json({ error: 'Etunimi, sukunimi ja sähköposti vaaditaan!' });
   }
 
-  // Luo PDF-tiedosto
-  if (!fs.existsSync('pdfs')) fs.mkdirSync('pdfs');
   const fileName = `cv_${Date.now()}.pdf`;
   const filePath = `pdfs/${fileName}`;
 
   const doc = new PDFDocument();
   doc.pipe(fs.createWriteStream(filePath));
+
+  // Otsikko
   doc.fontSize(20).text('Resumate – CV', { align: 'center' });
   doc.moveDown();
-  doc.fontSize(14).text(`Nimi: ${name}`);
+
+  // Jos kuva löytyy, lisätään PDF:ään
+  if (photoPath) {
+    try {
+      doc.image(photoPath, {
+        fit: [120, 120],
+        align: 'center',
+        valign: 'center',
+      });
+      doc.moveDown();
+    } catch (err) {
+      console.error('Kuvan lisäys epäonnistui:', err);
+    }
+  }
+
+  // Tekstit
+  doc.fontSize(14).text(`Työnimike: ${title || '-'}`);
+  doc.text(`Nimi: ${firstName} ${lastName}`);
   doc.text(`Sähköposti: ${email}`);
-  doc.moveDown();
-  doc.fontSize(12).text('Työkokemus:');
-  doc.text(experience || '-');
+  doc.text(`Puhelinnumero: ${phone || '-'}`);
+  doc.text(`Postinumero: ${postalCode || '-'}`);
+  doc.text(`Kaupunki: ${city || '-'}`);
+
   doc.end();
 
   res.json({ pdfPath: `/pdfs/${fileName}` });
