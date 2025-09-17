@@ -57,7 +57,7 @@
 
   /* Vasen puoli - lomake */
   .left-side {
-    width: 50%;
+    width: 55%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -66,23 +66,29 @@
     height: 100vh;
     box-sizing: border-box;
   }
-
-  /* Oikea puoli - kuva */
   .right-side {
-    width: 50%;
+    width: 45%;
     height: 100vh;
-    margin: 0; /* poistaa mahdollisen marginaalin */
-    padding: 0; /* poistaa paddingin */
-    overflow: hidden; /* estää kuvan ulkopuolelle menemisen */
+    overflow: hidden;
+    position: relative;
+    border-top-left-radius: 48px;
+    border-bottom-left-radius: 48px;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.25);
+  }
+  .right-side::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, #00acb51e, transparent); /* teal sävy */
   }
 
   .right-side img {
-    display: block; /* estää inline-kuvan baseline-offsetin */
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-top-left-radius: 24px;
-    border-bottom-left-radius: 24px;
+    display: block; /* poistaa ylimääräisen "inline spacingin" */
+    border-top-left-radius: 48px;
+    border-bottom-left-radius: 48px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
@@ -102,6 +108,8 @@
   .left-side form {
     display: flex;
     flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
     gap: 1rem;
     width: 100%;
     box-sizing: border-box;
