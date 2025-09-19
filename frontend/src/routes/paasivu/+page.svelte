@@ -6,10 +6,15 @@
   let phone = '';
   let postalCode = '';
   let city = '';
+  let birthdate = '';
+  let driverslicense = '';
+  let website = '';
+  let linkedin = '';
   let photoPreview = null; // esikatselu
   let photoFile = null; // varsinainen tiedosto
   let cvUrl = '';
-
+  let showExtra = false;
+  import { slide } from 'svelte/transition';
   async function createCV() {
     const formData = new FormData();
     formData.append('title', title);
@@ -19,6 +24,11 @@
     formData.append('phone', phone);
     formData.append('postalCode', postalCode);
     formData.append('city', city);
+    formData.append('birthdate', birthdate);
+    formData.append('driverslicense', driverslicense);
+    formData.append('website', website);
+    formData.append('linkedin', linkedin);
+
     if (photoFile) {
       formData.append('photo', photoFile);
     }
@@ -46,6 +56,14 @@
     const phones = ['0401234567', '0507654321', '0459998888'];
     const postals = ['00100', '33100', '90500'];
     const cities = ['Helsinki', 'Tampere', 'Oulu'];
+    const birthdates = ['01.01.1985', '12.06.1990', '23.09.1995'];
+    const drivers = ['B', 'B/C', 'A/B'];
+    const websites = ['www.example.com', 'www.mysite.fi', 'www.testpage.net'];
+    const linkedins = [
+      'linkedin.com/in/matti',
+      'linkedin.com/in/anna',
+      'linkedin.com/in/kalle',
+    ];
 
     title = titles[Math.floor(Math.random() * titles.length)];
     firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -54,6 +72,10 @@
     phone = phones[Math.floor(Math.random() * phones.length)];
     postalCode = postals[Math.floor(Math.random() * postals.length)];
     city = cities[Math.floor(Math.random() * cities.length)];
+    birthdate = birthdates[Math.floor(Math.random() * birthdates.length)];
+    driverslicense = drivers[Math.floor(Math.random() * drivers.length)];
+    website = websites[Math.floor(Math.random() * websites.length)];
+    linkedin = linkedins[Math.floor(Math.random() * linkedins.length)];
   }
 
   function handlePhotoUpload(event) {
@@ -74,8 +96,36 @@
   <div class="left">
     <main>
       <form on:submit|preventDefault={createCV} class="cv-form">
-        <input bind:value={title} placeholder="Työnimike" />
+        <!-- Työnimike + kuva samalla rivillä -->
+        <div class="row top-row">
+          <input bind:value={title} placeholder="Työnimike" />
 
+          <div class="photo-card">
+            <div class="photo-upload">
+              <!-- Placeholder/kuva vasemmalla -->
+              <div class="photo-preview">
+                {#if photoPreview}
+                  <img src={photoPreview} alt="Profiilikuva" />
+                {:else}
+                  <div class="placeholder">Ei kuvaa</div>
+                {/if}
+              </div>
+
+              <!-- Painike oikealla -->
+              <label class="upload-btn">
+                Lisää valokuva
+                <input
+                  type="file"
+                  accept="image/*"
+                  on:change={handlePhotoUpload}
+                  hidden
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Muut input-fieldit alempana -->
         <div class="row">
           <input bind:value={firstName} placeholder="Etunimi" />
           <input bind:value={lastName} placeholder="Sukunimi" />
@@ -91,29 +141,36 @@
           <input bind:value={city} placeholder="Kaupunki" />
         </div>
 
-        <!-- Muokattu photo upload -->
-        <div class="photo-upload">
-          <!-- Placeholder/kuva vasemmalla -->
-          <div class="photo-preview">
-            {#if photoPreview}
-              <img src={photoPreview} alt="Profiilikuva" />
-            {:else}
-              <div class="placeholder">Ei kuvaa</div>
-            {/if}
-          </div>
-
-          <!-- Painike oikealla -->
-          <label class="upload-btn">
-            📷 Lisää valokuva
-            <input
-              type="file"
-              accept="image/*"
-              on:change={handlePhotoUpload}
-              hidden
-            />
-          </label>
+        <div
+          class="extra-toggle"
+          role="button"
+          tabindex="0"
+          on:click={() => (showExtra = !showExtra)}
+          on:keydown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              showExtra = !showExtra;
+            }
+          }}
+        >
+          {#if showExtra}▼ Piilota lisätiedot{:else}▶ Näytä lisätiedot{/if}
         </div>
 
+        {#if showExtra}
+          <div class="extra-info" in:slide out:slide>
+            <div class="row">
+              <input bind:value={birthdate} placeholder="Syntymäaika" />
+              <input
+                bind:value={driverslicense}
+                placeholder="Ajokorttiluokat"
+              />
+            </div>
+            <div class="row">
+              <input bind:value={website} placeholder="Verkkosivusto" />
+              <input bind:value={linkedin} placeholder="Linkedin" />
+            </div>
+          </div>
+        {/if}
         <button type="submit">Luo CV</button>
       </form>
 
@@ -134,6 +191,28 @@
     padding-top: 70px; /* headerin korkeus */
     box-sizing: border-box; /* jotta padding ei lisää korkeutta */
     overflow-y: auto; /* scrolli vain tarvittaessa */
+  }
+  .extra-toggle {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    color: #000000;
+    font-family: 'afacad', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    user-select: none;
+    margin: 10px 0;
+  }
+
+  .extra-toggle:hover {
+    color: #0056a3;
+  }
+  .extra-info {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
   }
 
   header {
@@ -203,8 +282,8 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    max-width: 600px;
-    width: 100%;
+    max-width: 800px;
+    width: 120%;
     padding: 0;
     background-color: transparent;
   }
@@ -215,9 +294,27 @@
     width: 100%;
   }
 
-  .cv-form input {
-    flex: 1;
+  .top-row {
+    display: flex;
+    align-items: flex-end; /* estää inputin venymisen kortin korkeuteen */
+    gap: 12px;
+  }
+  .row,
+  .top-row {
+    display: flex;
+    gap: 12px;
     width: 100%;
+  }
+
+  .top-row input {
+    flex: 1;
+    min-height: 40px;
+    max-width: calc(50% - 6px); /* sama leveys kuin muilla riveillä */
+  }
+
+  .cv-form input {
+    flex: 1; /* kaikki yhtä leveitä */
+    min-height: 40px;
     padding: 0.5rem 1rem;
     border: 1px solid #393e46;
     border-radius: 24px;
@@ -226,6 +323,19 @@
     font-size: 16px;
     color: #000;
     background-color: transparent;
+    box-sizing: border-box;
+  }
+
+  .photo-card {
+    flex: none;
+    min-width: calc(50% - 6px);
+    width: 100;
+    padding: 12px;
+    border-radius: 16px;
+    background-color: #00acb54b; /* kortin tausta */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     box-sizing: border-box;
   }
 
@@ -240,10 +350,11 @@
     cursor: pointer;
     font-family: 'Afacad', sans-serif;
     font-weight: 600;
-    font-size: 16px;
-    color: #fff;
+    font-size: 18px;
+    text-decoration: underline;
+    color: #0056a3;
     padding: 12px 20px;
-    background-color: #00adb5;
+    background-color: transparent;
     border-radius: 24px;
     display: inline-flex;
     align-items: center;
@@ -252,8 +363,8 @@
   }
 
   .photo-preview {
-    width: 120px;
-    height: 120px;
+    width: 90px;
+    height: 90px;
     border-radius: 12px;
     border: 2px dashed #ccc;
     display: flex;
@@ -267,12 +378,14 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    align-items: center;
   }
 
   .photo-preview .placeholder {
     color: #999;
     font-size: 14px;
     text-align: center;
+    align-items: center;
   }
 
   .cv-form button {
@@ -301,7 +414,8 @@
     display: inline-block;
     margin-top: 20px;
     padding: 12px 25px;
-    border-radius: 10px;
+    border-radius: 24px;
+    font-family: 'afacad', sans-serif;
     background-color: #00adb5;
     color: #fff;
     text-decoration: none;
