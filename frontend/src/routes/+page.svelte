@@ -57,6 +57,11 @@
   </div>
 </div>
 
+<div class="background-shapes">
+  <div class="circle"></div>
+  <div class="triangle"></div>
+</div>
+
 <style>
   /* Pääkontti */
   .container {
@@ -162,7 +167,7 @@
   /* Painike */
   .left-side button {
     width: 100%;
-    height: 40px;
+    height: 45px;
     background-color: #00adb5;
     color: #fff;
     font-family: 'Afacad', sans-serif;
@@ -193,6 +198,33 @@
     font-size: 16px;
   }
 
+  .background-shapes {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .circle {
+    position: absolute;
+    top: -80px;
+    left: -80px;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: #e0e0e0;
+  }
+  .triangle {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 300px; /* koko kolmion leveys */
+    height: 300px; /* koko kolmion korkeus */
+    background: #757d8a;
+    clip-path: polygon(0 100%, 100% 100%, 0 0);
+    z-index: 0;
+  }
   /* Responsiivisuus */
   @media (max-width: 768px) {
     .container {

@@ -10,7 +10,6 @@
   let photoFile = null; // varsinainen tiedosto
   let cvUrl = '';
 
-  // --- PDF:n luonti ---
   async function createCV() {
     const formData = new FormData();
     formData.append('title', title);
@@ -35,7 +34,6 @@
     }
   }
 
-  // --- Satunnaistäyttö ---
   function fillRandom() {
     const titles = [
       'Ohjelmistokehittäjä',
@@ -58,147 +56,242 @@
     city = cities[Math.floor(Math.random() * cities.length)];
   }
 
-  // --- Kuvan valinta ---
   function handlePhotoUpload(event) {
     const file = event.target.files[0];
     if (file) {
-      photoFile = file; // talletetaan tiedosto backendille
-      photoPreview = URL.createObjectURL(file); // näytetään esikatselu
+      photoFile = file;
+      photoPreview = URL.createObjectURL(file);
     }
   }
 </script>
 
-<!-- Satunnaistäyttönappi -->
-<button class="fill-btn" on:click={fillRandom}>Täytä satunnaisilla</button>
+<header>
+  <h1>Resumate</h1>
+  <button class="fill-btn" on:click={fillRandom}>Täyttö</button>
+</header>
 
-<main>
-  <h1>Resumate – Prototyyppi</h1>
+<div class="page">
+  <div class="left">
+    <main>
+      <form on:submit|preventDefault={createCV} class="cv-form">
+        <input bind:value={title} placeholder="Työnimike" />
 
-  <form on:submit|preventDefault={createCV} class="cv-form">
-    <input bind:value={title} placeholder="Työnimike" />
+        <div class="row">
+          <input bind:value={firstName} placeholder="Etunimi" />
+          <input bind:value={lastName} placeholder="Sukunimi" />
+        </div>
 
-    <div class="row">
-      <input bind:value={firstName} placeholder="Etunimi" />
-      <input bind:value={lastName} placeholder="Sukunimi" />
-    </div>
+        <div class="row">
+          <input bind:value={email} type="email" placeholder="Sähköposti" />
+          <input bind:value={phone} type="tel" placeholder="Puhelinnumero" />
+        </div>
 
-    <div class="row">
-      <input bind:value={email} type="email" placeholder="Sähköposti" />
-      <input bind:value={phone} type="tel" placeholder="Puhelinnumero" />
-    </div>
+        <div class="row">
+          <input bind:value={postalCode} placeholder="Postinumero" />
+          <input bind:value={city} placeholder="Kaupunki" />
+        </div>
 
-    <div class="row">
-      <input bind:value={postalCode} placeholder="Postinumero" />
-      <input bind:value={city} placeholder="Kaupunki" />
-    </div>
+        <!-- Muokattu photo upload -->
+        <div class="photo-upload">
+          <!-- Placeholder/kuva vasemmalla -->
+          <div class="photo-preview">
+            {#if photoPreview}
+              <img src={photoPreview} alt="Profiilikuva" />
+            {:else}
+              <div class="placeholder">Ei kuvaa</div>
+            {/if}
+          </div>
 
-    <!-- Kuvan lataus -->
-    <label class="upload-btn">
-      📷 Lisää valokuva
-      <input
-        type="file"
-        accept="image/*"
-        on:change={handlePhotoUpload}
-        hidden
-      />
-    </label>
-    {#if photoPreview}
-      <img src={photoPreview} alt="Profiilikuva" class="preview" />
-    {/if}
+          <!-- Painike oikealla -->
+          <label class="upload-btn">
+            📷 Lisää valokuva
+            <input
+              type="file"
+              accept="image/*"
+              on:change={handlePhotoUpload}
+              hidden
+            />
+          </label>
+        </div>
 
-    <button type="submit">Luo CV</button>
-  </form>
+        <button type="submit">Luo CV</button>
+      </form>
 
-  {#if cvUrl}
-    <a href={cvUrl} target="_blank">📄 Lataa CV</a>
-  {/if}
-</main>
+      {#if cvUrl}
+        <a href={cvUrl} target="_blank">📄 Lataa CV</a>
+      {/if}
+    </main>
+  </div>
+
+  <div class="right"></div>
+</div>
 
 <style>
-  .fill-btn {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: none;
-    background: #0b76ef;
-    color: white;
-    font-weight: 600;
-    box-shadow: 0 6px 18px rgba(11, 118, 239, 0.18);
-    cursor: pointer;
-    z-index: 1000;
-  }
-  .fill-btn:active {
-    transform: translateY(1px);
+  .page {
+    display: flex;
+    min-height: 100vh; /* ei height: 100vh jos on padding-top */
+    width: 100%;
+    padding-top: 70px; /* headerin korkeus */
+    box-sizing: border-box; /* jotta padding ei lisää korkeutta */
+    overflow-y: auto; /* scrolli vain tarvittaessa */
   }
 
-  main {
-    font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
-    min-height: 100vh;
+  header {
+    width: 100%;
+    height: 70px;
+    background-color: #1e1e1e;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* h1 keskelle */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+  }
+
+  header h1 {
+    margin: 0;
+    font-family: 'Sansita Swashed', sans-serif;
+    font-size: 42px;
+    font-weight: 200;
+    position: relative; /* keskitetty */
+    z-index: 1;
+  }
+
+  header .fill-btn {
+    position: absolute; /* irti flex-kontekstista */
+    right: 20px;
+    top: 50%;
+    height: 40px;
+    width: 150px;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(-50%);
+    padding: 10px 14px;
+    border-radius: 24px;
+    border: none;
+    background: #00adb5;
+    font-family: 'Afacad', sans-serif;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 200;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(11, 118, 239, 0.18);
+  }
+
+  .left {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 30px;
+    align-items: flex-start; /* vasemmalle */
+    justify-content: flex-start;
+    padding: 1rem; /* lähempänä vasenta reunaa */
+    overflow-y: auto;
+    background: transparent;
+  }
+
+  .right {
+    flex: 1;
+    background: transparent;
   }
 
   .cv-form {
+    margin-top: 100px;
+    margin-left: 75px;
     display: flex;
     flex-direction: column;
     gap: 15px;
     max-width: 600px;
     width: 100%;
-    padding: 25px;
-    border-radius: 12px;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 0;
+    background-color: transparent;
   }
 
   .row {
     display: flex;
     gap: 12px;
+    width: 100%;
   }
 
   .cv-form input {
     flex: 1;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 15px;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #393e46;
+    border-radius: 24px;
+    font-family: 'Afacad', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #000;
+    background-color: transparent;
+    box-sizing: border-box;
+  }
+
+  .photo-upload {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* tila napin ja kuvan välillä */
+    margin-top: 10px;
   }
 
   .upload-btn {
-    display: inline-block;
-    padding: 10px 14px;
-    background: #0b76ef;
-    color: white;
-    border-radius: 8px;
-    font-weight: 600;
     cursor: pointer;
-    text-align: center;
-    width: fit-content;
+    font-family: 'Afacad', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #fff;
+    padding: 12px 20px;
+    background-color: #00adb5;
+    border-radius: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
   }
 
-  .preview {
-    margin-top: 12px;
-    max-width: 120px;
-    border-radius: 8px;
+  .photo-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    border: 2px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #f0f0f0;
+  }
+
+  .photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .photo-preview .placeholder {
+    color: #999;
+    font-size: 14px;
+    text-align: center;
   }
 
   .cv-form button {
-    padding: 14px;
-    border: none;
-    border-radius: 10px;
+    width: 100%;
+    height: 45px;
     background-color: #00adb5;
     color: #fff;
-    font-size: 18px;
-    font-weight: bold;
+    font-family: 'Afacad', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    border: none;
+    border-radius: 24px;
     cursor: pointer;
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
   }
+
   .cv-form button:hover {
     transform: scale(1.05);
     box-shadow: 0 5px 15px rgba(0, 173, 181, 0.5);
@@ -215,9 +308,10 @@
     font-weight: bold;
     font-size: 16px;
     transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
+      transform 0.5s ease,
+      box-shadow 0.5s ease;
   }
+
   a:hover {
     transform: scale(1.1);
     box-shadow: 0 8px 20px rgba(0, 173, 181, 0.5);
