@@ -35,17 +35,16 @@ declare module '$env/static/private' {
 	export const ComSpec: string;
 	export const DriverData: string;
 	export const EDITOR: string;
-	export const EFC_17304_1262719628: string;
-	export const EFC_17304_1592913036: string;
-	export const EFC_17304_2283032206: string;
-	export const EFC_17304_2775293581: string;
-	export const EFC_17304_3789132940: string;
+	export const EFC_14808_1262719628: string;
+	export const EFC_14808_1592913036: string;
+	export const EFC_14808_2283032206: string;
+	export const EFC_14808_2775293581: string;
+	export const EFC_14808_3789132940: string;
 	export const FPS_BROWSER_APP_PROFILE_STRING: string;
 	export const FPS_BROWSER_USER_PROFILE_STRING: string;
 	export const HOME: string;
 	export const HOMEDRIVE: string;
 	export const HOMEPATH: string;
-	export const IGCCSVC_DB: string;
 	export const INIT_CWD: string;
 	export const LOCALAPPDATA: string;
 	export const LOGONSERVER: string;
@@ -73,6 +72,7 @@ declare module '$env/static/private' {
 	export const npm_package_version: string;
 	export const NUMBER_OF_PROCESSORS: string;
 	export const OneDrive: string;
+	export const OneDriveConsumer: string;
 	export const OS: string;
 	export const Path: string;
 	export const PATHEXT: string;
@@ -97,7 +97,6 @@ declare module '$env/static/private' {
 	export const USERPROFILE: string;
 	export const VBOX_MSI_INSTALL_PATH: string;
 	export const windir: string;
-	export const ZES_ENABLE_SYSMAN: string;
 }
 
 /**
@@ -136,17 +135,16 @@ declare module '$env/dynamic/private' {
 		ComSpec: string;
 		DriverData: string;
 		EDITOR: string;
-		EFC_17304_1262719628: string;
-		EFC_17304_1592913036: string;
-		EFC_17304_2283032206: string;
-		EFC_17304_2775293581: string;
-		EFC_17304_3789132940: string;
+		EFC_14808_1262719628: string;
+		EFC_14808_1592913036: string;
+		EFC_14808_2283032206: string;
+		EFC_14808_2775293581: string;
+		EFC_14808_3789132940: string;
 		FPS_BROWSER_APP_PROFILE_STRING: string;
 		FPS_BROWSER_USER_PROFILE_STRING: string;
 		HOME: string;
 		HOMEDRIVE: string;
 		HOMEPATH: string;
-		IGCCSVC_DB: string;
 		INIT_CWD: string;
 		LOCALAPPDATA: string;
 		LOGONSERVER: string;
@@ -174,6 +172,7 @@ declare module '$env/dynamic/private' {
 		npm_package_version: string;
 		NUMBER_OF_PROCESSORS: string;
 		OneDrive: string;
+		OneDriveConsumer: string;
 		OS: string;
 		Path: string;
 		PATHEXT: string;
@@ -198,7 +197,6 @@ declare module '$env/dynamic/private' {
 		USERPROFILE: string;
 		VBOX_MSI_INSTALL_PATH: string;
 		windir: string;
-		ZES_ENABLE_SYSMAN: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
 	}
