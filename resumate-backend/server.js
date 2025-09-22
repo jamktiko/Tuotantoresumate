@@ -29,8 +29,19 @@ const upload = multer({ storage });
 
 // Luo CV (tekstit + kuva)
 app.post('/create-cv', upload.single('photo'), (req, res) => {
-  const { title, firstName, lastName, email, phone, postalCode, city } =
-    req.body;
+  const {
+    title,
+    firstName,
+    lastName,
+    email,
+    phone,
+    postalCode,
+    city,
+    birthdate,
+    driverslicense,
+    website,
+    linkedin,
+  } = req.body;
   const photoPath = req.file ? req.file.path : null;
 
   if (!firstName || !lastName || !email) {
@@ -70,6 +81,10 @@ app.post('/create-cv', upload.single('photo'), (req, res) => {
   doc.text(`Puhelinnumero: ${phone || '-'}`);
   doc.text(`Postinumero: ${postalCode || '-'}`);
   doc.text(`Kaupunki: ${city || '-'}`);
+  doc.text(`Syntymäaika: ${birthdate || '-'}`);
+  doc.text(`Ajokorttiluokat: ${driverslicense || '-'}`);
+  doc.text(`Verkkosivusto: ${website || '-'}`);
+  doc.text(`Linkedin: ${linkedin || '-'}`);
 
   doc.end();
 
