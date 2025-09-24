@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fi">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Moderni CV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Afacad:wght@600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+
+  <!-- Wrapper joka sisältää kaikki sivut -->
+  <div class="multi-page">
+    <div class="a4-page">
+      <div class="container">
+        <section class="contact-section">
+          <div class="contact-info">
+            <h2>{{firstName}} {{lastName}}</h2>
+            <h3>{{title}}</h3>
+
+            <div class="info-row">
+              <div class="half">{{email}}</div>
+              <div class="half">{{phone}}</div>
+            </div>
+            <div class="info-row">
+              <div class="half">{{city}}</div>
+              <div class="half">{{postalCode}}</div>
+            </div>
+            <!-- ⬇️ Nämä tuodaan mukaan samaan lohkoon -->
+            <div class="info-row">
+              <div class="half">{{website}}</div>
+              <div class="half">{{linkedin}}</div>
+            </div>
+          </div>
+
+
+          <div class="photo-placeholder">
+            {{photo}}
+          </div>
+        </section>
+
+        <hr class="section-divider">
+
+        <div class="two-columns">
+          <!-- Vasen sarake -->
+          <div class="left-column">
+            <section>
+              <h3>Koulutus</h3>
+              <p>{{education}}</p>
+              <p>{{education}}</p>
+              <p>{{education}}</p>
+            </section>
+
+            <section>
+              <h3>Kielitaito</h3>
+              <p>{{language1}}</p>
+              <p>{{language2}}</p>
+              <p>{{language3}}</p>
+            </section>
+
+            <section>
+              <h3>Lisätiedot</h3>
+              <p>{{lisatiedot}}</p>
+            </section>
+          </div>
+
+          <!-- Oikea sarake -->
+          <div class="right-column">
+            <section>
+              <h3>Minusta</h3>
+              <p>{{minustaInfoa}}</p>
+            </section>
+
+            <section>
+              <h3>Työhistoria</h3>
+              <ul>
+                <li><strong>{{role}}</strong>, {{company}} ({{years}})</li>
+                <li><strong>{{role}}</strong>, {{company}} ({{years}})</li>
+                <li><strong>{{role}}</strong>, {{company}} ({{years}})</li>
+                <li><strong>{{role}}</strong>, {{company}} ({{years}})</li>
+              </ul>
+            </section>
+
+            <section>
+              <h3>Taidot</h3>
+              <p>{{jotainTekstia}}</p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* Perustyyli */
+    body {
+      font-family: "Arial", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #eee;
+      color: #000;
+    }
+
+    .multi-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Jokainen .a4-page on yksi sivu */
+    .a4-page {
+      width: 210mm;
+      min-height: 297mm;
+      background: #fff;
+      padding: 20mm;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      overflow: visible;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 170mm;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-family: 'Afacad', sans-serif;
+      font-size: 36px;
+      color: #222;
+      margin: 0;
+    }
+
+    h2 {
+      font-size: 28px;
+      font-family: 'Afacad', sans-serif;
+      color: #00adb5;
+      margin: 5px 0 0;
+    }
+
+    h3 {
+      font-size: 20px;
+      font-family: 'Afacad', sans-serif;
+      color: #00adb5;
+      margin-bottom: 5px;
+    }
+
+
+    p,
+    li {
+      font-size: 16px;
+      line-height: 1.4;
+      margin: 0 0 10px 0;
+    }
+
+    .contact-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      margin-bottom: 30px;
+      gap: 30px;
+    }
+
+    .contact-info {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .photo-placeholder {
+      width: 130px;
+      height: 130px;
+      border-radius: 12px;
+      border: 2px dashed #00adb5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background-color: #f0f0f0;
+      font-size: 16px;
+      color: #999;
+      text-align: center;
+      margin-top: 25px;
+      margin-right: 20px;
+    }
+
+    .photo-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .info-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .half {
+      flex: 1;
+      font-size: 16px;
+    }
+
+    hr.section-divider {
+      border: none;
+      border-top: 2px solid #00adb5;
+      margin: 20px 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .two-columns {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      box-sizing: border-box;
+      flex-wrap: nowrap;
+    }
+
+    .left-column {
+      width: 50%;
+      padding-right: 20px;
+      border-right: 2px solid #00adb5;
+      box-sizing: border-box;
+      min-width: 85mm;
+    }
+
+    .right-column {
+      width: 50%;
+      padding-left: 20px;
+      box-sizing: border-box;
+      min-width: 85mm;
+    }
+
+    section {
+      margin-bottom: 20px;
+    }
+  </style>
+</body>
+
+</html>

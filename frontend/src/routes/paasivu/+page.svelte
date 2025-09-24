@@ -14,6 +14,11 @@
   let photoFile = null; // varsinainen tiedosto
   let cvUrl = '';
   let showExtra = false;
+  let template = 'default'; // aktiivinen template
+
+  function setTemplate(t) {
+    template = t;
+  }
   import { slide } from 'svelte/transition';
   async function createCV() {
     const formData = new FormData();
@@ -32,6 +37,7 @@
     if (photoFile) {
       formData.append('photo', photoFile);
     }
+    formData.append('template', template);
 
     const res = await fetch('http://localhost:4000/create-cv', {
       method: 'POST',
@@ -41,6 +47,7 @@
     const data = await res.json();
     if (data.pdfPath) {
       cvUrl = `http://localhost:4000${data.pdfPath}`;
+      window.open(cvUrl, '_blank'); // avaa PDF:n
     }
   }
 
@@ -87,8 +94,28 @@
   }
 </script>
 
-<header>
+<header class="main-header">
   <h1>Resumate</h1>
+  <div class="template-switcher">
+    <button
+      on:click={() => setTemplate('default')}
+      class:selected={template === 'default'}
+    >
+      Default
+    </button>
+    <button
+      on:click={() => setTemplate('modern')}
+      class:selected={template === 'modern'}
+    >
+      Modern
+    </button>
+    <button
+      on:click={() => setTemplate('minimalist')}
+      class:selected={template === 'minimalist'}
+    >
+      Minimalist
+    </button>
+  </div>
   <button class="fill-btn" on:click={fillRandom}>Täyttö</button>
 </header>
 
@@ -171,26 +198,63 @@
             </div>
           </div>
         {/if}
-        <button type="submit">Luo CV</button>
-      </form>
 
-      {#if cvUrl}
-        <a href={cvUrl} target="_blank">📄 Lataa CV</a>
-      {/if}
+        <button type="submit" class:download={cvUrl}>
+          {#if cvUrl}
+            📄 Lataa valmis CV
+          {:else}
+            Luo CV
+          {/if}
+        </button>
+      </form>
     </main>
   </div>
 
-  <div class="right"></div>
+  <div class="right">
+    <div class="cv-a4">
+      <header class="cv-header">
+        {#if photoPreview}
+          <img src={photoPreview} alt="Profiilikuva" />
+        {/if}
+        <div>
+          <h1>{firstName} {lastName}</h1>
+          <h2>{title}</h2>
+        </div>
+      </header>
+
+      <section class="cv-section">
+        <h3>Yhteystiedot</h3>
+        <p>{email}</p>
+        <p>{phone}</p>
+        <p>{postalCode} {city}</p>
+      </section>
+
+      {#if showExtra}
+        <section class="cv-section">
+          <h3>Lisätiedot</h3>
+          <p>🎂 {birthdate}</p>
+          <p>🚗 {driverslicense}</p>
+          <p>🌐 {website}</p>
+          <p>🔗 {linkedin}</p>
+        </section>
+      {/if}
+    </div>
+  </div>
 </div>
 
 <style>
+  .cv-form button.download {
+    background-color: #00d1da; /* kirkkaampi sininen */
+  }
+
   .page {
     display: flex;
-    min-height: 100vh; /* ei height: 100vh jos on padding-top */
+    min-height: 100vh;
+    height: 100vh; /* ei height: 100vh jos on padding-top */
     width: 100%;
     padding-top: 70px; /* headerin korkeus */
     box-sizing: border-box; /* jotta padding ei lisää korkeutta */
-    overflow-y: auto; /* scrolli vain tarvittaessa */
+    overflow-y: auto;
   }
   .extra-toggle {
     display: inline-flex;
@@ -215,28 +279,33 @@
     margin-top: 10px;
   }
 
-  header {
+  .main-header {
     width: 100%;
     height: 70px;
     background-color: #1e1e1e;
     color: #fff;
     display: flex;
     align-items: center;
-    justify-content: center; /* h1 keskelle */
+    justify-content: center;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
-    box-sizing: border-box;
   }
 
-  header h1 {
+  .main-header h1 {
     margin: 0;
     font-family: 'Sansita Swashed', sans-serif;
     font-size: 42px;
     font-weight: 200;
-    position: relative; /* keskitetty */
-    z-index: 1;
+  }
+
+  .main-header .fill-btn {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1010;
   }
 
   header .fill-btn {
@@ -245,6 +314,7 @@
     top: 50%;
     height: 40px;
     width: 150px;
+    z-index: 1010;
     justify-content: center;
     align-items: center;
     transform: translateY(-50%);
@@ -261,9 +331,10 @@
   }
 
   .left {
-    flex: 1;
+    flex: 3;
     display: flex;
     flex-direction: column;
+    background: linear-gradient(to top, #00acb51e, #eeeeee);
     align-items: flex-start; /* vasemmalle */
     justify-content: flex-start;
     padding: 1rem; /* lähempänä vasenta reunaa */
@@ -272,8 +343,13 @@
   }
 
   .right {
-    flex: 1;
-    background: transparent;
+    flex: none;
+    width: 650px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    overflow-y: auto;
   }
 
   .cv-form {
@@ -410,24 +486,99 @@
     box-shadow: 0 5px 15px rgba(0, 173, 181, 0.5);
   }
 
-  a {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 12px 25px;
-    border-radius: 24px;
-    font-family: 'afacad', sans-serif;
-    background-color: #00adb5;
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 16px;
-    transition:
-      transform 0.5s ease,
-      box-shadow 0.5s ease;
+  .right {
+    flex: none;
+    width: 650px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    background: transparent; /* kevyt tausta */
+    overflow-y: auto;
   }
 
-  a:hover {
-    transform: scale(1.1);
-    box-shadow: 0 8px 20px rgba(0, 173, 181, 0.5);
+  .cv-a4 {
+    background: #fff;
+    width: 595px; /* A4 leveys */
+    height: 842px; /* A4 korkeus */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    padding: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+  .cv-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 20px;
+  }
+
+  .cv-header img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .cv-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .cv-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 400;
+    color: #666;
+  }
+
+  .cv-section h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 4px;
+    color: #059dc0;
+  }
+
+  .cv-section p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .template-switcher {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 10px;
+  }
+
+  .template-switcher button {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Afacad', sans-serif;
+    font-weight: 600;
+    background: #444;
+    color: #fff;
+    transition: all 0.2s ease;
+  }
+
+  .template-switcher button:hover {
+    background: #00adb5;
+  }
+
+  .template-switcher button.selected {
+    background: #059dc0;
+    color: #fff;
   }
 </style>

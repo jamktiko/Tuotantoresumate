@@ -1,97 +1,118 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const PDFDocument = require('pdfkit');
-const cors = require('cors');
-const multer = require('multer');
 const path = require('path');
+const puppeteer = require('puppeteer');
+const multer = require('multer');
+const cors = require('cors');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/pdfs', express.static('pdfs'));
-app.use('/uploads', express.static('uploads')); // palvellaan kuvat ulos
+app.use('/uploads', express.static('uploads')); // kuvat ulos
 
-// varmistetaan että kansiot on olemassa
+// varmista kansiot
 if (!fs.existsSync('pdfs')) fs.mkdirSync('pdfs');
 if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
+if (!fs.existsSync('templates')) fs.mkdirSync('templates');
 
 // multer konfiguraatio kuville
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
+  destination: (req, file, cb) => cb(null, 'uploads/'),
+  filename: (req, file, cb) =>
+    cb(null, Date.now() + path.extname(file.originalname)),
 });
 const upload = multer({ storage });
 
-// Luo CV (tekstit + kuva)
-app.post('/create-cv', upload.single('photo'), (req, res) => {
-  const {
-    title,
-    firstName,
-    lastName,
-    email,
-    phone,
-    postalCode,
-    city,
-    birthdate,
-    driverslicense,
-    website,
-    linkedin,
-  } = req.body;
-  const photoPath = req.file ? req.file.path : null;
+// apufunktio: lataa template ja korvaa placeholderit
+function loadTemplate(name, data) {
+  const templatePath = path.join(__dirname, 'templates', `${name}.html`);
+  let html = fs.readFileSync(templatePath, 'utf-8');
 
-  if (!firstName || !lastName || !email) {
-    return res
-      .status(400)
-      .json({ error: 'Etunimi, sukunimi ja sähköposti vaaditaan!' });
+  for (const key in data) {
+    html = html.replace(new RegExp(`{{${key}}}`, 'g'), data[key] || '');
   }
+  return html;
+}
 
-  const fileName = `cv_${Date.now()}.pdf`;
-  const filePath = `pdfs/${fileName}`;
+// Luo CV (HTML + CSS pohjalla)
+app.post('/create-cv', upload.single('photo'), async (req, res) => {
+  try {
+    const {
+      title,
+      firstName,
+      lastName,
+      email,
+      phone,
+      postalCode,
+      city,
+      birthdate,
+      driverslicense,
+      website,
+      linkedin,
+      template, // käyttäjän valitsema teema
+    } = req.body;
 
-  const doc = new PDFDocument();
-  doc.pipe(fs.createWriteStream(filePath));
+    const photoPath = req.file ? req.file.path : null;
 
-  // Otsikko
-  doc.fontSize(20).text('Resumate – CV', { align: 'center' });
-  doc.moveDown();
-
-  // Jos kuva löytyy, lisätään PDF:ään
-  if (photoPath) {
-    try {
-      doc.image(photoPath, {
-        fit: [120, 120],
-        align: 'center',
-        valign: 'center',
-      });
-      doc.moveDown();
-    } catch (err) {
-      console.error('Kuvan lisäys epäonnistui:', err);
+    if (!firstName || !lastName || !email) {
+      return res
+        .status(400)
+        .json({ error: 'Etunimi, sukunimi ja sähköposti vaaditaan!' });
     }
+
+    // konvertoi taustakuva base64:ksi
+    const bgPath = path.join(__dirname, 'pohjat', 'cvpohja.jpg');
+    let bgBase64 = '';
+    if (fs.existsSync(bgPath)) {
+      const bgData = fs.readFileSync(bgPath);
+      bgBase64 = `data:image/jpeg;base64,${bgData.toString('base64')}`;
+    }
+
+    // konvertoi kuva base64:ksi
+    let photoHtml = '';
+    if (photoPath) {
+      const photoData = fs.readFileSync(photoPath);
+      const photoBase64 = `data:image/${path
+        .extname(photoPath)
+        .slice(1)};base64,${photoData.toString('base64')}`;
+      photoHtml = `<img src="${photoBase64}" style="max-width:120px;border-radius:50%;" />`;
+    }
+
+    // täyttödata templateen
+    const html = loadTemplate(template || 'default', {
+      title,
+      firstName,
+      lastName,
+      email,
+      phone,
+      postalCode,
+      city,
+      birthdate,
+      driverslicense,
+      website,
+      linkedin,
+      photo: photoHtml,
+      bgImage: bgBase64,
+    });
+
+    // Luo PDF
+    const fileName = `cv_${Date.now()}.pdf`;
+    const pdfPath = path.join(__dirname, 'pdfs', fileName);
+
+    const browser = await puppeteer.launch({ headless: 'new' });
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: 'networkidle0' });
+    await page.pdf({ path: pdfPath, format: 'A4', printBackground: true });
+    await browser.close();
+
+    res.json({ pdfPath: `/pdfs/${fileName}` });
+  } catch (err) {
+    console.error('Virhe CV:n luonnissa:', err);
+    res.status(500).json({ error: 'Virhe CV:n luonnissa' });
   }
-
-  // Tekstit
-  doc.fontSize(14).text(`Työnimike: ${title || '-'}`);
-  doc.text(`Nimi: ${firstName} ${lastName}`);
-  doc.text(`Sähköposti: ${email}`);
-  doc.text(`Puhelinnumero: ${phone || '-'}`);
-  doc.text(`Postinumero: ${postalCode || '-'}`);
-  doc.text(`Kaupunki: ${city || '-'}`);
-  doc.text(`Syntymäaika: ${birthdate || '-'}`);
-  doc.text(`Ajokorttiluokat: ${driverslicense || '-'}`);
-  doc.text(`Verkkosivusto: ${website || '-'}`);
-  doc.text(`Linkedin: ${linkedin || '-'}`);
-
-  doc.end();
-
-  res.json({ pdfPath: `/pdfs/${fileName}` });
 });
 
-// Käynnistä serveri
-app.listen(4000, () => {
-  console.log('API running at http://localhost:4000');
-});
+// käynnistä serveri
+app.listen(4000, () => console.log('API running at http://localhost:4000'));

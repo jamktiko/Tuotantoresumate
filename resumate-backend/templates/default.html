@@ -1,0 +1,60 @@
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      font-family: Arial, sans-serif;
+      background: url('{{bgImage}}') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0;
+    }
+
+    h2 {
+      font-size: 18px;
+      color: #555;
+      margin: 4px 0 12px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .photo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .section {
+      margin-bottom: 12px;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>{{firstName}} {{lastName}}</h1>
+    <h2>{{title}}</h2>
+  </div>
+  <div class="photo">{{photo}}</div>
+  <div class="section"><span class="label">📧 Sähköposti:</span> {{email}}</div>
+  <div class="section"><span class="label">📱 Puhelin:</span> {{phone}}</div>
+  <div class="section"><span class="label">🏙️ Osoite:</span> {{postalCode}} {{city}}</div>
+  <div class="section"><span class="label">🎂 Syntymäaika:</span> {{birthdate}}</div>
+  <div class="section"><span class="label">🚗 Ajokortti:</span> {{driverslicense}}</div>
+  <div class="section"><span class="label">🌐 Verkkosivusto:</span> {{website}}</div>
+  <div class="section"><span class="label">🔗 Linkedin:</span> {{linkedin}}</div>
+</body>
+
+</html>
