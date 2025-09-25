@@ -49,7 +49,9 @@
     </form>
 
     <p class="login-text">
-      Muistitko salasanan? <a href="/" class="text-blue-600">Kirjaudu sisään</a>
+      Muistitko salasanan? <a href="../" class="text-blue-600"
+        >Kirjaudu sisään</a
+      >
     </p>
   </div>
 
