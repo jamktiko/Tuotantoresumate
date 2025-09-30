@@ -28,7 +28,7 @@
       />
       <div class="pwdreset">
         <div class="flex justify-end">
-          <a href="/unohtunut-salasana" class="text-sm text-blue-600 underline">
+          <a href="./reset" class="text-sm text-blue-600 underline">
             Unohtuiko salasana?
           </a>
         </div>
