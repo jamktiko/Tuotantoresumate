@@ -30,15 +30,73 @@ function loadTemplate(name, data) {
   const templatePath = path.join(__dirname, 'templates', `${name}.html`);
   let html = fs.readFileSync(templatePath, 'utf-8');
 
-  for (const key in data) {
-    html = html.replace(new RegExp(`{{${key}}}`, 'g'), data[key] || '');
+  // kokemukset
+  if (Array.isArray(data.experiences)) {
+    const expHtml = data.experiences
+      .map(
+        (exp) => `
+        <li>
+          <strong>${exp.title || ''}</strong>, ${exp.company || ''} (${
+          exp.city || ''
+        })
+          ${exp.startDate ? ` | ${exp.startDate}` : ''} - ${exp.endDate || ''}
+          ${exp.description ? `<br>${exp.description}` : ''}
+        </li>`
+      )
+      .join('');
+    html = html.replace('{{experiences}}', expHtml);
+  } else {
+    html = html.replace('{{experiences}}', '');
   }
+
+  // koulutus
+  if (Array.isArray(data.educations)) {
+    const eduHtml = data.educations
+      .map(
+        (edu) => `
+        <li>
+          <strong>${edu.degree || ''}</strong>, ${edu.school || ''} (${
+          edu.city || ''
+        })
+          ${edu.startDate ? ` | ${edu.startDate}` : ''} - ${edu.endDate || ''}
+          ${edu.description ? `<br>${edu.description}` : ''}
+        </li>`
+      )
+      .join('');
+    html = html.replace('{{educations}}', eduHtml);
+  } else {
+    html = html.replace('{{educations}}', '');
+  }
+
+  // muut placeholderit
+  for (const key in data) {
+    if (key !== 'experiences' && key !== 'educations') {
+      html = html.replace(new RegExp(`{{${key}}}`, 'g'), data[key] || '');
+    }
+  }
+
   return html;
 }
 
-// Luo CV (HTML + CSS pohjalla)
 app.post('/create-cv', upload.single('photo'), async (req, res) => {
   try {
+    let experiencesData = [];
+    let educationsData = [];
+    if (req.body.experiences) {
+      try {
+        experiencesData = JSON.parse(req.body.experiences);
+      } catch (err) {
+        console.error('Experiences parsing error:', err);
+      }
+    }
+    if (req.body.educations) {
+      try {
+        educationsData = JSON.parse(req.body.educations);
+      } catch (err) {
+        console.error('Educations parsing error:', err);
+      }
+    }
+
     const {
       title,
       firstName,
@@ -51,7 +109,8 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
       driverslicense,
       website,
       linkedin,
-      template, // käyttäjän valitsema teema
+      summary,
+      template,
     } = req.body;
 
     const photoPath = req.file ? req.file.path : null;
@@ -62,7 +121,7 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
         .json({ error: 'Etunimi, sukunimi ja sähköposti vaaditaan!' });
     }
 
-    // konvertoi taustakuva base64:ksi
+    // taustakuva
     const bgPath = path.join(__dirname, 'pohjat', 'cvpohja.jpg');
     let bgBase64 = '';
     if (fs.existsSync(bgPath)) {
@@ -70,7 +129,7 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
       bgBase64 = `data:image/jpeg;base64,${bgData.toString('base64')}`;
     }
 
-    // konvertoi kuva base64:ksi
+    // profiilikuva
     let photoHtml = '';
     if (photoPath) {
       const photoData = fs.readFileSync(photoPath);
@@ -93,11 +152,14 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
       driverslicense,
       website,
       linkedin,
+      summary,
+      experiences: experiencesData,
+      educations: educationsData,
       photo: photoHtml,
       bgImage: bgBase64,
     });
 
-    // Luo PDF
+    // PDF generointi
     const fileName = `cv_${Date.now()}.pdf`;
     const pdfPath = path.join(__dirname, 'pdfs', fileName);
 

@@ -13,14 +13,32 @@
   let photoPreview = null; // esikatselu
   let photoFile = null; // varsinainen tiedosto
   let cvUrl = '';
+  let isLoading = false;
   let showExtra = false;
   let template = 'default'; // aktiivinen template
+  let showSummary = false; // 👈 uusi toggle ammattiyhteenvedolle
+  let summary = ''; // 👈 syötekenttää varten
+  let experiences = [
+    { title: '', company: '', city: '', start: '', end: '', description: '' },
+  ];
+  let educations = [
+    {
+      degree: '',
+      city: '',
+      school: '',
+      startDate: '',
+      endDate: '',
+      description: '',
+    },
+  ];
+  let languages = [];
 
   function setTemplate(t) {
     template = t;
   }
   import { slide } from 'svelte/transition';
   async function createCV() {
+    isLoading = true;
     const formData = new FormData();
     formData.append('title', title);
     formData.append('firstName', firstName);
@@ -33,25 +51,34 @@
     formData.append('driverslicense', driverslicense);
     formData.append('website', website);
     formData.append('linkedin', linkedin);
+    formData.append('summary', summary);
+    formData.append('experiences', JSON.stringify(experiences));
+    formData.append('educations', JSON.stringify(educations));
 
     if (photoFile) {
       formData.append('photo', photoFile);
     }
     formData.append('template', template);
 
-    const res = await fetch('http://localhost:4000/create-cv', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const data = await res.json();
-    if (data.pdfPath) {
-      cvUrl = `http://localhost:4000${data.pdfPath}`;
-      window.open(cvUrl, '_blank'); // avaa PDF:n
+    try {
+      const res = await fetch('http://localhost:4000/create-cv', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.pdfPath) {
+        cvUrl = `http://localhost:4000${data.pdfPath}`;
+        window.open(cvUrl, '_blank');
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      isLoading = false; // piilota spinner
     }
   }
 
   function fillRandom() {
+    // Henkilötiedot
     const titles = [
       'Ohjelmistokehittäjä',
       'Projektipäällikkö',
@@ -71,6 +98,10 @@
       'linkedin.com/in/anna',
       'linkedin.com/in/kalle',
     ];
+    const summaries = [
+      'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet...',
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+    ];
 
     title = titles[Math.floor(Math.random() * titles.length)];
     firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -83,6 +114,58 @@
     driverslicense = drivers[Math.floor(Math.random() * drivers.length)];
     website = websites[Math.floor(Math.random() * websites.length)];
     linkedin = linkedins[Math.floor(Math.random() * linkedins.length)];
+    summary = summaries[Math.floor(Math.random() * summaries.length)];
+
+    // Työkokemukset
+    const expTitles = [
+      'Ohjelmoija',
+      'Projektipäällikkö',
+      'UI/UX-suunnittelija',
+    ];
+    const expCompanies = ['Firma Oy', 'Startup Inc', 'BigCompany Ltd'];
+    const expCities = ['Helsinki', 'Tampere', 'Oulu'];
+    const expDescriptions = [
+      'Työskentelin front-end kehityksessä...',
+      'Vastuullani oli projektinhallinta ja tiimin ohjaus...',
+      'Suunnittelin käyttöliittymiä ja käyttäjäkokemusta...',
+    ];
+
+    // Luodaan 1-3 satunnaista työkokemusta
+    const count = Math.floor(Math.random() * 3) + 1;
+    experiences = [];
+    for (let i = 0; i < count; i++) {
+      experiences.push({
+        title: expTitles[Math.floor(Math.random() * expTitles.length)],
+        company: expCompanies[Math.floor(Math.random() * expCompanies.length)],
+        city: expCities[Math.floor(Math.random() * expCities.length)],
+        startDate: '2020-01-01',
+        endDate: '2021-12-31',
+        description:
+          expDescriptions[Math.floor(Math.random() * expDescriptions.length)],
+      });
+    }
+    const degrees = ['Tradenomi', 'Diplomi-insinööri', 'FM', 'AMK'];
+    const schools = ['Helsingin yliopisto', 'Tampereen AMK', 'Oulun yliopisto'];
+    const eduCities = ['Helsinki', 'Tampere', 'Oulu'];
+    const eduDescriptions = [
+      'Keskittyi tietojenkäsittelyyn ja ohjelmistokehitykseen.',
+      'Opiskeli projektinhallintaa ja liiketaloutta.',
+      'Erikoistui käyttöliittymien suunnitteluun ja UX:ään.',
+    ];
+
+    const eduCount = Math.floor(Math.random() * 3) + 1;
+    educations = [];
+    for (let i = 0; i < eduCount; i++) {
+      educations.push({
+        degree: degrees[Math.floor(Math.random() * degrees.length)],
+        city: eduCities[Math.floor(Math.random() * eduCities.length)],
+        school: schools[Math.floor(Math.random() * schools.length)],
+        startDate: '2015-08-01',
+        endDate: '2019-06-30',
+        description:
+          eduDescriptions[Math.floor(Math.random() * eduDescriptions.length)],
+      });
+    }
   }
 
   function handlePhotoUpload(event) {
@@ -92,6 +175,65 @@
       photoPreview = URL.createObjectURL(file);
     }
   }
+
+  function addExperience() {
+    experiences = [
+      ...experiences,
+      { title: '', company: '', city: '', start: '', end: '', description: '' },
+    ];
+  }
+
+  // Poista tietty työkokemus
+  function removeExperience(index) {
+    experiences = experiences.filter((_, i) => i !== index);
+  }
+
+  function addEducation() {
+    educations = [
+      ...educations,
+      {
+        degree: '',
+        city: '',
+        school: '',
+        startDate: '',
+        endDate: '',
+        description: '',
+      },
+    ];
+  }
+
+  // Poista koulutus
+  function removeEducation(index) {
+    educations = educations.filter((_, i) => i !== index);
+  }
+
+  function addLanguage() {
+    languages = [...languages, { language: '', level: 3 }]; // oletus keskellä
+  }
+
+  function removeLanguage(index) {
+    languages = languages.filter((_, i) => i !== index);
+  }
+  const availableLanguages = [
+    'Suomi',
+    'Englanti',
+    'Ruotsi',
+    'Saksa',
+    'Ranska',
+    'Espanja',
+    'Venäjä',
+    'Kiina',
+    'Japani',
+  ];
+
+  const levelLabels = [
+    'Aloittelija',
+    'Perustaso',
+    'Keskitaso',
+    'Hyvä',
+    'Erinomainen',
+    'Natiivi',
+  ];
 </script>
 
 <header class="main-header">
@@ -118,6 +260,12 @@
   </div>
   <button class="fill-btn" on:click={fillRandom}>Täyttö</button>
 </header>
+
+{#if isLoading}
+  <div class="loader-overlay">
+    <div class="spinner"></div>
+  </div>
+{/if}
 
 <div class="page">
   <div class="left">
@@ -199,6 +347,201 @@
           </div>
         {/if}
 
+        <!-- Ammattiyhteenveto-toggle -->
+        <div
+          class="extra-toggle"
+          role="button"
+          tabindex="0"
+          on:click={() => (showSummary = !showSummary)}
+          on:keydown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              showSummary = !showSummary;
+            }
+          }}
+        >
+          {#if showSummary}▼ Piilota ammattiyhteenveto{:else}▶
+            Ammattiyhteenveto{/if}
+        </div>
+
+        {#if showSummary}
+          <div class="extra-info" in:slide out:slide>
+            <label for="summary-input" class="summary-label">
+              Korosta yleistä ammatillista kokemustasi, keskeisiä taitoja ja
+              uratavoitteitasi.
+            </label>
+            <textarea
+              id="summary-input"
+              bind:value={summary}
+              rows="4"
+              class="input full"
+              placeholder="..."
+            ></textarea>
+          </div>
+        {/if}
+
+        <!-- Ammattiyhteenveto tähän -->
+
+        <!-- UUSI TYÖKOKEMUS-OSIO -->
+        <div class="section">
+          <h2>Työkokemus</h2>
+
+          {#each experiences as exp, i}
+            <div class="experience-grid">
+              <input
+                type="text"
+                placeholder="Työnimike"
+                bind:value={exp.title}
+                class="input"
+              />
+              <input
+                type="text"
+                placeholder="Kaupunki"
+                bind:value={exp.city}
+                class="input"
+              />
+
+              <input
+                type="text"
+                placeholder="Yrityksen nimi"
+                bind:value={exp.company}
+                class="input company"
+              />
+
+              <input
+                type="date"
+                placeholder="Aloituspäivämäärä"
+                bind:value={exp.startDate}
+                class="input date"
+              />
+              <input
+                type="date"
+                placeholder="Loppupäivämäärä"
+                bind:value={exp.endDate}
+                class="input date"
+              />
+
+              <!-- Kuvaus koko rivin levyisenä -->
+              <textarea
+                class="input full"
+                placeholder="Kuvaus"
+                bind:value={exp.description}
+              ></textarea>
+
+              <!-- Poista-nappi rivin levyisenä -->
+              <button
+                type="button"
+                class="remove full-width"
+                on:click={() => removeExperience(i)}
+              >
+                Poista
+              </button>
+            </div>
+          {/each}
+
+          <button type="button" class="add" on:click={addExperience}
+            >+ Lisää työkokemus</button
+          >
+        </div>
+
+        <h3>Koulutus</h3>
+
+        {#each educations as edu, i}
+          <div class="education-grid" in:slide out:slide>
+            <input
+              type="text"
+              placeholder="Tutkinto"
+              bind:value={edu.degree}
+              class="input"
+            />
+            <input
+              type="text"
+              placeholder="Kaupunki"
+              bind:value={edu.city}
+              class="input"
+            />
+            <input
+              type="text"
+              placeholder="Oppilaitos"
+              bind:value={edu.school}
+              class="input company"
+            />
+
+            <input
+              type="date"
+              placeholder="Aloituspäivämäärä"
+              bind:value={edu.startDate}
+              class="input date"
+            />
+            <input
+              type="date"
+              placeholder="Valmistumispäivämäärä"
+              bind:value={edu.endDate}
+              class="input date"
+            />
+
+            <textarea
+              class="input full"
+              placeholder="Kuvaus"
+              bind:value={edu.description}
+            ></textarea>
+
+            <!-- käytetään samaa remove-luokkaa kuin työkokemuksessa -->
+            <button
+              type="button"
+              class="remove"
+              on:click={() => removeEducation(i)}
+            >
+              Poista koulutus
+            </button>
+          </div>
+        {/each}
+
+        <!-- käytetään samaa add-luokkaa kuin työkokemuksessa -->
+        <button type="button" class="add" on:click={addEducation}>
+          Lisää koulutus
+        </button>
+
+        <div id="languages-section">
+          <h3>Kielitaidot</h3>
+
+          {#each languages as lang, i}
+            <div class="language-entry">
+              <!-- kieli dropdown -->
+              <select bind:value={lang.language}>
+                <option value="">Valitse kieli...</option>
+                {#each availableLanguages as langOption}
+                  <option value={langOption}>{langOption}</option>
+                {/each}
+              </select>
+
+              <!-- taso slider -->
+              <div class="level-control">
+                <input
+                  type="range"
+                  min="0"
+                  max="5"
+                  step="1"
+                  bind:value={lang.level}
+                />
+                <span class="level-label">{levelLabels[lang.level]}</span>
+              </div>
+
+              <button
+                type="button"
+                class="remove"
+                on:click={() => removeLanguage(i)}
+              >
+                Poista
+              </button>
+            </div>
+          {/each}
+
+          <button type="button" class="add" on:click={addLanguage}>
+            Lisää kieli
+          </button>
+        </div>
+
         <button type="submit" class:download={cvUrl}>
           {#if cvUrl}
             📄 Lataa valmis CV
@@ -232,10 +575,10 @@
       {#if showExtra}
         <section class="cv-section">
           <h3>Lisätiedot</h3>
-          <p>🎂 {birthdate}</p>
-          <p>🚗 {driverslicense}</p>
-          <p>🌐 {website}</p>
-          <p>🔗 {linkedin}</p>
+          <p>{birthdate}</p>
+          <p>{driverslicense}</p>
+          <p>{website}</p>
+          <p>{linkedin}</p>
         </section>
       {/if}
     </div>
@@ -335,7 +678,7 @@
     display: flex;
     flex-direction: column;
     background: linear-gradient(to top, #00acb51e, #eeeeee);
-    align-items: flex-start; /* vasemmalle */
+    align-items: center; /* vasemmalle */
     justify-content: flex-start;
     padding: 1rem; /* lähempänä vasenta reunaa */
     overflow-y: auto;
@@ -353,13 +696,12 @@
   }
 
   .cv-form {
-    margin-top: 100px;
-    margin-left: 75px;
+    margin-top: 5px;
     display: flex;
     flex-direction: column;
     gap: 15px;
     max-width: 800px;
-    width: 120%;
+    width: 100%;
     padding: 0;
     background-color: transparent;
   }
@@ -580,5 +922,243 @@
   .template-switcher button.selected {
     background: #059dc0;
     color: #fff;
+  }
+
+  .section {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  h2 {
+    font-size: 18px;
+    font-family: 'Afacad', sans-serif;
+    font-weight: 600;
+    align-items: center;
+    color: #000;
+    margin-bottom: 10px;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-family: 'Afacad', sans-serif;
+    font-weight: 600;
+    align-items: center;
+    color: #000;
+    margin-bottom: 10px;
+  }
+
+  .experience-grid {
+    border-radius: 6px;
+    margin-bottom: 15px;
+    background: transparent;
+    display: flex;
+    font-family: 'Afacad', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #000;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .experience-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* ensimmäinen rivi: työnimike + kaupunki */
+    grid-gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .experience-grid .company {
+    grid-column: 1 / span 2; /* vie koko rivin */
+  }
+
+  .experience-grid .date {
+    grid-column: span 1; /* molemmat vie puolet rivistä */
+  }
+
+  .row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: 'Afacad', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #000;
+  }
+
+  .input.full {
+    width: 100%;
+  }
+
+  textarea.input {
+    min-height: 60px;
+  }
+
+  button.add {
+    background: #00adb5;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 24px;
+    cursor: pointer;
+    align-self: flex-start;
+  }
+
+  textarea.input {
+    flex: 1;
+    min-height: 60px;
+    padding: 0.5rem 1rem;
+    border: 1px solid #393e46;
+    border-radius: 24px;
+    font-family: 'Afacad', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #000;
+    background-color: transparent;
+    box-sizing: border-box;
+    resize: vertical; /* sallii korkeuden muokkauksen */
+  }
+  .summary-label {
+    font-family: 'Afacad', sans-serif; /* vaihda tähän haluamasi fontti */
+    font-size: 16px; /* suurempi/pienempi fonttikoko */
+    font-weight: 600; /* lihavointi */
+    color: #333; /* tekstin väri */
+    margin-bottom: 8px; /* vähän tilaa labelin alle */
+    display: block; /* pitää labelin omalla rivillä */
+  }
+
+  /* Poista-nappi */
+  button.remove {
+    background: #db5b5b;
+    width: 100%;
+    text-align: center;
+    color: white;
+    border: none;
+    padding: 8px 14px; /* sama kuin add */
+    border-radius: 24px;
+    cursor: pointer;
+    align-self: flex-start; /* rivin alkuun */
+    width: auto; /* ei veny automaattisesti */
+    grid-column: 1 / -1; /* vie koko rivin */
+    justify-self: stretch; /* vasemmalle */
+  }
+
+  .experience-grid textarea.input {
+    grid-column: 1 / -1; /* vie koko rivin */
+    min-height: 120px;
+    font-size: 16px;
+    padding: 12px 16px;
+    border-radius: 24px;
+    border: 1px solid #393e46;
+    box-sizing: border-box;
+    resize: vertical;
+  }
+
+  .education-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* tutkinto + kaupunki vierekkäin */
+    grid-gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  /* Oppilaitos vie koko rivin */
+  .education-grid .company {
+    grid-column: 1 / span 2;
+  }
+
+  /* Päivämäärät puoliksi rinnakkain */
+  .education-grid .date {
+    grid-column: span 1;
+  }
+
+  /* Kuvaus koko rivin leveydeltä */
+  .education-grid textarea.input {
+    grid-column: 1 / -1;
+    min-height: 120px;
+    font-size: 16px;
+    padding: 12px 16px;
+    border-radius: 24px;
+    border: 1px solid #393e46;
+    box-sizing: border-box;
+    resize: vertical;
+  }
+
+  /* Poista-nappi koko rivin leveydeltä */
+  .education-grid button.remove {
+    grid-column: 1 / -1;
+  }
+
+  #languages-section {
+    margin: 20px 0;
+  }
+
+  .language-entry {
+    display: flex;
+    align-items: flex-start;
+    font-family: 'Afacad', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #000;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 12px 16px;
+    border-radius: 16px;
+    background-color: transparent;
+  }
+
+  /* dropdown */
+  .language-entry select {
+    flex: 1;
+    height: 40px; /* sama korkeus kuin muut */
+    width: 160px;
+    min-width: 0px;
+    padding: 0 12px;
+    border-radius: 12px;
+    border: 1px solid #393e46;
+    background-color: transparent;
+    font-family: 'Afacad', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #000;
+    display: flex;
+    align-items: center;
+  }
+
+  /* slider + label wrapper */
+  .level-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 200px; /* sliderin leveys */
+  }
+
+  /* slider itse */
+  .level-control input[type='range'] {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    accent-color: #00adb5;
+  }
+
+  /* poista-nappi */
+  .language-entry button.remove {
+    flex: none;
+    height: 40px; /* sama korkeus kuin muut */
+    padding: 0 16px;
+    border-radius: 12px;
+    background-color: #db5b5b;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>
