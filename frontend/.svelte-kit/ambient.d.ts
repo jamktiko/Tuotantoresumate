@@ -28,41 +28,25 @@
 declare module '$env/static/private' {
 	export const ALLUSERSPROFILE: string;
 	export const APPDATA: string;
-<<<<<<< HEAD
-	export const ChocolateyInstall: string;
-	export const ChocolateyLastPathUpdate: string;
-	export const CHROME_CRASHPAD_PIPE_NAME: string;
 	export const COLOR: string;
-	export const COLORTERM: string;
-=======
-	export const COLOR: string;
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 	export const CommonProgramFiles: string;
 	export const CommonProgramW6432: string;
 	export const COMPUTERNAME: string;
 	export const ComSpec: string;
 	export const DriverData: string;
 	export const EDITOR: string;
-<<<<<<< HEAD
-	export const GIT_ASKPASS: string;
-=======
-	export const EFC_15820_1262719628: string;
-	export const EFC_15820_1592913036: string;
-	export const EFC_15820_2283032206: string;
-	export const EFC_15820_2775293581: string;
-	export const EFC_15820_3789132940: string;
+	export const EFC_18812_1262719628: string;
+	export const EFC_18812_1592913036: string;
+	export const EFC_18812_2283032206: string;
+	export const EFC_18812_2775293581: string;
+	export const EFC_18812_3789132940: string;
 	export const FPS_BROWSER_APP_PROFILE_STRING: string;
 	export const FPS_BROWSER_USER_PROFILE_STRING: string;
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 	export const HOME: string;
 	export const HOMEDRIVE: string;
 	export const HOMEPATH: string;
 	export const IGCCSVC_DB: string;
 	export const INIT_CWD: string;
-<<<<<<< HEAD
-	export const LANG: string;
-=======
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 	export const LOCALAPPDATA: string;
 	export const LOGONSERVER: string;
 	export const NODE: string;
@@ -72,10 +56,6 @@ declare module '$env/static/private' {
 	export const npm_config_engine_strict: string;
 	export const npm_config_globalconfig: string;
 	export const npm_config_global_prefix: string;
-<<<<<<< HEAD
-	export const npm_config_init_author_name: string;
-=======
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 	export const npm_config_init_module: string;
 	export const npm_config_local_prefix: string;
 	export const npm_config_node_gyp: string;
@@ -93,10 +73,6 @@ declare module '$env/static/private' {
 	export const npm_package_version: string;
 	export const NUMBER_OF_PROCESSORS: string;
 	export const OneDrive: string;
-<<<<<<< HEAD
-	export const ORIGINAL_XDG_CURRENT_DESKTOP: string;
-=======
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 	export const OS: string;
 	export const Path: string;
 	export const PATHEXT: string;
@@ -110,33 +86,16 @@ declare module '$env/static/private' {
 	export const PROMPT: string;
 	export const PSModulePath: string;
 	export const PUBLIC: string;
-<<<<<<< HEAD
-	export const SystemDrive: string;
-	export const SystemRoot: string;
-	export const TEMP: string;
-	export const TERM_PROGRAM: string;
-	export const TERM_PROGRAM_VERSION: string;
-=======
 	export const SESSIONNAME: string;
 	export const SystemDrive: string;
 	export const SystemRoot: string;
 	export const TEMP: string;
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 	export const TMP: string;
 	export const USERDOMAIN: string;
 	export const USERDOMAIN_ROAMINGPROFILE: string;
 	export const USERNAME: string;
 	export const USERPROFILE: string;
 	export const VBOX_MSI_INSTALL_PATH: string;
-<<<<<<< HEAD
-	export const VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
-	export const VSCODE_GIT_ASKPASS_MAIN: string;
-	export const VSCODE_GIT_ASKPASS_NODE: string;
-	export const VSCODE_GIT_IPC_HANDLE: string;
-	export const VSCODE_INJECTION: string;
-	export const VSCODE_PYTHON_AUTOACTIVATE_GUARD: string;
-=======
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 	export const windir: string;
 	export const ZES_ENABLE_SYSMAN: string;
 }
@@ -170,41 +129,25 @@ declare module '$env/dynamic/private' {
 	export const env: {
 		ALLUSERSPROFILE: string;
 		APPDATA: string;
-<<<<<<< HEAD
-		ChocolateyInstall: string;
-		ChocolateyLastPathUpdate: string;
-		CHROME_CRASHPAD_PIPE_NAME: string;
 		COLOR: string;
-		COLORTERM: string;
-=======
-		COLOR: string;
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 		CommonProgramFiles: string;
 		CommonProgramW6432: string;
 		COMPUTERNAME: string;
 		ComSpec: string;
 		DriverData: string;
 		EDITOR: string;
-<<<<<<< HEAD
-		GIT_ASKPASS: string;
-=======
-		EFC_15820_1262719628: string;
-		EFC_15820_1592913036: string;
-		EFC_15820_2283032206: string;
-		EFC_15820_2775293581: string;
-		EFC_15820_3789132940: string;
+		EFC_18812_1262719628: string;
+		EFC_18812_1592913036: string;
+		EFC_18812_2283032206: string;
+		EFC_18812_2775293581: string;
+		EFC_18812_3789132940: string;
 		FPS_BROWSER_APP_PROFILE_STRING: string;
 		FPS_BROWSER_USER_PROFILE_STRING: string;
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 		HOME: string;
 		HOMEDRIVE: string;
 		HOMEPATH: string;
 		IGCCSVC_DB: string;
 		INIT_CWD: string;
-<<<<<<< HEAD
-		LANG: string;
-=======
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 		LOCALAPPDATA: string;
 		LOGONSERVER: string;
 		NODE: string;
@@ -214,10 +157,6 @@ declare module '$env/dynamic/private' {
 		npm_config_engine_strict: string;
 		npm_config_globalconfig: string;
 		npm_config_global_prefix: string;
-<<<<<<< HEAD
-		npm_config_init_author_name: string;
-=======
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 		npm_config_init_module: string;
 		npm_config_local_prefix: string;
 		npm_config_node_gyp: string;
@@ -235,10 +174,6 @@ declare module '$env/dynamic/private' {
 		npm_package_version: string;
 		NUMBER_OF_PROCESSORS: string;
 		OneDrive: string;
-<<<<<<< HEAD
-		ORIGINAL_XDG_CURRENT_DESKTOP: string;
-=======
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 		OS: string;
 		Path: string;
 		PATHEXT: string;
@@ -252,33 +187,16 @@ declare module '$env/dynamic/private' {
 		PROMPT: string;
 		PSModulePath: string;
 		PUBLIC: string;
-<<<<<<< HEAD
-		SystemDrive: string;
-		SystemRoot: string;
-		TEMP: string;
-		TERM_PROGRAM: string;
-		TERM_PROGRAM_VERSION: string;
-=======
 		SESSIONNAME: string;
 		SystemDrive: string;
 		SystemRoot: string;
 		TEMP: string;
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 		TMP: string;
 		USERDOMAIN: string;
 		USERDOMAIN_ROAMINGPROFILE: string;
 		USERNAME: string;
 		USERPROFILE: string;
 		VBOX_MSI_INSTALL_PATH: string;
-<<<<<<< HEAD
-		VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
-		VSCODE_GIT_ASKPASS_MAIN: string;
-		VSCODE_GIT_ASKPASS_NODE: string;
-		VSCODE_GIT_IPC_HANDLE: string;
-		VSCODE_INJECTION: string;
-		VSCODE_PYTHON_AUTOACTIVATE_GUARD: string;
-=======
->>>>>>> d4f6d9c7772cb922e1665de16f5fa9ebea20c54e
 		windir: string;
 		ZES_ENABLE_SYSMAN: string;
 		[key: `PUBLIC_${string}`]: undefined;
