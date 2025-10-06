@@ -1,0 +1,639 @@
+.cv-form button.download {
+  background-color: #00d1da; /* kirkkaampi sininen */
+}
+.section-card {
+  background: #f0f8fa;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.page {
+  display: flex;
+  min-height: 100vh;
+  height: 100vh; /* ei height: 100vh jos on padding-top */
+  width: 100%;
+  padding-top: 70px; /* headerin korkeus */
+  box-sizing: border-box; /* jotta padding ei lisää korkeutta */
+  overflow-y: auto;
+}
+.extra-toggle {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  color: #000000;
+  font-family: 'afacad', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  user-select: none;
+  margin: 10px 0;
+}
+
+.extra-toggle:hover {
+  color: #0056a3;
+}
+.extra-info {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.main-header {
+  width: 100%;
+  height: 70px;
+  background-color: #1e1e1e;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.main-header h1 {
+  margin: 0;
+  font-family: 'Sansita Swashed', sans-serif;
+  font-size: 42px;
+  font-weight: 200;
+}
+
+.main-header .fill-btn {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1010;
+}
+
+header .fill-btn {
+  position: absolute; /* irti flex-kontekstista */
+  right: 20px;
+  top: 50%;
+  height: 40px;
+  width: 150px;
+  z-index: 1010;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(-50%);
+  padding: 10px 14px;
+  border-radius: 24px;
+  border: none;
+  background: #00adb5;
+  font-family: 'Afacad', sans-serif;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 200;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(11, 118, 239, 0.18);
+}
+
+.left {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to top, #00acb51e, #eeeeee);
+  align-items: center; /* vasemmalle */
+  justify-content: flex-start;
+  padding: 1rem; /* lähempänä vasenta reunaa */
+  overflow-y: auto;
+  background: transparent;
+}
+
+.right {
+  flex: none;
+  width: 650px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.cv-form {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 800px;
+  width: 100%;
+  padding: 0;
+  background-color: transparent;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.top-row {
+  align-items: flex-end; /* estää inputin venymisen kortin korkeuteen */
+}
+.row,
+.top-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.top-row input {
+  flex: 1;
+  min-height: 40px;
+  max-width: calc(50% - 6px); /* sama leveys kuin muilla riveillä */
+}
+
+.cv-form input {
+  flex: 1; /* kaikki yhtä leveitä */
+  min-height: 40px;
+  padding: 0.5rem 1rem;
+  border: 1px solid #393e46;
+  border-radius: 24px;
+  font-family: 'Afacad', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+  box-sizing: border-box;
+}
+
+/* container */
+.photo-card {
+  display: flex;
+  align-items: center;
+}
+
+.photo-preview {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #999; /* placeholderin harmaa */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid #fff; /* siisti ohut valkoinen border */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* kevyt varjo */
+}
+
+/* placeholder SVG tyyli */
+.photo-preview .placeholder-icon {
+  width: 50%;
+  height: 50%;
+  color: white;
+  opacity: 0.95;
+  display: block;
+}
+
+/* varsinainen kuva: cover ja pehmeä fade-in */
+.photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+/* kun kuva on ladattu */
+.photo-preview img.loaded {
+  opacity: 1;
+}
+
+/* overlay-nappi avatarin oikeassa alakulmassa */
+.upload-overlay {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #00adb5;
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s ease;
+}
+/* kun fokus sisällä (näppäin saavutettavuus) */
+.upload-overlay:focus-within {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(4, 212, 240, 0.18),
+    0 6px 18px rgba(4, 212, 240, 0.18);
+}
+
+/* piilotetaan input visuaalisesti mutta annetaan se peittämään koko napin
+   (näin kosketus/klikki varmasti toimii) */
+.upload-overlay input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+/* pieni animaatio hoverissa */
+.upload-overlay:hover {
+  transform: translateY(-2px);
+}
+
+/* kameraikonille ei anneta pointer-events (input hoitaa klikkauksen) */
+.upload-overlay .camera-small {
+  pointer-events: none;
+  width: 18px;
+  height: 18px;
+}
+
+.cv-form button {
+  width: 100%;
+  height: 45px;
+  background-color: #00adb5;
+  color: #fff;
+  font-family: 'Afacad', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+.cv-form button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 173, 181, 0.5);
+}
+
+.right {
+  flex: none;
+  width: 650px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+  background: transparent; /* kevyt tausta */
+  overflow-y: auto;
+}
+
+.cv-a4 {
+  background: #fff;
+  width: 595px; /* A4 leveys */
+  height: 842px; /* A4 korkeus */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  padding: 30px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+}
+.cv-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 20px;
+}
+
+.cv-header img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cv-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.cv-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 400;
+  color: #666;
+}
+
+.cv-section h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 4px;
+  color: #059dc0;
+}
+
+.cv-section p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.template-switcher {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+.template-switcher button {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Afacad', sans-serif;
+  font-weight: 600;
+  background: #444;
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.template-switcher button:hover {
+  background: #00adb5;
+}
+
+.template-switcher button.selected {
+  background: #059dc0;
+  color: #fff;
+}
+
+.section {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+h2 {
+  font-size: 18px;
+  font-family: 'Afacad', sans-serif;
+  font-weight: 600;
+  align-items: center;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-size: 18px;
+  font-family: 'Afacad', sans-serif;
+  font-weight: 600;
+  align-items: center;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.experience-grid {
+  border-radius: 6px;
+  margin-bottom: 15px;
+
+  display: flex;
+  font-family: 'Afacad', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.experience-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* ensimmäinen rivi: työnimike + kaupunki */
+  grid-gap: 10px;
+  margin-bottom: 20px;
+}
+
+.experience-grid .company {
+  grid-column: 1 / span 2; /* vie koko rivin */
+}
+
+.experience-grid .date {
+  grid-column: span 1; /* molemmat vie puolet rivistä */
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.input {
+  flex: 1;
+  padding: 12px 16px; /* enemmän sisäistä tilaa */
+  border-radius: 16px; /* pyöristetyt kulmat */
+  border: 1px solid #ccc; /* kevyt reuna */
+  background-color: #f0f8fa;
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: 'Afacad', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+}
+
+.input.full {
+  width: 100%;
+}
+
+textarea.input {
+  min-height: 60px;
+  resize: vertical;
+  background-color: #f0f8fa;
+  border-radius: 16px;
+  padding: 12px 16px;
+}
+
+button.add {
+  background: #00adb5;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 24px;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+textarea.input {
+  flex: 1;
+  min-height: 60px;
+  padding: 0.5rem 1rem;
+  border: 1px solid #393e46;
+  border-radius: 24px;
+  font-family: 'Afacad', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+  box-sizing: border-box;
+  resize: vertical; /* sallii korkeuden muokkauksen */
+}
+.summary-label {
+  font-family: 'Afacad', sans-serif; /* vaihda tähän haluamasi fontti */
+  font-size: 16px; /* suurempi/pienempi fonttikoko */
+  font-weight: 600; /* lihavointi */
+  color: #333; /* tekstin väri */
+  margin-bottom: 8px; /* vähän tilaa labelin alle */
+  display: block; /* pitää labelin omalla rivillä */
+}
+
+/* Poista-nappi */
+button.remove {
+  background: #db5b5b;
+  width: 100%;
+  text-align: center;
+  color: white;
+  border: none;
+  padding: 8px 14px; /* sama kuin add */
+  border-radius: 24px;
+  cursor: pointer;
+  align-self: flex-start; /* rivin alkuun */
+  width: auto; /* ei veny automaattisesti */
+  grid-column: 1 / -1; /* vie koko rivin */
+  justify-self: stretch; /* vasemmalle */
+}
+
+.experience-grid textarea.input {
+  grid-column: 1 / -1; /* vie koko rivin */
+  min-height: 120px;
+  font-size: 16px;
+  padding: 12px 16px;
+  border-radius: 24px;
+  border: 1px solid #393e46;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.education-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* tutkinto + kaupunki vierekkäin */
+  grid-gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Oppilaitos vie koko rivin */
+.education-grid .company {
+  grid-column: 1 / span 2;
+}
+
+/* Päivämäärät puoliksi rinnakkain */
+.education-grid .date {
+  grid-column: span 1;
+}
+
+/* Kuvaus koko rivin leveydeltä */
+.education-grid textarea.input {
+  grid-column: 1 / -1;
+  min-height: 120px;
+  font-size: 16px;
+  padding: 12px 16px;
+  border-radius: 24px;
+  border: 1px solid #393e46;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+/* Poista-nappi koko rivin leveydeltä */
+.education-grid button.remove {
+  grid-column: 1 / -1;
+}
+
+#languages-section {
+  margin: 20px 0;
+}
+
+.language-entry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background-color: #f0f8fa;
+}
+
+.custom-select-wrapper {
+  position: relative;
+  flex: 1;
+  overflow: visible;
+}
+
+.custom-select {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 24px;
+  border: 1px solid #393e46;
+  background-color: #fff;
+  font-family: 'Afacad', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+  cursor: pointer;
+  appearance: none; /* poistaa selaimen oletustyyli */
+  transition: all 0.2s ease;
+}
+
+/* Lisätään nuoli dropdownille */
+.custom-select-wrapper::after {
+  content: '▾';
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #000000;
+  font-size: 16px;
+}
+
+/* Smooth animaatio dropdownille */
+.custom-select option {
+  transition: background 0.2s ease;
+}
+
+/* ============== Poista-nappi (selkeä ja kontrastinen) ============== */
+.language-entry button.remove {
+  background: #ff4d4d;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 800;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.28s ease, background 0.14s ease;
+  transform: rotate(0deg);
+  align-self: center;
+  margin: 0;
+}
+.language-entry button.remove:hover,
+.language-entry button.remove:focus {
+  background: #e60000;
+  transform: rotate(90deg) scale(1.08); /* pyörähdys ja pieni suurennus */
+  outline: none;
+}
+
+/* ============== Lisätyn napin tyyli (Lisää kieli) ============== */
+#languages-section > button.add {
+  margin-top: 8px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #00adb5;
+  color: white;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}

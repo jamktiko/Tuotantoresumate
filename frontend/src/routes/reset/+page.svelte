@@ -1,4 +1,5 @@
 <script>
+  import './+page.css';
   let sahkoposti = '';
   let viesti = '';
 

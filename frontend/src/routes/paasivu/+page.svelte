@@ -1,4 +1,5 @@
 <script>
+  import './+page.css';
   let title = '';
   let firstName = '';
   let lastName = '';
@@ -32,6 +33,7 @@
     },
   ];
   let languages = [];
+  let photoLoaded = false;
 
   function setTemplate(t) {
     template = t;
@@ -172,7 +174,9 @@
     const file = event.target.files[0];
     if (file) {
       photoFile = file;
-      photoPreview = URL.createObjectURL(file);
+      photoLoaded = false;
+      const url = URL.createObjectURL(file);
+      photoPreview = url;
     }
   }
 
@@ -183,7 +187,6 @@
     ];
   }
 
-  // Poista tietty työkokemus
   function removeExperience(index) {
     experiences = experiences.filter((_, i) => i !== index);
   }
@@ -274,27 +277,39 @@
         <!-- Työnimike + kuva samalla rivillä -->
         <div class="row top-row">
           <input bind:value={title} placeholder="Työnimike" />
-
+          <!-- korvaa vanha photo-card tällä -->
           <div class="photo-card">
-            <div class="photo-upload">
-              <!-- Placeholder/kuva vasemmalla -->
-              <div class="photo-preview">
-                {#if photoPreview}
-                  <img src={photoPreview} alt="Profiilikuva" />
-                {:else}
-                  <div class="placeholder">Ei kuvaa</div>
-                {/if}
-              </div>
+            <div class="photo-preview">
+              {#if photoPreview}
+                <img
+                  src={photoPreview}
+                  alt="Profiilikuva"
+                  on:load={() => (photoLoaded = true)}
+                  class:loaded={photoLoaded}
+                />
+              {/if}
 
-              <!-- Painike oikealla -->
-              <label class="upload-btn">
-                Lisää valokuva
+              <!-- overlay-nappi -->
+              <label class="upload-overlay" title="Vaihda profiilikuva">
                 <input
                   type="file"
                   accept="image/*"
                   on:change={handlePhotoUpload}
-                  hidden
+                  aria-label="Lataa profiilikuva"
                 />
+                <svg
+                  class="camera-small"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="white"
+                >
+                  <path
+                    d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"
+                  />
+                  <path
+                    d="M20 5h-3.2l-1.2-1.6a1 1 0 0 0-.8-.4H9.2c-.3 0-.6.1-.8.4L7.2 5H4a2 2 0 0 0-2 2v12h20V7a2 2 0 0 0-2-2z"
+                  />
+                </svg>
               </label>
             </div>
           </div>
@@ -506,40 +521,35 @@
           <h3>Kielitaidot</h3>
 
           {#each languages as lang, i}
-            <div class="language-entry">
-              <!-- kieli dropdown -->
-              <select bind:value={lang.language}>
-                <option value="">Valitse kieli...</option>
-                {#each availableLanguages as langOption}
-                  <option value={langOption}>{langOption}</option>
-                {/each}
-              </select>
+            <div class="language-entry" in:slide out:slide>
+              <div class="custom-select-wrapper">
+                <select bind:value={lang.language} class="custom-select">
+                  <option value="">Valitse kieli...</option>
+                  {#each availableLanguages as langOption}
+                    <option value={langOption}>{langOption}</option>
+                  {/each}
+                </select>
+              </div>
 
-              <!-- taso slider -->
-              <div class="level-control">
-                <input
-                  type="range"
-                  min="0"
-                  max="5"
-                  step="1"
-                  bind:value={lang.level}
-                />
-                <span class="level-label">{levelLabels[lang.level]}</span>
+              <div class="custom-select-wrapper">
+                <select bind:value={lang.level} class="custom-select">
+                  {#each [0, 1, 2, 3, 4, 5] as n}
+                    <option value={n}>{levelLabels[n]}</option>
+                  {/each}
+                </select>
               </div>
 
               <button
                 type="button"
                 class="remove"
-                on:click={() => removeLanguage(i)}
+                on:click={() => removeLanguage(i)}>✕</button
               >
-                Poista
-              </button>
             </div>
           {/each}
 
-          <button type="button" class="add" on:click={addLanguage}>
-            Lisää kieli
-          </button>
+          <button type="button" class="add" on:click={addLanguage}
+            >Lisää kieli</button
+          >
         </div>
 
         <button type="submit" class:download={cvUrl}>
@@ -584,581 +594,3 @@
     </div>
   </div>
 </div>
-
-<style>
-  .cv-form button.download {
-    background-color: #00d1da; /* kirkkaampi sininen */
-  }
-
-  .page {
-    display: flex;
-    min-height: 100vh;
-    height: 100vh; /* ei height: 100vh jos on padding-top */
-    width: 100%;
-    padding-top: 70px; /* headerin korkeus */
-    box-sizing: border-box; /* jotta padding ei lisää korkeutta */
-    overflow-y: auto;
-  }
-  .extra-toggle {
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer;
-    color: #000000;
-    font-family: 'afacad', sans-serif;
-    font-weight: 600;
-    font-size: 18px;
-    user-select: none;
-    margin: 10px 0;
-  }
-
-  .extra-toggle:hover {
-    color: #0056a3;
-  }
-  .extra-info {
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 10px;
-  }
-
-  .main-header {
-    width: 100%;
-    height: 70px;
-    background-color: #1e1e1e;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-  }
-
-  .main-header h1 {
-    margin: 0;
-    font-family: 'Sansita Swashed', sans-serif;
-    font-size: 42px;
-    font-weight: 200;
-  }
-
-  .main-header .fill-btn {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1010;
-  }
-
-  header .fill-btn {
-    position: absolute; /* irti flex-kontekstista */
-    right: 20px;
-    top: 50%;
-    height: 40px;
-    width: 150px;
-    z-index: 1010;
-    justify-content: center;
-    align-items: center;
-    transform: translateY(-50%);
-    padding: 10px 14px;
-    border-radius: 24px;
-    border: none;
-    background: #00adb5;
-    font-family: 'Afacad', sans-serif;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 200;
-    cursor: pointer;
-    box-shadow: 0 6px 18px rgba(11, 118, 239, 0.18);
-  }
-
-  .left {
-    flex: 3;
-    display: flex;
-    flex-direction: column;
-    background: linear-gradient(to top, #00acb51e, #eeeeee);
-    align-items: center; /* vasemmalle */
-    justify-content: flex-start;
-    padding: 1rem; /* lähempänä vasenta reunaa */
-    overflow-y: auto;
-    background: transparent;
-  }
-
-  .right {
-    flex: none;
-    width: 650px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 20px;
-    overflow-y: auto;
-  }
-
-  .cv-form {
-    margin-top: 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    max-width: 800px;
-    width: 100%;
-    padding: 0;
-    background-color: transparent;
-  }
-
-  .row {
-    display: flex;
-    gap: 12px;
-    width: 100%;
-  }
-
-  .top-row {
-    display: flex;
-    align-items: flex-end; /* estää inputin venymisen kortin korkeuteen */
-    gap: 12px;
-  }
-  .row,
-  .top-row {
-    display: flex;
-    gap: 12px;
-    width: 100%;
-  }
-
-  .top-row input {
-    flex: 1;
-    min-height: 40px;
-    max-width: calc(50% - 6px); /* sama leveys kuin muilla riveillä */
-  }
-
-  .cv-form input {
-    flex: 1; /* kaikki yhtä leveitä */
-    min-height: 40px;
-    padding: 0.5rem 1rem;
-    border: 1px solid #393e46;
-    border-radius: 24px;
-    font-family: 'Afacad', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    color: #000;
-    background-color: transparent;
-    box-sizing: border-box;
-  }
-
-  .photo-card {
-    flex: none;
-    min-width: calc(50% - 6px);
-    width: 100;
-    padding: 12px;
-    border-radius: 16px;
-    background-color: #00acb54b; /* kortin tausta */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-  }
-
-  .photo-upload {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* tila napin ja kuvan välillä */
-    margin-top: 10px;
-  }
-
-  .upload-btn {
-    cursor: pointer;
-    font-family: 'Afacad', sans-serif;
-    font-weight: 600;
-    font-size: 18px;
-    text-decoration: underline;
-    color: #0056a3;
-    padding: 12px 20px;
-    background-color: transparent;
-    border-radius: 24px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
-  }
-
-  .photo-preview {
-    width: 90px;
-    height: 90px;
-    border-radius: 12px;
-    border: 2px dashed #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background-color: #f0f0f0;
-  }
-
-  .photo-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    align-items: center;
-  }
-
-  .photo-preview .placeholder {
-    color: #999;
-    font-size: 14px;
-    text-align: center;
-    align-items: center;
-  }
-
-  .cv-form button {
-    width: 100%;
-    height: 45px;
-    background-color: #00adb5;
-    color: #fff;
-    font-family: 'Afacad', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    border: none;
-    border-radius: 24px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-  }
-
-  .cv-form button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(0, 173, 181, 0.5);
-  }
-
-  .right {
-    flex: none;
-    width: 650px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 20px;
-    background: transparent; /* kevyt tausta */
-    overflow-y: auto;
-  }
-
-  .cv-a4 {
-    background: #fff;
-    width: 595px; /* A4 leveys */
-    height: 842px; /* A4 korkeus */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
-    padding: 30px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    flex-shrink: 0;
-  }
-  .cv-header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 20px;
-  }
-
-  .cv-header img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-  .cv-header h1 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 700;
-  }
-
-  .cv-header h2 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 400;
-    color: #666;
-  }
-
-  .cv-section h3 {
-    margin: 0 0 10px;
-    font-size: 16px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 4px;
-    color: #059dc0;
-  }
-
-  .cv-section p {
-    margin: 4px 0;
-    font-size: 14px;
-    color: #333;
-  }
-
-  .template-switcher {
-    position: absolute;
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    gap: 10px;
-  }
-
-  .template-switcher button {
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: none;
-    cursor: pointer;
-    font-family: 'Afacad', sans-serif;
-    font-weight: 600;
-    background: #444;
-    color: #fff;
-    transition: all 0.2s ease;
-  }
-
-  .template-switcher button:hover {
-    background: #00adb5;
-  }
-
-  .template-switcher button.selected {
-    background: #059dc0;
-    color: #fff;
-  }
-
-  .section {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  h2 {
-    font-size: 18px;
-    font-family: 'Afacad', sans-serif;
-    font-weight: 600;
-    align-items: center;
-    color: #000;
-    margin-bottom: 10px;
-  }
-
-  h3 {
-    font-size: 18px;
-    font-family: 'Afacad', sans-serif;
-    font-weight: 600;
-    align-items: center;
-    color: #000;
-    margin-bottom: 10px;
-  }
-
-  .experience-grid {
-    border-radius: 6px;
-    margin-bottom: 15px;
-    background: transparent;
-    display: flex;
-    font-family: 'Afacad', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    color: #000;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .experience-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* ensimmäinen rivi: työnimike + kaupunki */
-    grid-gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .experience-grid .company {
-    grid-column: 1 / span 2; /* vie koko rivin */
-  }
-
-  .experience-grid .date {
-    grid-column: span 1; /* molemmat vie puolet rivistä */
-  }
-
-  .row {
-    display: flex;
-    gap: 10px;
-  }
-
-  .input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-family: 'Afacad', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    color: #000;
-  }
-
-  .input.full {
-    width: 100%;
-  }
-
-  textarea.input {
-    min-height: 60px;
-  }
-
-  button.add {
-    background: #00adb5;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 24px;
-    cursor: pointer;
-    align-self: flex-start;
-  }
-
-  textarea.input {
-    flex: 1;
-    min-height: 60px;
-    padding: 0.5rem 1rem;
-    border: 1px solid #393e46;
-    border-radius: 24px;
-    font-family: 'Afacad', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    color: #000;
-    background-color: transparent;
-    box-sizing: border-box;
-    resize: vertical; /* sallii korkeuden muokkauksen */
-  }
-  .summary-label {
-    font-family: 'Afacad', sans-serif; /* vaihda tähän haluamasi fontti */
-    font-size: 16px; /* suurempi/pienempi fonttikoko */
-    font-weight: 600; /* lihavointi */
-    color: #333; /* tekstin väri */
-    margin-bottom: 8px; /* vähän tilaa labelin alle */
-    display: block; /* pitää labelin omalla rivillä */
-  }
-
-  /* Poista-nappi */
-  button.remove {
-    background: #db5b5b;
-    width: 100%;
-    text-align: center;
-    color: white;
-    border: none;
-    padding: 8px 14px; /* sama kuin add */
-    border-radius: 24px;
-    cursor: pointer;
-    align-self: flex-start; /* rivin alkuun */
-    width: auto; /* ei veny automaattisesti */
-    grid-column: 1 / -1; /* vie koko rivin */
-    justify-self: stretch; /* vasemmalle */
-  }
-
-  .experience-grid textarea.input {
-    grid-column: 1 / -1; /* vie koko rivin */
-    min-height: 120px;
-    font-size: 16px;
-    padding: 12px 16px;
-    border-radius: 24px;
-    border: 1px solid #393e46;
-    box-sizing: border-box;
-    resize: vertical;
-  }
-
-  .education-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* tutkinto + kaupunki vierekkäin */
-    grid-gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  /* Oppilaitos vie koko rivin */
-  .education-grid .company {
-    grid-column: 1 / span 2;
-  }
-
-  /* Päivämäärät puoliksi rinnakkain */
-  .education-grid .date {
-    grid-column: span 1;
-  }
-
-  /* Kuvaus koko rivin leveydeltä */
-  .education-grid textarea.input {
-    grid-column: 1 / -1;
-    min-height: 120px;
-    font-size: 16px;
-    padding: 12px 16px;
-    border-radius: 24px;
-    border: 1px solid #393e46;
-    box-sizing: border-box;
-    resize: vertical;
-  }
-
-  /* Poista-nappi koko rivin leveydeltä */
-  .education-grid button.remove {
-    grid-column: 1 / -1;
-  }
-
-  #languages-section {
-    margin: 20px 0;
-  }
-
-  .language-entry {
-    display: flex;
-    align-items: flex-start;
-    font-family: 'Afacad', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    color: #000;
-    gap: 12px;
-    margin-bottom: 12px;
-    padding: 12px 16px;
-    border-radius: 16px;
-    background-color: transparent;
-  }
-
-  /* dropdown */
-  .language-entry select {
-    flex: 1;
-    height: 40px; /* sama korkeus kuin muut */
-    width: 160px;
-    min-width: 0px;
-    padding: 0 12px;
-    border-radius: 12px;
-    border: 1px solid #393e46;
-    background-color: transparent;
-    font-family: 'Afacad', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    color: #000;
-    display: flex;
-    align-items: center;
-  }
-
-  /* slider + label wrapper */
-  .level-control {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    width: 200px; /* sliderin leveys */
-  }
-
-  /* slider itse */
-  .level-control input[type='range'] {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    accent-color: #00adb5;
-  }
-
-  /* poista-nappi */
-  .language-entry button.remove {
-    flex: none;
-    height: 40px; /* sama korkeus kuin muut */
-    padding: 0 16px;
-    border-radius: 12px;
-    background-color: #db5b5b;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-</style>
