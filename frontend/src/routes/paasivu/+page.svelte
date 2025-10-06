@@ -395,62 +395,54 @@
           </div>
         {/if}
 
-        <!-- Ammattiyhteenveto tähän -->
+        <hr class="section-divider" />
 
         <!-- UUSI TYÖKOKEMUS-OSIO -->
         <div class="section">
           <h2>Työkokemus</h2>
 
           {#each experiences as exp, i}
-            <div class="experience-grid">
-              <input
-                type="text"
-                placeholder="Työnimike"
-                bind:value={exp.title}
-                class="input"
-              />
-              <input
-                type="text"
-                placeholder="Kaupunki"
-                bind:value={exp.city}
-                class="input"
-              />
-
-              <input
-                type="text"
-                placeholder="Yrityksen nimi"
-                bind:value={exp.company}
-                class="input company"
-              />
-
-              <input
-                type="date"
-                placeholder="Aloituspäivämäärä"
-                bind:value={exp.startDate}
-                class="input date"
-              />
-              <input
-                type="date"
-                placeholder="Loppupäivämäärä"
-                bind:value={exp.endDate}
-                class="input date"
-              />
-
-              <!-- Kuvaus koko rivin levyisenä -->
-              <textarea
-                class="input full"
-                placeholder="Kuvaus"
-                bind:value={exp.description}
-              ></textarea>
-
-              <!-- Poista-nappi rivin levyisenä -->
-              <button
-                type="button"
-                class="remove full-width"
-                on:click={() => removeExperience(i)}
-              >
-                Poista
-              </button>
+            <div class="experience-card">
+              <div class="experience-grid">
+                <input
+                  type="text"
+                  placeholder="Työnimike"
+                  bind:value={exp.title}
+                />
+                <input
+                  type="text"
+                  placeholder="Kaupunki"
+                  bind:value={exp.city}
+                />
+                <input
+                  type="text"
+                  placeholder="Yrityksen nimi"
+                  bind:value={exp.company}
+                  class="company"
+                />
+                <input
+                  type="date"
+                  placeholder="Aloituspäivämäärä"
+                  bind:value={exp.startDate}
+                  class="date"
+                />
+                <input
+                  type="date"
+                  placeholder="Loppupäivämäärä"
+                  bind:value={exp.endDate}
+                  class="date"
+                />
+                <textarea
+                  class="input full"
+                  placeholder="Kuvaus"
+                  bind:value={exp.description}
+                ></textarea>
+                <button
+                  type="button"
+                  class="remove full-width"
+                  on:click={() => removeExperience(i)}>Poista</button
+                >
+              </div>
             </div>
           {/each}
 
@@ -459,64 +451,61 @@
           >
         </div>
 
-        <h3>Koulutus</h3>
+        <hr class="section-divider" />
+        <div class="section">
+          <h2>Koulutus</h2>
 
-        {#each educations as edu, i}
-          <div class="education-grid" in:slide out:slide>
-            <input
-              type="text"
-              placeholder="Tutkinto"
-              bind:value={edu.degree}
-              class="input"
-            />
-            <input
-              type="text"
-              placeholder="Kaupunki"
-              bind:value={edu.city}
-              class="input"
-            />
-            <input
-              type="text"
-              placeholder="Oppilaitos"
-              bind:value={edu.school}
-              class="input company"
-            />
+          {#each educations as edu, i}
+            <div class="education-card">
+              <div class="education-grid">
+                <input
+                  type="text"
+                  placeholder="Tutkinto"
+                  bind:value={edu.degree}
+                />
+                <input
+                  type="text"
+                  placeholder="Kaupunki"
+                  bind:value={edu.city}
+                />
+                <input
+                  type="text"
+                  placeholder="Oppilaitos"
+                  bind:value={edu.school}
+                  class="company"
+                />
+                <input
+                  type="date"
+                  placeholder="Aloituspäivämäärä"
+                  bind:value={edu.startDate}
+                  class="date"
+                />
+                <input
+                  type="date"
+                  placeholder="Valmistumispäivämäärä"
+                  bind:value={edu.endDate}
+                  class="date"
+                />
+                <textarea
+                  class="input full"
+                  placeholder="Kuvaus"
+                  bind:value={edu.description}
+                ></textarea>
+                <button
+                  type="button"
+                  class="remove"
+                  on:click={() => removeEducation(i)}>Poista koulutus</button
+                >
+              </div>
+            </div>
+          {/each}
 
-            <input
-              type="date"
-              placeholder="Aloituspäivämäärä"
-              bind:value={edu.startDate}
-              class="input date"
-            />
-            <input
-              type="date"
-              placeholder="Valmistumispäivämäärä"
-              bind:value={edu.endDate}
-              class="input date"
-            />
+          <button type="button" class="add" on:click={addEducation}
+            >Lisää koulutus</button
+          >
+        </div>
 
-            <textarea
-              class="input full"
-              placeholder="Kuvaus"
-              bind:value={edu.description}
-            ></textarea>
-
-            <!-- käytetään samaa remove-luokkaa kuin työkokemuksessa -->
-            <button
-              type="button"
-              class="remove"
-              on:click={() => removeEducation(i)}
-            >
-              Poista koulutus
-            </button>
-          </div>
-        {/each}
-
-        <!-- käytetään samaa add-luokkaa kuin työkokemuksessa -->
-        <button type="button" class="add" on:click={addEducation}>
-          Lisää koulutus
-        </button>
-
+        <hr class="section-divider" />
         <div id="languages-section">
           <h3>Kielitaidot</h3>
 
@@ -551,7 +540,7 @@
             >Lisää kieli</button
           >
         </div>
-
+        <hr class="section-divider" />
         <button type="submit" class:download={cvUrl}>
           {#if cvUrl}
             📄 Lataa valmis CV
