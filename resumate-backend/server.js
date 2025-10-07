@@ -24,6 +24,17 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname)),
 });
 const upload = multer({ storage });
+function levelToText(level) {
+  const labels = [
+    'Aloittelija',
+    'Perustaso',
+    'Keskitaso',
+    'Hyvä',
+    'Erinomainen',
+    'Natiivi',
+  ];
+  return labels[level] || '';
+}
 
 // apufunktio: lataa template ja korvaa placeholderit
 function loadTemplate(name, data) {
@@ -82,6 +93,7 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
   try {
     let experiencesData = [];
     let educationsData = [];
+    let languagesData = [];
     if (req.body.experiences) {
       try {
         experiencesData = JSON.parse(req.body.experiences);
@@ -94,6 +106,13 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
         educationsData = JSON.parse(req.body.educations);
       } catch (err) {
         console.error('Educations parsing error:', err);
+      }
+    }
+    if (req.body.languages) {
+      try {
+        languagesData = JSON.parse(req.body.languages);
+      } catch (err) {
+        console.error('Languages parsing error:', err);
       }
     }
 
@@ -157,6 +176,26 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
       educations: educationsData,
       photo: photoHtml,
       bgImage: bgBase64,
+      language1: languagesData[0]
+        ? `${languagesData[0].language} (${levelToText(
+            languagesData[0].level
+          )})`
+        : '',
+      language2: languagesData[1]
+        ? `${languagesData[1].language} (${levelToText(
+            languagesData[1].level
+          )})`
+        : '',
+      language3: languagesData[2]
+        ? `${languagesData[2].language} (${levelToText(
+            languagesData[2].level
+          )})`
+        : '',
+      photo: photoPath
+        ? `<img src="data:image/png;base64,${fs
+            .readFileSync(photoPath)
+            .toString('base64')}" />`
+        : '',
     });
 
     // PDF generointi
