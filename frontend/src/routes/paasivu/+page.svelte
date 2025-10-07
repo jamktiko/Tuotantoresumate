@@ -1,5 +1,6 @@
 <script>
   import './+page.css';
+  import { tick } from 'svelte';
   let title = '';
   let firstName = '';
   let lastName = '';
@@ -41,6 +42,7 @@
   import { slide } from 'svelte/transition';
   async function createCV() {
     isLoading = true;
+    await tick();
     const formData = new FormData();
     formData.append('title', title);
     formData.append('firstName', firstName);
@@ -56,6 +58,7 @@
     formData.append('summary', summary);
     formData.append('experiences', JSON.stringify(experiences));
     formData.append('educations', JSON.stringify(educations));
+    formData.append('languages', JSON.stringify(languages));
 
     if (photoFile) {
       formData.append('photo', photoFile);
@@ -168,6 +171,25 @@
           eduDescriptions[Math.floor(Math.random() * eduDescriptions.length)],
       });
     }
+    const allLanguages = [
+      'Suomi',
+      'Englanti',
+      'Ruotsi',
+      'Saksa',
+      'Ranska',
+      'Espanja',
+      'Venäjä',
+      'Kiina',
+      'Japani',
+    ];
+    const langCount = Math.floor(Math.random() * 3) + 1; // 1–3 kieltä
+    languages = [];
+    for (let i = 0; i < langCount; i++) {
+      const randomLang =
+        allLanguages[Math.floor(Math.random() * allLanguages.length)];
+      const randomLevel = Math.floor(Math.random() * 6); // taso 0–5
+      languages.push({ language: randomLang, level: randomLevel });
+    }
   }
 
   function handlePhotoUpload(event) {
@@ -239,6 +261,12 @@
   ];
 </script>
 
+{#if isLoading}
+  <div class="loader-overlay">
+    <div class="spinner"></div>
+  </div>
+{/if}
+
 <header class="main-header">
   <h1>Resumate</h1>
   <div class="template-switcher">
@@ -263,12 +291,6 @@
   </div>
   <button class="fill-btn" on:click={fillRandom}>Täyttö</button>
 </header>
-
-{#if isLoading}
-  <div class="loader-overlay">
-    <div class="spinner"></div>
-  </div>
-{/if}
 
 <div class="page">
   <div class="left">
@@ -540,12 +562,48 @@
             >Lisää kieli</button
           >
         </div>
-        <hr class="section-divider" />
-        <button type="submit" class:download={cvUrl}>
+        <button
+          class="cv-button-fixed"
+          on:click={createCV}
+          title={cvUrl ? 'CV valmis – lataa' : 'Luo CV'}
+        >
           {#if cvUrl}
-            📄 Lataa valmis CV
+            <!-- Paperi + kynä (valmis CV) -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="white"
+            >
+              <g fill="none">
+                <path
+                  fill="white"
+                  d="M6 21h12c-1 0-3-.6-3-3v-2H3v2c0 2.4 2 3 3 3z"
+                />
+                <path
+                  stroke="white"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v13c0 1-.6 3-3 3m0 0H6c-1 0-3-.6-3-3v-2h12v2c0 2.4 2 3 3 3zM9 7h8m-8 4h4"
+                />
+              </g>
+            </svg>
           {:else}
-            Luo CV
+            <!-- Latausikoni -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="28"
+              height="28"
+              viewBox="0 0 20 20"
+              fill="white"
+            >
+              <path
+                fill="white"
+                d="M15 7h-3V1H8v6H5l5 5l5-5zm4.338 6.532c-.21-.224-1.611-1.723-2.011-2.114A1.503 1.503 0 0 0 16.285 11h-1.757l3.064 2.994h-3.544a.274.274 0 0 0-.24.133L12.992 16H7.008l-.816-1.873a.276.276 0 0 0-.24-.133H2.408L5.471 11H3.715c-.397 0-.776.159-1.042.418c-.4.392-1.801 1.891-2.011 2.114c-.489.521-.758.936-.63 1.449l.561 3.074c.128.514.691.936 1.252.936h16.312c.561 0 1.124-.422 1.252-.936l.561-3.074c.126-.513-.142-.928-.632-1.449z"
+              />
+            </svg>
           {/if}
         </button>
       </form>
