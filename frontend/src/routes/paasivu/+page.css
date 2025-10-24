@@ -142,22 +142,22 @@ header .fill-btn {
 
 .right {
   flex: 1;
-  padding: 0;
+  width: 650px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  padding: 20px;
   background: #f8f9fa;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .preview-frame {
   width: 90%;
   height: 100%;
-
-  margin-top: 10px;
   border: none;
-  overflow: hidden;
   background: #f8f9fa;
+  display: block;
+  margin: 0 auto;
 }
 
 .cv-form {

@@ -144,57 +144,52 @@ function loadTemplate(name, data, isPreview = false) {
   html = html.replace('{{extraInfo}}', extraHtml);
   if (isPreview) {
     const previewStyle = `
-    <style>
-      html, body {
-        margin: 0;
-        height: 100%;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #f8f9fa;
-        overflow: hidden;
-      }
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: hidden;
+    }
 
-      .cv-wrapper {
-        width: 595px;
-        height: 842px;
-        transform-origin: center center;   /* 👈 keep scaling centered */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+    .cv-wrapper {
+      transform-origin: top center;
+      transform: scale(var(--scale)) translateY(var(--offset));
+      transition: transform 0.25s ease;
+    }
 
-      @media screen {
-        .cv-wrapper {
-          transform: scale(var(--scale));
-        }
-      }
+    .cv-a4 {
+      width: 595px;
+      height: 842px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      border-radius: 6px;
+    }
+  </style>
 
-      .cv-a4 {
-        background: #fff;
-        box-shadow: 0 0 20px rgba(0,0,0,0.15);
-        border-radius: 6px;
-      }
-    </style>
+  <script>
+    function adjustScale() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
 
-    <script>
-      function adjustScale() {
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        const scale = Math.min(w / 595, h / 842);
-        document.body.style.setProperty('--scale', scale);
+      const scale = Math.min(w / 595, h / 842);
+      const scaledHeight = 842 * scale;
 
-        // recenter wrapper after scale change
-        const wrapper = document.querySelector('.cv-wrapper');
-        if (wrapper) {
-          wrapper.style.marginTop = '0';
-          wrapper.style.marginLeft = '0';
-        }
-      }
-      window.addEventListener('resize', adjustScale);
-      window.addEventListener('load', adjustScale);
-    </script>
+      // 🧮 Center vertically only if extra space (small offset)
+      const offset = scaledHeight < h ? (h - scaledHeight) / (3 * scale) : 0;
+
+      document.body.style.setProperty('--scale', scale);
+      document.body.style.setProperty('--offset', offset + 'px');
+    }
+
+    window.addEventListener('resize', adjustScale);
+    window.addEventListener('load', adjustScale);
+  </script>
   `;
 
     html = html.replace('</head>', `${previewStyle}</head>`);
