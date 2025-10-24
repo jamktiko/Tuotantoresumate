@@ -1,7 +1,7 @@
 <script>
   import './+page.css';
   import { tick } from 'svelte';
-
+  let previewFrame;
   let title = '';
   let firstName = '';
   let lastName = '';
@@ -46,11 +46,10 @@
     'Edistynyt',
     'Ammattilainen',
   ];
-  let previewHtml = ''; // this will hold the rendered HTML from backend
-  let previewLoading = false;
 
   async function updatePreview() {
-    previewLoading = true;
+    if (!previewFrame) return;
+
     const formData = new FormData();
     formData.append('title', title);
     formData.append('firstName', firstName);
@@ -78,11 +77,13 @@
         body: formData,
       });
       const html = await res.text();
-      previewHtml = html;
+
+      const doc = previewFrame.contentDocument;
+      doc.open();
+      doc.write(html);
+      doc.close();
     } catch (err) {
       console.error('Preview fetch failed', err);
-    } finally {
-      previewLoading = false;
     }
   }
 
@@ -352,6 +353,29 @@
     'Erinomainen',
     'Natiivi',
   ];
+
+  $: {
+    title;
+    firstName;
+    lastName;
+    email;
+    phone;
+    postalCode;
+    city;
+    birthdate;
+    driverslicense;
+    website;
+    linkedin;
+    summary;
+    experiences;
+    educations;
+    languages;
+    skills;
+    extraWork;
+    extraEducation;
+    template;
+    updatePreview();
+  }
 </script>
 
 {#if isLoading}
@@ -723,7 +747,6 @@
           title={cvUrl ? 'CV valmis – lataa' : 'Luo CV'}
         >
           {#if cvUrl}
-            <!-- Paperi + kynä (valmis CV) -->
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="28"
@@ -746,7 +769,6 @@
               </g>
             </svg>
           {:else}
-            <!-- Latausikoni -->
             <svg
               class="cv-icon"
               xmlns="http://www.w3.org/2000/svg"
@@ -766,17 +788,7 @@
     </main>
   </div>
   <div class="right">
-    {#if previewLoading}
-      <p style="text-align:center; margin-top: 2rem;">
-        Ladataan esikatselua...
-      </p>
-    {:else if previewHtml}
-      <iframe srcdoc={previewHtml} class="preview-frame" title="CV Preview"
-      ></iframe>
-    {:else}
-      <p style="text-align:center; margin-top: 2rem; color: gray;">
-        Valitse teema nähdäksesi esikatselun
-      </p>
-    {/if}
+    <iframe bind:this={previewFrame} class="preview-frame" title="CV Preview"
+    ></iframe>
   </div>
 </div>

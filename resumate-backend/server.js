@@ -153,38 +153,56 @@ function loadTemplate(name, data, isPreview = false) {
       background: #f8f9fa;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center;
       overflow: hidden;
     }
 
+    /* Center wrapper that will scale the whole CV */
     .cv-wrapper {
-      transform-origin: top center;
-      transform: scale(var(--scale)) translateY(var(--offset));
-      transition: transform 0.25s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-origin: center center; /* ✅ center the scaling pivot */
+      transition: none !important;
     }
 
-    .cv-a4 {
+    .multi-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .a4-page, .cv-a4 {
       width: 595px;
       height: 842px;
       background: #fff;
       box-shadow: 0 0 10px rgba(0,0,0,0.15);
       border-radius: 6px;
+      margin: 0;
     }
   </style>
 
   <script>
     function adjustScale() {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
+      const pageWidth = 595;
+      const pageHeight = 842;
+      const availW = window.innerWidth;
+      const availH = window.innerHeight;
 
-      const scale = Math.min(w / 595, h / 842);
-      const scaledHeight = 842 * scale;
+      const scale = Math.min(
+        (availW - 40) / pageWidth,
+        (availH - 40) / pageHeight
+      );
 
-      // 🧮 Center vertically only if extra space (small offset)
-      const offset = scaledHeight < h ? (h - scaledHeight) / (3 * scale) : 0;
-
-      document.body.style.setProperty('--scale', scale);
-      document.body.style.setProperty('--offset', offset + 'px');
+      const wrapper = document.querySelector('.cv-wrapper');
+      if (wrapper) {
+        wrapper.style.transform =
+          'translate(-50%, -50%) scale(' + scale + ')';
+        wrapper.style.position = 'absolute';
+        wrapper.style.top = '50%';
+        wrapper.style.left = '50%';
+      }
     }
 
     window.addEventListener('resize', adjustScale);

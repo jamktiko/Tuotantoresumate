@@ -141,23 +141,25 @@ header .fill-btn {
 }
 
 .right {
-  flex: 1;
   width: 650px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 20px;
-  background: #f8f9fa;
   overflow-y: auto;
+  flex: none;
+  padding: 20px;
+  background: transparent;
 }
 
 .preview-frame {
-  width: 90%;
-  height: 100%;
+  width: 100%;
+  height: calc(100vh - 100px);
   border: none;
   background: #f8f9fa;
   display: block;
   margin: 0 auto;
+  transition: none !important;
+  overflow: hidden;
 }
 
 .cv-form {
@@ -347,17 +349,6 @@ textarea.input {
 .cv-form button:hover {
   transform: scale(1.05);
   box-shadow: 0 5px 15px rgba(0, 173, 181, 0.5);
-}
-
-.right {
-  flex: none;
-  width: 650px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 20px;
-  background: transparent; /* kevyt tausta */
-  overflow-y: auto;
 }
 
 .cv-a4 {
