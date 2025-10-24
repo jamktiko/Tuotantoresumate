@@ -1,7 +1,4 @@
-# Node modules
-node_modules/
-frontend/node_modules/
-resumate-backend/node_modules/
+node_modules
 
 # Output
 .output
@@ -9,7 +6,7 @@ resumate-backend/node_modules/
 .netlify
 .wrangler
 frontend/.svelte-kit/
-build/
+/build
 
 # OS
 .DS_Store
