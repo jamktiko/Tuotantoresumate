@@ -59,10 +59,11 @@
               <p>{{language3}}</p>
             </section>
 
-            <section>
+            <section class="extra-info-section">
               <h3>Lisätiedot</h3>
-              <p>{{lisatiedot}}</p>
+              {{extraInfo}}
             </section>
+
           </div>
 
           <!-- Oikea sarake -->
@@ -82,8 +83,11 @@
 
             <section>
               <h3>Taidot</h3>
-              <p>{{jotainTekstia}}</p>
+              <ul>
+                {{skills}}
+              </ul>
             </section>
+
           </div>
         </div>
       </div>
@@ -235,6 +239,23 @@
 
     section {
       margin-bottom: 20px;
+    }
+
+    .extra-info-section h3 {
+      margin-bottom: 5px;
+      color: #000000;
+      font-size: 18px;
+    }
+
+    .extra-info-section p {
+      margin: 0 0 10px 0;
+      line-height: 1.4;
+    }
+
+    .extra-info-section hr {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 10px 0;
     }
   </style>
 </body>

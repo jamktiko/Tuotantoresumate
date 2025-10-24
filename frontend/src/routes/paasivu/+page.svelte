@@ -1,6 +1,7 @@
 <script>
   import './+page.css';
   import { tick } from 'svelte';
+
   let title = '';
   let firstName = '';
   let lastName = '';
@@ -12,14 +13,16 @@
   let driverslicense = '';
   let website = '';
   let linkedin = '';
-  let photoPreview = null; // esikatselu
-  let photoFile = null; // varsinainen tiedosto
+  let photoPreview = null;
+  let photoFile = null;
   let cvUrl = '';
   let isLoading = false;
   let showExtra = false;
-  let template = 'default'; // aktiivinen template
-  let showSummary = false; // 👈 uusi toggle ammattiyhteenvedolle
-  let summary = ''; // 👈 syötekenttää varten
+  let extraWork = '';
+  let extraEducation = '';
+  let template = 'modern';
+  let showSummary = false;
+  let summary = '';
   let experiences = [
     { title: '', company: '', city: '', start: '', end: '', description: '' },
   ];
@@ -36,8 +39,64 @@
   let languages = [];
   let photoLoaded = false;
 
+  let skills = [];
+  const skillLevels = [
+    'Aloittelija',
+    'Keskitaso',
+    'Edistynyt',
+    'Ammattilainen',
+  ];
+  let previewHtml = ''; // this will hold the rendered HTML from backend
+  let previewLoading = false;
+
+  async function updatePreview() {
+    previewLoading = true;
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('firstName', firstName);
+    formData.append('lastName', lastName);
+    formData.append('email', email);
+    formData.append('phone', phone);
+    formData.append('postalCode', postalCode);
+    formData.append('city', city);
+    formData.append('birthdate', birthdate);
+    formData.append('driverslicense', driverslicense);
+    formData.append('website', website);
+    formData.append('linkedin', linkedin);
+    formData.append('summary', summary);
+    formData.append('experiences', JSON.stringify(experiences));
+    formData.append('educations', JSON.stringify(educations));
+    formData.append('languages', JSON.stringify(languages));
+    formData.append('skills', JSON.stringify(skills));
+    formData.append('extraWork', extraWork);
+    formData.append('extraEducation', extraEducation);
+    formData.append('template', template);
+
+    try {
+      const res = await fetch('http://localhost:4000/preview-cv', {
+        method: 'POST',
+        body: formData,
+      });
+      const html = await res.text();
+      previewHtml = html;
+    } catch (err) {
+      console.error('Preview fetch failed', err);
+    } finally {
+      previewLoading = false;
+    }
+  }
+
+  function addSkill() {
+    skills = [...skills, { nimi: '', opittu: '', taso: 'Aloittelija' }];
+  }
+
+  function removeSkill(index) {
+    skills = skills.filter((_, i) => i !== index);
+  }
+
   function setTemplate(t) {
     template = t;
+    updatePreview();
   }
   import { slide } from 'svelte/transition';
   async function createCV() {
@@ -59,6 +118,9 @@
     formData.append('experiences', JSON.stringify(experiences));
     formData.append('educations', JSON.stringify(educations));
     formData.append('languages', JSON.stringify(languages));
+    formData.append('skills', JSON.stringify(skills));
+    formData.append('extraWork', extraWork);
+    formData.append('extraEducation', extraEducation);
 
     if (photoFile) {
       formData.append('photo', photoFile);
@@ -78,12 +140,11 @@
     } catch (err) {
       console.error(err);
     } finally {
-      isLoading = false; // piilota spinner
+      isLoading = false;
     }
   }
 
   function fillRandom() {
-    // Henkilötiedot
     const titles = [
       'Ohjelmistokehittäjä',
       'Projektipäällikkö',
@@ -121,7 +182,6 @@
     linkedin = linkedins[Math.floor(Math.random() * linkedins.length)];
     summary = summaries[Math.floor(Math.random() * summaries.length)];
 
-    // Työkokemukset
     const expTitles = [
       'Ohjelmoija',
       'Projektipäällikkö',
@@ -135,7 +195,6 @@
       'Suunnittelin käyttöliittymiä ja käyttäjäkokemusta...',
     ];
 
-    // Luodaan 1-3 satunnaista työkokemusta
     const count = Math.floor(Math.random() * 3) + 1;
     experiences = [];
     for (let i = 0; i < count; i++) {
@@ -170,6 +229,41 @@
         description:
           eduDescriptions[Math.floor(Math.random() * eduDescriptions.length)],
       });
+      const allSkills = [
+        'JavaScript',
+        'Node.js',
+        'React',
+        'Python',
+        'HTML & CSS',
+        'SQL',
+        'Photoshop',
+        'UI/UX-suunnittelu',
+        'Projektinhallinta',
+        'Git & GitHub',
+      ];
+      const learnedFrom = ['Itseopittu', 'Koulu', 'Työkokemus', 'Kurssi'];
+      const skillLevels = [
+        'Aloittelija',
+        'Keskitaso',
+        'Edistynyt',
+        'Ammattilainen',
+      ];
+
+      const skillCount = Math.floor(Math.random() * 4) + 1; // 1–4 taitoa
+      skills = [];
+      for (let i = 0; i < skillCount; i++) {
+        const randomSkill =
+          allSkills[Math.floor(Math.random() * allSkills.length)];
+        const randomLearned =
+          learnedFrom[Math.floor(Math.random() * learnedFrom.length)];
+        const randomLevel =
+          skillLevels[Math.floor(Math.random() * skillLevels.length)];
+        skills.push({
+          nimi: randomSkill,
+          opittu: randomLearned,
+          taso: randomLevel,
+        });
+      }
     }
     const allLanguages = [
       'Suomi',
@@ -227,13 +321,12 @@
     ];
   }
 
-  // Poista koulutus
   function removeEducation(index) {
     educations = educations.filter((_, i) => i !== index);
   }
 
   function addLanguage() {
-    languages = [...languages, { language: '', level: 3 }]; // oletus keskellä
+    languages = [...languages, { language: '', level: 3 }];
   }
 
   function removeLanguage(index) {
@@ -562,6 +655,68 @@
             >Lisää kieli</button
           >
         </div>
+
+        <hr class="section-divider" />
+        <div class="section" id="skills-section">
+          <h2>Taidot</h2>
+
+          {#each skills as skill, i}
+            <div class="skill-entry" in:slide out:slide>
+              <div class="custom-select-wrapper">
+                <input
+                  type="text"
+                  placeholder="Taidon nimi"
+                  bind:value={skill.nimi}
+                  class="skill-input"
+                />
+              </div>
+              <div class="custom-select-wrapper">
+                <input
+                  type="text"
+                  placeholder="Missä opittu"
+                  bind:value={skill.opittu}
+                  class="skill-input"
+                />
+              </div>
+              <div class="custom-select-wrapper">
+                <select bind:value={skill.taso} class="custom-select">
+                  {#each skillLevels as level}
+                    <option value={level}>{level}</option>
+                  {/each}
+                </select>
+              </div>
+              <button
+                type="button"
+                class="remove"
+                on:click={() => removeSkill(i)}>✕</button
+              >
+            </div>
+          {/each}
+
+          <button type="button" class="add" on:click={addSkill}
+            >Lisää taito</button
+          >
+        </div>
+        <hr class="section-divider" />
+        <h2>Kerro lisää</h2>
+        <section class="extra-section">
+          <div class="extra-two">
+            <div>
+              <label for="extraWork">Työhön liittyviä lisätietoja</label>
+              <textarea id="extraWork" rows="4" bind:value={extraWork}
+              ></textarea>
+            </div>
+            <div>
+              <label for="extraEducation"
+                >Työn kannalta oleellisia opintoihin tai osaamiseen liittyviä
+                lisätietoja</label
+              >
+              <textarea id="extraEducation" rows="4" bind:value={extraEducation}
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
         <button
           class="cv-button-fixed"
           on:click={createCV}
@@ -593,6 +748,7 @@
           {:else}
             <!-- Latausikoni -->
             <svg
+              class="cv-icon"
               xmlns="http://www.w3.org/2000/svg"
               width="28"
               height="28"
@@ -609,35 +765,18 @@
       </form>
     </main>
   </div>
-
   <div class="right">
-    <div class="cv-a4">
-      <header class="cv-header">
-        {#if photoPreview}
-          <img src={photoPreview} alt="Profiilikuva" />
-        {/if}
-        <div>
-          <h1>{firstName} {lastName}</h1>
-          <h2>{title}</h2>
-        </div>
-      </header>
-
-      <section class="cv-section">
-        <h3>Yhteystiedot</h3>
-        <p>{email}</p>
-        <p>{phone}</p>
-        <p>{postalCode} {city}</p>
-      </section>
-
-      {#if showExtra}
-        <section class="cv-section">
-          <h3>Lisätiedot</h3>
-          <p>{birthdate}</p>
-          <p>{driverslicense}</p>
-          <p>{website}</p>
-          <p>{linkedin}</p>
-        </section>
-      {/if}
-    </div>
+    {#if previewLoading}
+      <p style="text-align:center; margin-top: 2rem;">
+        Ladataan esikatselua...
+      </p>
+    {:else if previewHtml}
+      <iframe srcdoc={previewHtml} class="preview-frame" title="CV Preview"
+      ></iframe>
+    {:else}
+      <p style="text-align:center; margin-top: 2rem; color: gray;">
+        Valitse teema nähdäksesi esikatselun
+      </p>
+    {/if}
   </div>
 </div>
