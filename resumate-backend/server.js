@@ -144,71 +144,57 @@ function loadTemplate(name, data, isPreview = false) {
   html = html.replace('{{extraInfo}}', extraHtml);
   if (isPreview) {
     const previewStyle = `
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background: #f8f9fa;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    /* let page height define the document; still scroll if needed */
+    height: auto;
+    min-height: 100%;
+    background: transparent !important;   /* ← no gray background */
+    display: block;                        /* no flex gaps */
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 
-    /* Center wrapper that will scale the whole CV */
-    .cv-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transform-origin: center center; /* ✅ center the scaling pivot */
-      transition: none !important;
-    }
+  .cv-wrapper {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform-origin: top center;
+    /* your scale applied in JS */
+  }
 
-    .multi-page {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+  .multi-page {
+    margin: 0;
+    padding: 0;
+  }
 
-    .a4-page, .cv-a4 {
-      width: 595px;
-      height: 842px;
-      background: #fff;
-      box-shadow: 0 0 10px rgba(0,0,0,0.15);
-      border-radius: 6px;
-      margin: 0;
-    }
-  </style>
-
-  <script>
-    function adjustScale() {
-      const pageWidth = 595;
-      const pageHeight = 842;
-      const availW = window.innerWidth;
-      const availH = window.innerHeight;
-
-      const scale = Math.min(
-        (availW - 40) / pageWidth,
-        (availH - 40) / pageHeight
-      );
-
-      const wrapper = document.querySelector('.cv-wrapper');
-      if (wrapper) {
-        wrapper.style.transform =
-          'translate(-50%, -50%) scale(' + scale + ')';
-        wrapper.style.position = 'absolute';
-        wrapper.style.top = '50%';
-        wrapper.style.left = '50%';
-      }
-    }
-
-    window.addEventListener('resize', adjustScale);
-    window.addEventListener('load', adjustScale);
-  </script>
-  `;
+  /* Remove the bottom gap under the page */
+  .a4-page, .cv-a4 {
+    width: 595px;
+    min-height: 842px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    border-radius: 6px;
+    margin: 0;                /* ← was 20px; remove the gap */
+    overflow: visible;
+  }
+</style>
+<script>
+  function adjustScale() {
+    const pageWidth = 595;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const baseMargin = 80; // your tuned value
+    const scale = (window.innerWidth - (scrollbarWidth + baseMargin)) / pageWidth;
+    const wrapper = document.querySelector('.cv-wrapper');
+    if (wrapper) wrapper.style.transform = 'translateX(-50%) scale(' + scale + ')';
+  }
+  window.addEventListener('resize', adjustScale);
+  window.addEventListener('load', adjustScale);
+</script>
+`;
 
     html = html.replace('</head>', `${previewStyle}</head>`);
     html = html.replace('<body>', '<body><div class="cv-wrapper">');

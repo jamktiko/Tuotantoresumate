@@ -155,7 +155,7 @@ header .fill-btn {
   width: 100%;
   height: calc(100vh - 100px);
   border: none;
-  background: #f8f9fa;
+  background: transparent;
   display: block;
   margin: 0 auto;
   transition: none !important;
