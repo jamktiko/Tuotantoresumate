@@ -1,0 +1,52 @@
+.logout-btn {
+  background-color: #ff4d4d;
+  border: none;
+  padding: 0.5rem 1rem;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.profile-info {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.cv-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cv-card {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cv-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.cv-actions button,
+.cv-actions a {
+  background-color: #007bff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cv-actions button:hover,
+.cv-actions a:hover {
+  background-color: #0056b3;
+}
