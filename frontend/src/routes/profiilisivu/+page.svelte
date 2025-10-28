@@ -47,8 +47,11 @@
 <div class="page">
   <div class="left">
     <div class="profile-info">
-      <h2>{user.name}</h2>
-      <p1>{user.email}</p1>
+      <div class="avatar">{user.name.charAt(0)}</div>
+      <div class="profile-text">
+        <h2 class="username">{user.name}</h2>
+        <p1 class="email">{user.email}</p1>
+      </div>
     </div>
 
     <hr class="section-divider" />
@@ -56,7 +59,6 @@
     <h2>Omat CV:t</h2>
 
     <div class="cv-gallery">
-      <!-- Tyhjä CV (Uusi) -->
       <button class="cv-template new-cv" on:click={createNewCV}>
         <div class="cv-thumb empty">
           <div class="plus-icon">＋</div>
@@ -64,7 +66,6 @@
         <p>Uusi CV</p>
       </button>
 
-      <!-- Käyttäjän tallennetut CV:t -->
       {#each cvs as cv}
         <div class="cv-template">
           <button class="cv-thumb" on:click={() => openCV(cv)}>
@@ -139,11 +140,51 @@
   }
 
   .profile-info {
-    background-color: white;
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin: 8rem 0 8rem 0px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 8rem 0 3rem 50px;
+  }
+  .avatar {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .profile-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .username {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e1e1e;
+    margin: 0;
+  }
+
+  .email {
+    font-size: 1.1rem;
+    color: #444;
+    margin-top: 0.2rem;
+  }
+
+  .section-divider {
+    width: 100vw;
+    border: none;
+    border-top: 2px solid #aaa;
+    margin: 2rem 0;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .cv-gallery {
