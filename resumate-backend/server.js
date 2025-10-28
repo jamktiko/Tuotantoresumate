@@ -10,14 +10,12 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/pdfs', express.static('pdfs'));
-app.use('/uploads', express.static('uploads')); // kuvat ulos
+app.use('/uploads', express.static('uploads'));
 
-// varmista kansiot
 if (!fs.existsSync('pdfs')) fs.mkdirSync('pdfs');
 if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
 if (!fs.existsSync('templates')) fs.mkdirSync('templates');
 
-// multer konfiguraatio kuville
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
   filename: (req, file, cb) =>
@@ -39,13 +37,11 @@ function levelToText(level) {
 function skillLevelToText(level) {
   const labels = ['Aloittelija', 'Keskitaso', 'Edistynyt', 'Ammattilainen'];
 
-  // If frontend sends numeric indexes (0–3)
   if (!isNaN(level)) {
     const index = Number(level);
     return labels[index] || '';
   }
 
-  // If frontend sends the text directly (like "Keskitaso")
   if (labels.includes(level)) {
     return level;
   }
@@ -53,13 +49,10 @@ function skillLevelToText(level) {
   return '';
 }
 
-// apufunktio: lataa template ja korvaa placeholderit
 function loadTemplate(name, data, isPreview = false) {
   const templatePath = path.join(__dirname, 'templates', `${name}.html`);
   let html = fs.readFileSync(templatePath, 'utf-8');
-  // New route for live preview
 
-  // kokemukset
   if (Array.isArray(data.experiences)) {
     const expHtml = data.experiences
       .map(
@@ -77,7 +70,7 @@ function loadTemplate(name, data, isPreview = false) {
   } else {
     html = html.replace('{{experiences}}', '');
   }
-  // taidot
+
   if (Array.isArray(data.skills)) {
     const skillsHtml = data.skills
       .map(
@@ -94,9 +87,7 @@ function loadTemplate(name, data, isPreview = false) {
   } else {
     html = html.replace('{{skills}}', '');
   }
-  // extra-tekstit otsikoiden kanssa
 
-  // koulutus
   if (Array.isArray(data.educations)) {
     const eduHtml = data.educations
       .map(
@@ -115,13 +106,12 @@ function loadTemplate(name, data, isPreview = false) {
     html = html.replace('{{educations}}', '');
   }
 
-  // muut placeholderit
   for (const key in data) {
     if (key !== 'experiences' && key !== 'educations') {
       html = html.replace(new RegExp(`{{${key}}}`, 'g'), data[key] || '');
     }
   }
-  // Extra-tekstit erillisinä osioina
+
   const extraHtml = `
   ${
     data.extraEducation
@@ -149,11 +139,10 @@ function loadTemplate(name, data, isPreview = false) {
     margin: 0;
     padding: 0;
     width: 100%;
-    /* let page height define the document; still scroll if needed */
     height: auto;
     min-height: 100%;
-    background: transparent !important;   /* ← no gray background */
-    display: block;                        /* no flex gaps */
+    background: transparent !important;   
+    display: block;                        
     overflow-x: hidden;
     overflow-y: auto;
   }
@@ -171,14 +160,13 @@ function loadTemplate(name, data, isPreview = false) {
     padding: 0;
   }
 
-  /* Remove the bottom gap under the page */
   .a4-page, .cv-a4 {
     width: 595px;
     min-height: 842px;
     background: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.15);
     border-radius: 6px;
-    margin: 0;                /* ← was 20px; remove the gap */
+    margin: 0;               
     overflow: visible;
   }
 </style>
@@ -186,7 +174,7 @@ function loadTemplate(name, data, isPreview = false) {
   function adjustScale() {
     const pageWidth = 595;
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    const baseMargin = 80; // your tuned value
+    const baseMargin = 120; // your tuned value
     const scale = (window.innerWidth - (scrollbarWidth + baseMargin)) / pageWidth;
     const wrapper = document.querySelector('.cv-wrapper');
     if (wrapper) wrapper.style.transform = 'translateX(-50%) scale(' + scale + ')';
@@ -257,22 +245,6 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
     } = req.body;
 
     const photoPath = req.file ? req.file.path : null;
-
-    if (!firstName || !lastName || !email) {
-      return res
-        .status(400)
-        .json({ error: 'Etunimi, sukunimi ja sähköposti vaaditaan!' });
-    }
-
-    // taustakuva
-    const bgPath = path.join(__dirname, 'pohjat', 'cvpohja.jpg');
-    let bgBase64 = '';
-    if (fs.existsSync(bgPath)) {
-      const bgData = fs.readFileSync(bgPath);
-      bgBase64 = `data:image/jpeg;base64,${bgData.toString('base64')}`;
-    }
-
-    // profiilikuva
     let photoHtml = '';
     if (photoPath) {
       const photoData = fs.readFileSync(photoPath);
@@ -281,8 +253,19 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
         .slice(1)};base64,${photoData.toString('base64')}`;
       photoHtml = `<img src="${photoBase64}" style="max-width:120px;border-radius:50%;" />`;
     }
+    if (!firstName || !lastName || !email) {
+      return res
+        .status(400)
+        .json({ error: 'Etunimi, sukunimi ja sähköposti vaaditaan!' });
+    }
 
-    // täyttödata templateen
+    const bgPath = path.join(__dirname, 'pohjat', 'cvpohja.jpg');
+    let bgBase64 = '';
+    if (fs.existsSync(bgPath)) {
+      const bgData = fs.readFileSync(bgPath);
+      bgBase64 = `data:image/jpeg;base64,${bgData.toString('base64')}`;
+    }
+
     const html = loadTemplate(template || 'default', {
       title,
       firstName,
@@ -325,7 +308,6 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
         : '',
     });
 
-    // PDF generointi
     const fileName = `cv_${Date.now()}.pdf`;
     const pdfPath = path.join(__dirname, 'pdfs', fileName);
 
@@ -387,7 +369,15 @@ app.post('/preview-cv', upload.single('photo'), async (req, res) => {
       extraEducation,
     } = req.body;
 
-    // Generate preview HTML using selected template
+    let photoHtml = '';
+    if (req.file) {
+      const photoData = fs.readFileSync(req.file.path);
+      const photoBase64 = `data:image/${path
+        .extname(req.file.path)
+        .slice(1)};base64,${photoData.toString('base64')}`;
+      photoHtml = `<img src="${photoBase64}" style="max-width:120px;border-radius:50%;" />`;
+    }
+
     const html = loadTemplate(
       template || 'default',
       {
@@ -408,7 +398,7 @@ app.post('/preview-cv', upload.single('photo'), async (req, res) => {
         skills: skillsData,
         extraWork,
         extraEducation,
-        photo: '', // skip photo in preview for simplicity
+        photo: photoHtml,
         bgImage: '',
         language1: languagesData[0]
           ? `${languagesData[0].language} (${levelToText(
@@ -426,7 +416,7 @@ app.post('/preview-cv', upload.single('photo'), async (req, res) => {
             )})`
           : '',
       },
-      true // 👈 enable preview scaling
+      true
     );
 
     res.send(html);
@@ -435,5 +425,5 @@ app.post('/preview-cv', upload.single('photo'), async (req, res) => {
     res.status(500).json({ error: 'Virhe esikatselun luonnissa' });
   }
 });
-// käynnistä serveri
+
 app.listen(4000, () => console.log('API running at http://localhost:4000'));

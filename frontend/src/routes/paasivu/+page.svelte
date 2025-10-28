@@ -2,6 +2,8 @@
   import './+page.css';
   import { tick } from 'svelte';
   let previewFrame;
+  let showDropdown = false;
+
   let title = '';
   let firstName = '';
   let lastName = '';
@@ -70,6 +72,10 @@
     formData.append('extraWork', extraWork);
     formData.append('extraEducation', extraEducation);
     formData.append('template', template);
+
+    if (photoFile) {
+      formData.append('photo', photoFile);
+    }
 
     try {
       const res = await fetch('http://localhost:4000/preview-cv', {
@@ -386,26 +392,62 @@
 
 <header class="main-header">
   <h1>Resumate</h1>
-  <div class="template-switcher">
+  <div class="template-dropdown">
     <button
-      on:click={() => setTemplate('default')}
-      class:selected={template === 'default'}
+      class="dropdown-toggle"
+      type="button"
+      on:click={() => (showDropdown = !showDropdown)}
+      aria-haspopup="true"
+      aria-expanded={showDropdown}
     >
-      Default
+      {#if template === 'Playful'}Playful{/if}
+      {#if template === 'modern'}Modern{/if}
+      {#if template === 'Vintage'}Vintage{/if}
+      ▾
     </button>
-    <button
-      on:click={() => setTemplate('modern')}
-      class:selected={template === 'modern'}
-    >
-      Modern
-    </button>
-    <button
-      on:click={() => setTemplate('minimalist')}
-      class:selected={template === 'minimalist'}
-    >
-      Minimalist
-    </button>
+
+    {#if showDropdown}
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <button
+            type="button"
+            class="dropdown-item"
+            on:click={() => {
+              setTemplate('Playful');
+              showDropdown = false;
+            }}
+          >
+            Playful
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            class="dropdown-item"
+            on:click={() => {
+              setTemplate('modern');
+              showDropdown = false;
+            }}
+          >
+            Modern
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            class="dropdown-item"
+            on:click={() => {
+              setTemplate('Vintage');
+              showDropdown = false;
+            }}
+          >
+            Vintage
+          </button>
+        </li>
+      </ul>
+    {/if}
   </div>
+
   <button class="fill-btn" on:click={fillRandom}>Täyttö</button>
 </header>
 
