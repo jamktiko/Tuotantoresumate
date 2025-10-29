@@ -19,12 +19,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd backend
+          cd resumate-backend
           npm ci
 
       - name: Package backend
         run: |
-          cd backend
+          cd resumate-backend
           zip -r ../backend.zip .
 
       - name: Deploy to Elastic Beanstalk
