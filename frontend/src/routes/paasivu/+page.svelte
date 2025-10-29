@@ -1,6 +1,7 @@
 <script>
   import './+page.css';
   import { tick } from 'svelte';
+  import { slide } from 'svelte/transition';
   let title = '';
   let firstName = '';
   let lastName = '';
