@@ -50,7 +50,7 @@
       <div class="avatar">{user.name.charAt(0)}</div>
       <div class="profile-text">
         <h2 class="username">{user.name}</h2>
-        <p1 class="email">{user.email}</p1>
+        <p class="email">{user.email}</p>
       </div>
     </div>
 
@@ -90,11 +90,13 @@
     flex-direction: column;
     align-items: flex-start; /* profiili vasemmalle */
   }
-  p1 {
+  p {
     margin-left: 50px;
+    font-family: 'Afacad', sans-serif;
   }
   h2 {
     margin-left: 50px;
+    font-family: 'Afacad', sans-serif;
   }
   .main-header {
     width: 100%;
@@ -127,7 +129,8 @@
     font-weight: bold;
     transition: background-color 0.2s ease;
     margin-right: 50px;
-
+    font-family: 'Afacad', sans-serif;
+    font-size: 18px;
     position: absolute;
     right: 20px;
     top: 50%;
@@ -162,19 +165,22 @@
   .profile-text {
     display: flex;
     flex-direction: column;
+    align-items: flex-start; /* pitää rivit samassa kohdassa vasemmalta */
+    justify-content: center;
   }
 
   .username {
     font-size: 1.8rem;
     font-weight: 700;
     color: #1e1e1e;
-    margin: 0;
+    margin: 0; /* ei ylimääräisiä välejä */
   }
 
   .email {
     font-size: 1.1rem;
     color: #444;
-    margin-top: 0.2rem;
+    margin: 0; /* varmistetaan, että sähköposti on heti nimen alla */
+    margin-top: 0.2rem; /* pieni väli nimen ja sähköpostin väliin */
   }
 
   .section-divider {
