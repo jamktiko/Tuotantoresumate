@@ -95,7 +95,7 @@
     font-family: 'Afacad', sans-serif;
   }
   h2 {
-    margin-left: 50px;
+    margin-left: 51px;
     font-family: 'Afacad', sans-serif;
   }
   .main-header {
