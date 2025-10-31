@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import './+page.css';
   import { fetchCVs, logoutUser, openCV, editCV, createNewCV } from './api.js';
+  import CVCard from './CVCard.svelte';
 
   let user = { name: 'Testikäyttäjä', email: 'testi@example.com' };
   let cvs = [];
@@ -48,16 +49,7 @@
       </button>
 
       {#each cvs as cv}
-        <div class="cv-template">
-          <button class="cv-thumb" on:click={() => openCV(cv)}>
-            <h4>{cv.title}</h4>
-          </button>
-          <p>{new Date(cv.createdAt).toLocaleDateString('fi-FI')}</p>
-          <div class="cv-actions">
-            <button on:click={() => editCV(cv)}>Muokkaa</button>
-            <a href={`http://localhost:4000${cv.pdfPath}`} download>⬇️</a>
-          </div>
-        </div>
+        <CVCard {cv} onOpen={openCV} onEdit={editCV} />
       {/each}
     </div>
   </div>
