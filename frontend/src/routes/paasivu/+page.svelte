@@ -391,63 +391,87 @@
 {/if}
 
 <header class="main-header">
-  <h1>Resumate</h1>
-  <div class="template-dropdown">
+  <div class="left-controls">
+    <div class="template-dropdown">
+      <button
+        class="dropdown-toggle"
+        type="button"
+        on:click={() => (showDropdown = !showDropdown)}
+        aria-haspopup="true"
+        aria-expanded={showDropdown}
+      >
+        {#if template === 'Playful'}Playful{/if}
+        {#if template === 'modern'}Modern{/if}
+        {#if template === 'Vintage'}Vintage{/if}
+        ▾
+      </button>
+
+      {#if showDropdown}
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <button
+              type="button"
+              class="dropdown-item"
+              on:click={() => {
+                setTemplate('Playful');
+                showDropdown = false;
+              }}
+            >
+              Playful
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              class="dropdown-item"
+              on:click={() => {
+                setTemplate('modern');
+                showDropdown = false;
+              }}
+            >
+              Modern
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              class="dropdown-item"
+              on:click={() => {
+                setTemplate('Vintage');
+                showDropdown = false;
+              }}
+            >
+              Vintage
+            </button>
+          </li>
+        </ul>
+      {/if}
+    </div>
     <button
-      class="dropdown-toggle"
-      type="button"
-      on:click={() => (showDropdown = !showDropdown)}
-      aria-haspopup="true"
-      aria-expanded={showDropdown}
+      class="cv-download-btn"
+      on:click={createCV}
+      title="Lataa CV (avaa uudessa välilehdessä)"
+      aria-label="Lataa CV"
     >
-      {#if template === 'Playful'}Playful{/if}
-      {#if template === 'modern'}Modern{/if}
-      {#if template === 'Vintage'}Vintage{/if}
-      ▾
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="white"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="cv-icon"
+      >
+        <path d="M12 5v14M5 12l7 7 7-7" />
+        <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
+      </svg>
+      <span>Lataa CV</span>
     </button>
-
-    {#if showDropdown}
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <button
-            type="button"
-            class="dropdown-item"
-            on:click={() => {
-              setTemplate('Playful');
-              showDropdown = false;
-            }}
-          >
-            Playful
-          </button>
-        </li>
-        <li>
-          <button
-            type="button"
-            class="dropdown-item"
-            on:click={() => {
-              setTemplate('modern');
-              showDropdown = false;
-            }}
-          >
-            Modern
-          </button>
-        </li>
-        <li>
-          <button
-            type="button"
-            class="dropdown-item"
-            on:click={() => {
-              setTemplate('Vintage');
-              showDropdown = false;
-            }}
-          >
-            Vintage
-          </button>
-        </li>
-      </ul>
-    {/if}
   </div>
-
+  <h1>Resumate</h1>
   <button class="fill-btn" on:click={fillRandom}>Täyttö</button>
 </header>
 
@@ -782,50 +806,6 @@
             </div>
           </div>
         </section>
-
-        <button
-          class="cv-button-fixed"
-          on:click={createCV}
-          title={cvUrl ? 'CV valmis – lataa' : 'Luo CV'}
-        >
-          {#if cvUrl}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="white"
-            >
-              <g fill="none">
-                <path
-                  fill="white"
-                  d="M6 21h12c-1 0-3-.6-3-3v-2H3v2c0 2.4 2 3 3 3z"
-                />
-                <path
-                  stroke="white"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v13c0 1-.6 3-3 3m0 0H6c-1 0-3-.6-3-3v-2h12v2c0 2.4 2 3 3 3zM9 7h8m-8 4h4"
-                />
-              </g>
-            </svg>
-          {:else}
-            <svg
-              class="cv-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              width="28"
-              height="28"
-              viewBox="0 0 20 20"
-              fill="white"
-            >
-              <path
-                fill="white"
-                d="M15 7h-3V1H8v6H5l5 5l5-5zm4.338 6.532c-.21-.224-1.611-1.723-2.011-2.114A1.503 1.503 0 0 0 16.285 11h-1.757l3.064 2.994h-3.544a.274.274 0 0 0-.24.133L12.992 16H7.008l-.816-1.873a.276.276 0 0 0-.24-.133H2.408L5.471 11H3.715c-.397 0-.776.159-1.042.418c-.4.392-1.801 1.891-2.011 2.114c-.489.521-.758.936-.63 1.449l.561 3.074c.128.514.691.936 1.252.936h16.312c.561 0 1.124-.422 1.252-.936l.561-3.074c.126-.513-.142-.928-.632-1.449z"
-              />
-            </svg>
-          {/if}
-        </button>
       </form>
     </main>
   </div>

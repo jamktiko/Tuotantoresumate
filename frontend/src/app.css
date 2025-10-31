@@ -8,3 +8,23 @@ body {
   padding: 0;
   height: 100%;
 }
+
+* {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+img,
+iframe,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+html {
+  font-size: 100%;
+}
+body {
+  font-family: 'Afacad', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
