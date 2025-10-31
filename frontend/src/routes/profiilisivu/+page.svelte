@@ -1,41 +1,22 @@
 <script>
   import { onMount } from 'svelte';
   import './+page.css';
+  import { fetchCVs, logoutUser, openCV, editCV, createNewCV } from './api.js';
+
   let user = { name: 'Testikäyttäjä', email: 'testi@example.com' };
   let cvs = [];
 
   onMount(async () => {
     try {
-      const res = await fetch('http://localhost:4000/my-cvs', {
-        credentials: 'include',
-      });
-      const data = await res.json();
-      cvs = data || [];
+      cvs = await fetchCVs();
     } catch (err) {
       console.error('CV:n haku epäonnistui:', err);
     }
   });
 
-  function logout() {
-    fetch('http://localhost:4000/logout', {
-      method: 'POST',
-      credentials: 'include',
-    });
+  async function logout() {
+    await logoutUser();
     window.location.href = '/login';
-  }
-
-  function openCV(cv) {
-    window.open(`http://localhost:4000${cv.pdfPath}`, '_blank');
-  }
-
-  function editCV(cv) {
-    localStorage.setItem('editCV', JSON.stringify(cv));
-    window.location.href = '/';
-  }
-
-  function createNewCV() {
-    localStorage.removeItem('editCV');
-    window.location.href = '/paasivu';
   }
 </script>
 
