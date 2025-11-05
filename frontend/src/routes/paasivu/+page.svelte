@@ -1,6 +1,8 @@
 <script>
   import './+page.css';
   import { tick } from 'svelte';
+  import { API_URL } from '$lib/config.js';
+  import { createCV } from '$lib/api.js'; 
 
   let title = '';
   let firstName = '';
@@ -99,7 +101,8 @@
     updatePreview();
   }
   import { slide } from 'svelte/transition';
-  async function createCV() {
+
+  async function createCVHandler() {
     isLoading = true;
     await tick();
     const formData = new FormData();
