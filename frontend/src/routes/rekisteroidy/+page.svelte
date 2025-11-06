@@ -40,7 +40,7 @@
   <!-- Oikea puoli: kuva -->
   <div class="right-side">
     <img
-      src="../src/lib/assets/kirjautumiskuva.jpg"
+      src="/kirjautumiskuva.jpg"
       alt="Signup illustration"
     />
   </div>

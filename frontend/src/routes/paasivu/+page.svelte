@@ -4,6 +4,7 @@
   import { API_URL } from '$lib/config.js';
   import { createCV } from '$lib/api.js'; 
 
+  
   let title = '';
   let firstName = '';
   let lastName = '';
@@ -75,7 +76,7 @@
     formData.append('template', template);
 
     try {
-      const res = await fetch('http://localhost:4000/preview-cv', {
+      const res = await fetch(`${API_URL}/preview-cv`, {
         method: 'POST',
         body: formData,
       });
@@ -131,13 +132,13 @@
     formData.append('template', template);
 
     try {
-      const res = await fetch('http://localhost:4000/create-cv', {
+      const res = await fetch(`${API_URL}/create-cv`, {
         method: 'POST',
         body: formData,
       });
       const data = await res.json();
       if (data.pdfPath) {
-        cvUrl = `http://localhost:4000${data.pdfPath}`;
+        cvUrl = `${API_URL}${data.pdfPath}`;
         window.open(cvUrl, '_blank');
       }
     } catch (err) {
@@ -391,7 +392,7 @@
 <div class="page">
   <div class="left">
     <main>
-      <form on:submit|preventDefault={createCV} class="cv-form">
+      <form on:submit|preventDefault={createCVHandler} class="cv-form">
         <!-- Työnimike + kuva samalla rivillä -->
         <div class="row top-row">
           <input bind:value={title} placeholder="Työnimike" />
@@ -722,7 +723,7 @@
 
         <button
           class="cv-button-fixed"
-          on:click={createCV}
+          on:click={createCVHandler}
           title={cvUrl ? 'CV valmis – lataa' : 'Luo CV'}
         >
           {#if cvUrl}

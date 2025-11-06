@@ -39,6 +39,6 @@ declare module "$app/types" {
 		};
 		Pathname(): "/" | "/paasivu" | "/paasivu/" | "/rekisteroidy" | "/rekisteroidy/" | "/reset" | "/reset/";
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
-		Asset(): "/robots.txt" | string & {};
+		Asset(): "/kirjautumiskuva.jpg" | "/resumatelogo.png" | "/robots.txt" | string & {};
 	}
 }

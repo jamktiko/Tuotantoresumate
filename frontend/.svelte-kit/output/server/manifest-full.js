@@ -7,10 +7,10 @@ function __memo(fn) {
 return {
 	appDir: "_app",
 	appPath: "_app",
-	assets: new Set(["robots.txt"]),
-	mimeTypes: {".txt":"text/plain"},
+	assets: new Set(["kirjautumiskuva.jpg","resumatelogo.png","robots.txt"]),
+	mimeTypes: {".jpg":"image/jpeg",".png":"image/png",".txt":"text/plain"},
 	_: {
-		client: {start:"_app/immutable/entry/start.OkYAZsPB.js",app:"_app/immutable/entry/app.BOt9JX3I.js",imports:["_app/immutable/entry/start.OkYAZsPB.js","_app/immutable/chunks/Wh1Mq7er.js","_app/immutable/chunks/DLvRxPYn.js","_app/immutable/chunks/BM4aws82.js","_app/immutable/chunks/pnuHE1ME.js","_app/immutable/chunks/BBf2YSF3.js","_app/immutable/chunks/ClWfC-3T.js","_app/immutable/chunks/B52NjPIL.js","_app/immutable/entry/app.BOt9JX3I.js","_app/immutable/chunks/BM4aws82.js","_app/immutable/chunks/pnuHE1ME.js","_app/immutable/chunks/BBf2YSF3.js","_app/immutable/chunks/ClWfC-3T.js","_app/immutable/chunks/DsnmJJEf.js","_app/immutable/chunks/DLvRxPYn.js","_app/immutable/chunks/B52NjPIL.js","_app/immutable/chunks/cr2CvWk8.js"],stylesheets:[],fonts:[],uses_env_dynamic_public:false},
+		client: {start:"_app/immutable/entry/start.CYpy6hf1.js",app:"_app/immutable/entry/app.BhFkRROZ.js",imports:["_app/immutable/entry/start.CYpy6hf1.js","_app/immutable/chunks/DSeZd1EQ.js","_app/immutable/chunks/DLvRxPYn.js","_app/immutable/chunks/BM4aws82.js","_app/immutable/chunks/pnuHE1ME.js","_app/immutable/chunks/BBf2YSF3.js","_app/immutable/chunks/ClWfC-3T.js","_app/immutable/chunks/B52NjPIL.js","_app/immutable/entry/app.BhFkRROZ.js","_app/immutable/chunks/BM4aws82.js","_app/immutable/chunks/pnuHE1ME.js","_app/immutable/chunks/BBf2YSF3.js","_app/immutable/chunks/ClWfC-3T.js","_app/immutable/chunks/DsnmJJEf.js","_app/immutable/chunks/DLvRxPYn.js","_app/immutable/chunks/B52NjPIL.js","_app/immutable/chunks/cr2CvWk8.js"],stylesheets:[],fonts:[],uses_env_dynamic_public:false},
 		nodes: [
 			__memo(() => import('./nodes/0.js')),
 			__memo(() => import('./nodes/1.js')),
