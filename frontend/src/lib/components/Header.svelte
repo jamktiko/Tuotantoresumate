@@ -1,0 +1,146 @@
+<script>
+  import { cvData } from '$lib/stores/cvStore';
+  import { createCV, fillRandom } from '$lib/utils/cvHelpers';
+  import { fly } from 'svelte/transition';
+  import { tick } from 'svelte';
+
+  let showDropdown = false;
+  let isLoading = false;
+  let isSuccess = false;
+  let progress = 0;
+
+  function setTemplate(t) {
+    cvData.update((d) => ({ ...d, template: t }));
+    showDropdown = false;
+  }
+
+  async function handleDownload() {
+    if (isLoading) return;
+    isLoading = true;
+    isSuccess = false;
+    progress = 0;
+
+    // Animate the progress bar visually
+    const interval = setInterval(() => {
+      progress += Math.random() * 10;
+      if (progress > 100) progress = 100;
+    }, 200);
+
+    try {
+      // 🧩 Actual CV generation/download
+      await createCV(true);
+
+      clearInterval(interval);
+      progress = 100;
+      await tick();
+      isSuccess = true;
+    } catch (err) {
+      console.error('CV download failed:', err);
+    } finally {
+      clearInterval(interval);
+      // Reset back to default state after delay
+      setTimeout(() => {
+        isLoading = false;
+        isSuccess = false;
+        progress = 0;
+      }, 2500);
+    }
+  }
+</script>
+
+<header class="main-header" transition:fly={{ y: -8, duration: 150 }}>
+  <div class="left-controls">
+    <div class="template-dropdown">
+      <button
+        class="dropdown-toggle"
+        on:click={() => (showDropdown = !showDropdown)}
+      >
+        {#if $cvData.template === 'Playful'}Playful{/if}
+        {#if $cvData.template === 'modern'}Modern{/if}
+        {#if $cvData.template === 'Vintage'}Vintage{/if}
+        ▾
+      </button>
+
+      {#if showDropdown}
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <button
+              class="dropdown-item"
+              on:click={() => setTemplate('Playful')}>Playful</button
+            >
+          </li>
+          <li>
+            <button class="dropdown-item" on:click={() => setTemplate('modern')}
+              >Modern</button
+            >
+          </li>
+          <li>
+            <button
+              class="dropdown-item"
+              on:click={() => setTemplate('Vintage')}>Vintage</button
+            >
+          </li>
+        </ul>
+      {/if}
+    </div>
+
+    <!-- ✅ Fixed download button -->
+    <button
+      class="cv-download-btn {isLoading ? 'loading' : ''} {isSuccess
+        ? 'success'
+        : ''}"
+      on:click={handleDownload}
+    >
+      <span class="icon">
+        {#if isSuccess}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            viewBox="0 0 24 24"
+            class="success-check"
+          >
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        {:else}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline class="arrow" points="7 10 12 15 17 10"></polyline>
+            <line class="arrow" x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+        {/if}
+      </span>
+
+      <span class="button-text">
+        {#if isLoading}
+          Ladataan...
+        {:else if isSuccess}
+          Valmis!
+        {:else}
+          Lataa CV
+        {/if}
+      </span>
+
+      <div class="progress-bar" style="width: {progress}%;"></div>
+    </button>
+  </div>
+
+  <h1>Resumate</h1>
+
+  <button class="fill-btn" on:click={fillRandom}>Täyttö</button>
+</header>
+
+{#if isLoading}
+  <div class="loader-overlay"><div class="spinner"></div></div>
+{/if}
