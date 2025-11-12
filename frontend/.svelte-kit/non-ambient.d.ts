@@ -27,17 +27,18 @@ export {};
 
 declare module "$app/types" {
 	export interface AppTypes {
-		RouteId(): "/" | "/paasivu" | "/rekisteroidy" | "/reset";
+		RouteId(): "/" | "/paasivu" | "/profiilisivu" | "/rekisteroidy" | "/reset";
 		RouteParams(): {
 			
 		};
 		LayoutParams(): {
 			"/": Record<string, never>;
 			"/paasivu": Record<string, never>;
+			"/profiilisivu": Record<string, never>;
 			"/rekisteroidy": Record<string, never>;
 			"/reset": Record<string, never>
 		};
-		Pathname(): "/" | "/paasivu" | "/paasivu/" | "/rekisteroidy" | "/rekisteroidy/" | "/reset" | "/reset/";
+		Pathname(): "/" | "/paasivu" | "/paasivu/" | "/profiilisivu" | "/profiilisivu/" | "/rekisteroidy" | "/rekisteroidy/" | "/reset" | "/reset/";
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
 		Asset(): "/robots.txt" | string & {};
 	}
