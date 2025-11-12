@@ -180,3 +180,165 @@ h2 {
 .cv-actions a:hover {
   background-color: #0056b3;
 }
+
+/* --- PARANNETTU RESPONSIIVISUUS JA TASAINEN LINJAUS --- */
+
+/* Desktop (oletus) pysyy ennallaan — kortit ja otsikko vasemmassa reunassa */
+
+/* Tabletit (alle 1024px leveys) */
+@media (max-width: 1024px) {
+  .page {
+    align-items: center;
+    overflow-y: auto;
+    height: auto;
+    padding-bottom: 3rem;
+  }
+
+  h2 {
+    margin-left: 0; /* poistetaan staattinen marginaali */
+    width: 90%;
+    text-align: left;
+  }
+
+  .cv-gallery {
+    justify-content: flex-start; /* kortit alkavat samasta linjasta kuin otsikko */
+    gap: 1rem;
+    width: 90%;
+  }
+
+  .cv-thumb {
+    margin-left: 0;
+  }
+
+  .profile-info {
+    margin-left: 20px;
+  }
+
+  .main-header h1 {
+    font-size: 36px;
+  }
+}
+
+/* Mobiilit (alle 600px leveys) */
+@media (max-width: 600px) {
+  .main-header {
+    height: auto;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0.5rem 0;
+    text-align: center;
+  }
+
+  .main-header h1 {
+    font-family: 'Sansita Swashed', sans-serif;
+    font-weight: 200;
+    font-size: clamp(22px, 5vw, 42px); /* skaalaa automaattisesti */
+    transition: font-size 0.2s ease;
+  }
+
+  .logout-btn {
+    position: static;
+    transform: none;
+    margin: 0.5rem 0 0 0;
+    width: clamp(
+      120px,
+      40vw,
+      200px
+    ); /* skaalautuu automaattisesti: min 120px, max 200px */
+    font-size: clamp(
+      12px,
+      3.5vw,
+      16px
+    ); /* fontti kasvaa/pienenee ruudun mukaan */
+    padding: clamp(0.3rem, 1vw, 0.5rem) clamp(0.6rem, 2vw, 0.8rem); /* myös sisämarginaalit skaalautuvat */
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .profile-info {
+    flex-direction: column;
+    align-items: center;
+    margin: 6rem auto 2rem auto;
+    gap: 0.8rem;
+  }
+
+  .profile-text {
+    align-items: center;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 70px;
+    height: 70px;
+    font-size: 1.4rem;
+  }
+
+  .username {
+    font-size: 1.4rem;
+  }
+
+  .email {
+    font-size: 0.95rem;
+  }
+
+  h2 {
+    text-align: center;
+    margin-left: 0;
+  }
+
+  .cv-gallery {
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    gap: 1.2rem;
+  }
+
+  .cv-thumb {
+    width: 160px;
+    margin-left: 0;
+  }
+
+  .cv-template p {
+    font-size: 0.85rem;
+  }
+
+  .cv-actions button,
+  .cv-actions a {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .section-divider {
+    width: 90%;
+  }
+
+  .page {
+    overflow-y: auto;
+    height: auto;
+  }
+}
+
+/* --- UUSI CV -TEKSTIN LINJAUS KORJAUS --- */
+
+/* Korjataan oletus, ettei Uusi CV -teksti periydy yleisestä p-marginaalista */
+.cv-template p {
+  margin-left: 0 !important;
+  text-align: center;
+}
+
+/* Tabletit (alle 1024px) */
+@media (max-width: 1024px) {
+  .cv-template p {
+    margin-left: 0 !important;
+    text-align: left;
+  }
+}
+
+/* Mobiilit (alle 600px) */
+@media (max-width: 600px) {
+  .cv-template p {
+    text-align: center;
+    margin-left: 0 !important;
+  }
+}
