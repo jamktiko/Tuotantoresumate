@@ -1,9 +1,9 @@
 .page {
-  height: 100vh; /* näkyvän alueen korkeus */
-  overflow: hidden; /* sisäistä vieritystä ei sallita */
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* profiili vasemmalle */
+  align-items: flex-start;
 }
 p {
   margin-left: 50px;
@@ -80,7 +80,7 @@ h2 {
 .profile-text {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* pitää rivit samassa kohdassa vasemmalta */
+  align-items: flex-start;
   justify-content: center;
 }
 
@@ -88,14 +88,14 @@ h2 {
   font-size: 1.8rem;
   font-weight: 700;
   color: #1e1e1e;
-  margin: 0; /* ei ylimääräisiä välejä */
+  margin: 0;
 }
 
 .email {
   font-size: 1.1rem;
   color: #444;
-  margin: 0; /* varmistetaan, että sähköposti on heti nimen alla */
-  margin-top: 0.2rem; /* pieni väli nimen ja sähköpostin väliin */
+  margin: 0;
+  margin-top: 0.2rem;
 }
 
 .section-divider {
@@ -181,11 +181,6 @@ h2 {
   background-color: #0056b3;
 }
 
-/* --- PARANNETTU RESPONSIIVISUUS JA TASAINEN LINJAUS --- */
-
-/* Desktop (oletus) pysyy ennallaan — kortit ja otsikko vasemmassa reunassa */
-
-/* Tabletit (alle 1024px leveys) */
 @media (max-width: 1024px) {
   .page {
     align-items: center;
@@ -195,13 +190,13 @@ h2 {
   }
 
   h2 {
-    margin-left: 0; /* poistetaan staattinen marginaali */
+    margin-left: 0;
     width: 90%;
     text-align: left;
   }
 
   .cv-gallery {
-    justify-content: flex-start; /* kortit alkavat samasta linjasta kuin otsikko */
+    justify-content: flex-start;
     gap: 1rem;
     width: 90%;
   }
@@ -219,7 +214,6 @@ h2 {
   }
 }
 
-/* Mobiilit (alle 600px leveys) */
 @media (max-width: 600px) {
   .main-header {
     height: auto;
@@ -232,7 +226,7 @@ h2 {
   .main-header h1 {
     font-family: 'Sansita Swashed', sans-serif;
     font-weight: 200;
-    font-size: clamp(22px, 5vw, 42px); /* skaalaa automaattisesti */
+    font-size: clamp(22px, 5vw, 42px);
     transition: font-size 0.2s ease;
   }
 
@@ -240,17 +234,9 @@ h2 {
     position: static;
     transform: none;
     margin: 0.5rem 0 0 0;
-    width: clamp(
-      120px,
-      40vw,
-      200px
-    ); /* skaalautuu automaattisesti: min 120px, max 200px */
-    font-size: clamp(
-      12px,
-      3.5vw,
-      16px
-    ); /* fontti kasvaa/pienenee ruudun mukaan */
-    padding: clamp(0.3rem, 1vw, 0.5rem) clamp(0.6rem, 2vw, 0.8rem); /* myös sisämarginaalit skaalautuvat */
+    width: clamp(120px, 40vw, 200px);
+    font-size: clamp(12px, 3.5vw, 16px);
+    padding: clamp(0.3rem, 1vw, 0.5rem) clamp(0.6rem, 2vw, 0.8rem);
     border-radius: 6px;
     transition: all 0.2s ease;
   }
@@ -319,15 +305,11 @@ h2 {
   }
 }
 
-/* --- UUSI CV -TEKSTIN LINJAUS KORJAUS --- */
-
-/* Korjataan oletus, ettei Uusi CV -teksti periydy yleisestä p-marginaalista */
 .cv-template p {
   margin-left: 0 !important;
   text-align: center;
 }
 
-/* Tabletit (alle 1024px) */
 @media (max-width: 1024px) {
   .cv-template p {
     margin-left: 0 !important;
@@ -335,7 +317,6 @@ h2 {
   }
 }
 
-/* Mobiilit (alle 600px) */
 @media (max-width: 600px) {
   .cv-template p {
     text-align: center;
