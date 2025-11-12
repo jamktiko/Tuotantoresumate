@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fi">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Yksinkertainen CV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+
+  <div class="a4-page">
+    <div class="container">
+      <section class="contact-section">
+        <div class="photo-placeholder">
+          {{photo}}
+        </div>
+        <div class="contact-info" style="margin-left: 40px;">
+          <h1>{{firstName}} {{lastName}}</h1>
+          <h2>{{title}}</h2>
+
+          <div class="info-row">
+            <div class="half"><i class="fas fa-envelope"></i>{{email}}</div>
+            <div class="half"><i class="fas fa-phone"></i>{{phone}}</div>
+          </div>
+          <div class="info-row">
+            <div class="half"><i class="fas fa-map-marker-alt"></i>{{city}}</div>
+            <div class="half"><i class="fas fa-home"></i>{{postalCode}}</div>
+          </div>
+          <div class="info-row">
+            <div class="half"><i class="fas fa-globe"></i>{{website}}</div>
+            <div class="half"><i class="fab fa-linkedin"></i>{{linkedin}}</div>
+          </div>
+        </div>
+
+
+      </section>
+
+      <hr class="section-divider" />
+      <section>
+        <h3>Minusta</h3>
+        <p>{{summary}}</p>
+      </section>
+      <hr class="divider" />
+
+      <div class="sections-stack">
+        <section>
+          <h3>Koulutus</h3>
+          <p>{{educations}}</p>
+
+        </section>
+        <hr class="divider" />
+        <section>
+          <h3>Työhistoria</h3>
+          <ul>
+            {{experiences}}
+          </ul>
+        </section>
+        <hr class="divider" />
+
+        <section>
+          <h3>Kielitaito</h3>
+          <p>{{language1}}</p>
+          <p>{{language2}}</p>
+          <p>{{language3}}</p>
+        </section>
+        <hr class="divider" />
+        <section>
+          <h3>Taidot</h3>
+          <p>{{skills}}</p>
+        </section>
+        <hr class="divider" />
+
+        <section>
+          <h3>Lisätiedot</h3>
+          <p>{{extraInfo}}</p>
+        </section>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- STYLES -->
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: rgb(255, 255, 255);
+      color: #2a2a2a;
+    }
+
+    .a4-page {
+      width: 210mm;
+      min-height: 297mm;
+      background: #ffeef0;
+      padding: 20mm;
+      margin: 20px auto;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 170mm;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 5px;
+
+
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+
+    }
+
+    h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    p,
+    li {
+      font-size: 15px;
+      line-height: 1.6;
+      margin: 0 0 10px 0;
+    }
+
+    .contact-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .contact-info {
+      flex: 1;
+      min-width: 250px;
+      text-align: left;
+    }
+
+    .contact-info i {
+      margin-right: 8px;
+      color: #cc6973;
+    }
+
+    .photo-placeholder {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 3px solid #cc6973;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #999;
+      text-align: center;
+      margin-left: -15px;
+    }
+
+    .photo-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .info-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .half {
+      flex: 1;
+    }
+
+    hr.section-divider {
+      border: none;
+      border-top: 2px solid #cc6973;
+      margin: 30px 0;
+    }
+
+    hr.divider {
+      border: none;
+      border-top: 2px solid #cc6973;
+      margin: 20px 0;
+    }
+
+
+    section {
+      margin-bottom: 20px;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+  </style>
+
+</body>
+
+</html>
