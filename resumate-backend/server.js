@@ -7,192 +7,181 @@ const cors = require('cors');
 
 const app = express();
 
-
-// CORS
+// ====== CORS ======
 app.use(cors({
   origin: [
     'http://resumatehost.s3-website-us-east-1.amazonaws.com',
-    'https://resumatehost.s3-website-us-east-1.amazonaws.com'
+    'https://resumatehost.s3-website-us-east-1.amazonaws.com',
+    'https://d71w65z8yjd54.cloudfront.net'
   ],
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type']
 }));
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Absoluuttinen polku
+// ====== POLUT JA KANSIOT ======
 const __dirnameResolved = path.resolve();
-
-// Tiedostokansiot (luodaan jos puuttuvat)
 const folders = ['pdfs', 'uploads', 'templates', 'pohjat'];
 folders.forEach(folder => {
   if (!fs.existsSync(folder)) fs.mkdirSync(folder);
 });
 
-// Staattiset tiedostot
 app.use('/pdfs', express.static(path.join(__dirnameResolved, 'pdfs')));
 app.use('/uploads', express.static(path.join(__dirnameResolved, 'uploads')));
 
-// Health check
-app.get('/', (req, res) => {
-  res.send('Backend is running!');
-});
+// ====== HEALTH CHECK ======
+app.get('/', (req, res) => res.send('Backend is running!'));
 
-// Multer-konfiguraatio
+// ====== MULTER ======
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
 const upload = multer({ storage });
 
-// Kielitason muunnos
-function levelToText(level) {
-  const labels = [
-    'Aloittelija',
-    'Perustaso',
-    'Keskitaso',
-    'Hyvä',
-    'Erinomainen',
-    'Natiivi',
-  ];
-  return labels[level] || '';
+// ====== APUTOIMINNOT ======
+const levelLabels = ['Aloittelija', 'Perustaso', 'Keskitaso', 'Hyvä', 'Erinomainen', 'Natiivi'];
+const skillLabels = ['Aloittelija', 'Keskitaso', 'Edistynyt', 'Ammattilainen'];
+
+function levelToText(l) {
+  return levelLabels[l] || '';
+}
+function skillLevelToText(l) {
+  return !isNaN(l) ? skillLabels[+l] : skillLabels.includes(l) ? l : '';
 }
 
-// Template-lataus
-function loadTemplate(name, data) {
-  const templatePath = path.join(__dirnameResolved, 'templates', `${name}.html`);
-  if (!fs.existsSync(templatePath)) {
-    throw new Error(`Template not found: ${templatePath}`);
+function safeJSON(str, label) {
+  try {
+    return str ? JSON.parse(str) : [];
+  } catch (err) {
+    console.error(`JSON parse error in ${label}:`, err);
+    return [];
   }
+}
+
+// ====== TEMPLATE ======
+function loadTemplate(name, data, isPreview = false) {
+  const templatePath = path.join(__dirnameResolved, 'templates', `${name}.html`);
+  if (!fs.existsSync(templatePath)) throw new Error(`Template not found: ${templatePath}`);
 
   let html = fs.readFileSync(templatePath, 'utf-8');
 
-  // Työkokemus
-  if (Array.isArray(data.experiences)) {
-    const expHtml = data.experiences.map(exp => `
-      <li>
-        <strong>${exp.title || ''}</strong>, ${exp.company || ''} (${exp.city || ''})
-        ${exp.startDate ? ` | ${exp.startDate}` : ''} - ${exp.endDate || ''}
-        ${exp.description ? `<br>${exp.description}` : ''}
-      </li>`).join('');
-    html = html.replace('{{experiences}}', expHtml);
-  } else {
-    html = html.replace('{{experiences}}', '');
-  }
+  // Listat
+  const renderList = (arr, fields) =>
+    Array.isArray(arr)
+      ? arr.map(item => `
+        <li>
+          <strong>${item[fields[0]] || ''}</strong>, ${item[fields[1]] || ''} (${item.city || ''})
+          ${item.startDate ? ` | ${item.startDate}` : ''} - ${item.endDate || ''}
+          ${item.description ? `<br>${item.description}` : ''}
+        </li>`).join('')
+      : '';
 
-  // Opinnot
-  if (Array.isArray(data.educations)) {
-    const eduHtml = data.educations.map(edu => `
-      <li>
-        <strong>${edu.degree || ''}</strong>, ${edu.school || ''} (${edu.city || ''})
-        ${edu.startDate ? ` | ${edu.startDate}` : ''} - ${edu.endDate || ''}
-        ${edu.description ? `<br>${edu.description}` : ''}
-      </li>`).join('');
-    html = html.replace('{{educations}}', eduHtml);
-  } else {
-    html = html.replace('{{educations}}', '');
-  }
+  html = html
+    .replace('{{experiences}}', renderList(data.experiences, ['title', 'company']))
+    .replace('{{educations}}', renderList(data.educations, ['degree', 'school']))
+    .replace('{{skills}}',
+      (data.skills || []).map(s => `
+        <li><strong>${s.nimi || ''}</strong>
+        ${s.opittu ? ` – ${s.opittu}` : ''}
+        ${s.taso ? `(${skillLevelToText(s.taso)})` : ''}</li>`).join('')
+    )
+    .replace('{{extraInfo}}', `
+      ${data.extraEducation ? `<h3>Koulutuksen lisätiedot</h3><p>${data.extraEducation}</p><hr>` : ''}
+      ${data.extraWork ? `<h3>Työhön liittyvät lisätiedot</h3><p>${data.extraWork}</p>` : ''}
+    `);
 
   // Muut placeholderit
-  for (const key in data) {
-    if (key !== 'experiences' && key !== 'educations') {
-      html = html.replace(new RegExp(`{{${key}}}`, 'g'), data[key] || '');
-    }
-  }
+  for (const [k, v] of Object.entries(data))
+    if (!['experiences', 'educations', 'skills'].includes(k))
+      html = html.replace(new RegExp(`{{${k}}}`, 'g'), v || '');
 
+  // Esikatselu
+  if (isPreview) {
+    html = html
+      .replace('</head>', `
+        <style>
+          html, body {margin:0;height:100%;display:flex;justify-content:center;align-items:center;background:#f8f9fa;}
+          .cv-wrapper {width:595px;height:842px;transform-origin:center;}
+          @media screen {.cv-wrapper {transform:scale(var(--scale));}}
+          .cv-a4 {background:#fff;box-shadow:0 0 20px rgba(0,0,0,0.15);border-radius:6px;}
+        </style>
+        <script>
+          function adjustScale(){
+            const s=Math.min(innerWidth/595,innerHeight/842);
+            document.body.style.setProperty('--scale',s);
+          }
+          addEventListener('resize',adjustScale);
+          addEventListener('load',adjustScale);
+        </script>
+      </head>`)
+      .replace('<body>', '<body><div class="cv-wrapper">')
+      .replace('</body>', '</div></body>');
+  }
+s
   return html;
 }
 
-const generatedDir = path.join(__dirname, 'public', 'generated');
-if (!fs.existsSync(generatedDir)) {
-  fs.mkdirSync(generatedDir, { recursive: true });
+// ====== DATA ======
+function extractData(req) {
+  const f = [
+    'title', 'firstName', 'lastName', 'email', 'phone', 'postalCode', 'city',
+    'birthdate', 'driverslicense', 'website', 'linkedin', 'summary', 'template',
+    'extraWork', 'extraEducation'
+  ];
+  const parsed = Object.fromEntries(f.map(key => [key, req.body[key] || '']));
+  parsed.experiences = safeJSON(req.body.experiences, 'experiences');
+  parsed.educations = safeJSON(req.body.educations, 'educations');
+  parsed.skills = safeJSON(req.body.skills, 'skills');
+  parsed.languages = safeJSON(req.body.languages, 'languages');
+  return parsed;
 }
 
-// 🧠 CV-luonti polku (parannettu + virhelokit)
+// ====== CREATE CV ======
 app.post('/create-cv', upload.single('photo'), async (req, res) => {
   console.log('/create-cv request received');
+
   try {
-    // Turvallinen JSON-parsaus
-    const safeParse = (data, label) => {
-      try {
-        return data ? JSON.parse(data) : [];
-      } catch (err) {
-        console.error(`JSON parse error in ${label}:`, err);
-        return [];
-      }
-    };
-
-    const experiencesData = safeParse(req.body?.experiences || '[]', 'experiences');
-    const educationsData = safeParse(req.body?.educations || '[]', 'educations');
-    const languagesData = safeParse(req.body?.languages || '[]', 'languages');
-
-    const {
-      title, firstName, lastName, email, phone, postalCode, city,
-      birthdate, driverslicense, website, linkedin, summary, template
-    } = req.body;
-
-    console.log('Body received:', {
-      firstName, lastName, email, template, experiencesCount: experiencesData.length
-    });
-
-    if (!firstName || !lastName || !email) {
-      console.error('Missing required fields');
+    const data = extractData(req);
+    if (!data.firstName || !data.lastName || !data.email)
       return res.status(400).json({ error: 'Etunimi, sukunimi ja sähköposti vaaditaan!' });
-    }
 
-    const photoPath = req.file ? req.file.path : null;
-
-    // Taustakuva
+    // Tausta
     const bgPath = path.join(__dirnameResolved, 'pohjat', 'cvpohja.jpg');
-    let bgBase64 = '';
-    if (fs.existsSync(bgPath)) {
-      const bgData = fs.readFileSync(bgPath);
-      bgBase64 = `data:image/jpeg;base64,${bgData.toString('base64')}`;
-    } else {
-      console.warn('Background image not found:', bgPath);
-    }
+    const bgImage = fs.existsSync(bgPath)
+      ? `data:image/jpeg;base64,${fs.readFileSync(bgPath).toString('base64')}`
+      : '';
 
-    // Profiilikuva
-    let photoHtml = '';
-    if (photoPath && fs.existsSync(photoPath)) {
-      const photoData = fs.readFileSync(photoPath);
-      const photoBase64 = `data:image/${path.extname(photoPath).slice(1)};base64,${photoData.toString('base64')}`;
-      photoHtml = `<img src="${photoBase64}" style="max-width:120px;border-radius:50%;" />`;
-    }
+    // Kuva
+    const photoPath = req.file?.path;
+    const photo = photoPath && fs.existsSync(photoPath)
+      ? `<img src="data:image/png;base64,${fs.readFileSync(photoPath).toString('base64')}" style="max-width:120px;border-radius:50%;" />`
+      : '';
 
-    // Template täyttö
-    const html = loadTemplate(template || 'default', {
-      title, firstName, lastName, email, phone, postalCode, city,
-      birthdate, driverslicense, website, linkedin, summary,
-      experiences: experiencesData,
-      educations: educationsData,
-      photo: photoHtml,
-      bgImage: bgBase64,
-      language1: languagesData[0] ? `${languagesData[0].language} (${levelToText(languagesData[0].level)})` : '',
-      language2: languagesData[1] ? `${languagesData[1].language} (${levelToText(languagesData[1].level)})` : '',
-      language3: languagesData[2] ? `${languagesData[2].language} (${levelToText(languagesData[2].level)})` : '',
+    // Kielitasot
+    ['language1', 'language2', 'language3'].forEach((key, i) => {
+      const lang = data.languages[i];
+      data[key] = lang ? `${lang.language} (${levelToText(lang.level)})` : '';
     });
 
-    // PDF-generointi
+    // Template
+    const html = loadTemplate(data.template || 'default', { ...data, photo, bgImage });
+
+    // PDF
     const fileName = `cv_${Date.now()}.pdf`;
     const pdfPath = path.join(__dirnameResolved, 'pdfs', fileName);
 
-    try {
-      const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-      });
-      const page = await browser.newPage();
-      await page.setContent(html, { waitUntil: 'networkidle0' });
-      await page.pdf({ path: pdfPath, format: 'A4', printBackground: true });
-      await browser.close();
-      console.log('PDF created successfully:', pdfPath);
-    } catch (pdfErr) {
-      console.error('PDF generation failed:', pdfErr);
-      return res.status(500).json({ error: 'PDF generation failed', detail: String(pdfErr).slice(0, 200) });
-    }
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: 'networkidle0' });
+    await page.pdf({ path: pdfPath, format: 'A4', printBackground: true });
+    await browser.close();
 
+    console.log('PDF created:', pdfPath);
     res.json({ pdfPath: `/pdfs/${fileName}` });
 
   } catch (err) {
@@ -201,8 +190,26 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
   }
 });
 
-// Palvelimen käynnistys
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`API running at http://localhost:${PORT}`);
+// ====== PREVIEW ======
+app.post('/preview-cv', upload.single('photo'), (req, res) => {
+  try {
+    const data = extractData(req);
+    ['language1', 'language2', 'language3'].forEach((key, i) => {
+      const lang = data.languages[i];
+      data[key] = lang ? `${lang.language} (${levelToText(lang.level)})` : '';
+    });
+    const html = loadTemplate(
+      data.template || 'default',
+      { ...data, bgImage: '', photo: '' },
+      true
+    );
+    res.send(html);
+  } catch (err) {
+    console.error('Error generating preview:', err);
+    res.status(500).json({ error: 'Virhe esikatselun luonnissa' });
+  }
 });
+
+// ====== SERVER ======
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, '0.0.0.0', () => console.log(`API running on port ${PORT}`));

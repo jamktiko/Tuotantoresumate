@@ -132,21 +132,17 @@
     formData.append('template', template);
 
     try {
-      const res = await fetch(`${API_URL}/create-cv`, {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await res.json();
-      if (data.pdfPath) {
-        cvUrl = `${API_URL}${data.pdfPath}`;
-        window.open(cvUrl, '_blank');
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      isLoading = false;
+    const data = await createCV(formData); 
+    if (data.pdfPath) {
+      cvUrl = `${API_URL}${data.pdfPath}`;
+      window.open(cvUrl, '_blank');
     }
+  } catch (err) {
+    console.error('CV creation failed', err);
+  } finally {
+    isLoading = false;
   }
+}
 
   function fillRandom() {
     const titles = [

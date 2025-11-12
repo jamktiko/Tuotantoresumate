@@ -1,0 +1,14 @@
+packages:
+  yum:
+    atk: []
+    cups-libs: []
+    gtk3: []
+    libXcomposite: []
+    libXcursor: []
+    libXi: []
+    libXtst: []
+    libnss3: []
+    libXScrnSaver: []
+    libXrandr: []
+    alsa-lib: []
+    pango: []
