@@ -394,14 +394,19 @@ select:focus {
   border-radius: 20px;
   box-shadow: var(--shadow-1);
   padding: 16px 28px 28px;
+  margin-right: 680px; /* = preview width + padding gap */
 }
 
 .right {
-  width: 640px;
-  flex: none;
+  position: fixed;
+  top: 88px; /* header height (72px) + 16px breathing space */
+  right: 32px;
+  z-index: 50;
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  width: 640px;
+  height: calc(100vh - 100px); /* stay fully visible below header */
 }
 
 /* Form structure */
@@ -957,18 +962,31 @@ textarea:focus {
   margin-bottom: 6px;
   display: block;
 }
-
 .skill-entry input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background: #fafcfd;
   color: var(--ink);
   font-weight: 600;
   font-size: 15px;
-  padding: 10px 16px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  font-family: 'Afacad', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  transition: border var(--t-fast), box-shadow var(--t-fast),
+    background var(--t-fast);
+}
+.skill-entry input::placeholder {
+  color: #a3adb5;
+  font-weight: 500;
 }
 
+.skill-entry input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(0, 173, 181, 0.25);
+  background: #fff;
+}
 .skill-entry select {
   width: 100%;
   min-height: 44px;
@@ -1125,17 +1143,16 @@ button.remove:hover {
   transform: translateY(-1px);
 }
 
-/* CV preview (A4 exact) */
 .preview-frame {
-  width: 100%;
-  aspect-ratio: 210 / 297; /* true A4 */
-  background: #fff;
-  border: 1px solid var(--line);
+  width: 680px;
+  height: 100%;
+  border: 1px solid #ccc;
   border-radius: 10px;
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18);
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 }
 
-/* ---------- Dashboard (post-login info page) ---------- */
 .dashboard {
   max-width: 1200px;
   margin: calc(72px + 24px) auto 40px;
@@ -1397,7 +1414,6 @@ button.remove:hover {
   }
 }
 
-/* ---------- Utilities ---------- */
 .muted {
   color: var(--muted);
 }
@@ -1407,6 +1423,64 @@ button.remove:hover {
   background: #f2f4f6;
   border: 1px solid var(--line);
   font-weight: 600;
+}
+
+.hamburger {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 8px;
+  transition: background 0.25s ease;
+}
+
+.hamburger:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Slide-down mobile menu */
+.mobile-menu {
+  position: absolute;
+  top: 72px;
+  right: 0;
+  width: 220px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 0 0 12px 12px;
+  box-shadow: var(--shadow-2);
+  z-index: 1000;
+}
+
+.mobile-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 12px 0;
+}
+
+.mobile-menu li {
+  padding: 8px 16px;
+}
+
+.mobile-menu button {
+  background: none;
+  border: none;
+  color: var(--header);
+  font-family: 'Afacad', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.mobile-menu button:hover {
+  background: rgba(0, 173, 181, 0.1);
+  color: var(--brand);
 }
 
 .cv-download-btn {

@@ -138,13 +138,7 @@ function loadTemplate(name, data, isPreview = false) {
   html, body {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: auto;
-    min-height: 100%;
-    background: transparent !important;   
-    display: block;                        
-    overflow-x: hidden;
-    overflow-y: auto;
+    background: transparent !important;
   }
 
   .cv-wrapper {
@@ -152,36 +146,72 @@ function loadTemplate(name, data, isPreview = false) {
     top: 0;
     left: 50%;
     transform-origin: top center;
-    /* your scale applied in JS */
+  }
+  img, svg {
+    max-width: 100%;
+    height: auto;
   }
 
-  .multi-page {
-    margin: 0;
-    padding: 0;
+  /* --- Fix photo shape and scaling --- */
+  .photo img, img.photo, img.profile-photo {
+    display: block;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(0,0,0,0.15);
   }
 
+  /* Ensure no template backgrounds overlap the photo */
+  .photo, .photo-wrapper {
+    overflow: visible !important;
+    background: transparent !important;
+  }
   .a4-page, .cv-a4 {
     width: 595px;
     min-height: 842px;
     background: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.15);
     border-radius: 6px;
-    margin: 0;               
+    margin: 0;
     overflow: visible;
   }
 </style>
 <script>
   function adjustScale() {
-    const pageWidth = 595;
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    const baseMargin = 120; // your tuned value
-    const scale = (window.innerWidth - (scrollbarWidth + baseMargin)) / pageWidth;
-    const wrapper = document.querySelector('.cv-wrapper');
-    if (wrapper) wrapper.style.transform = 'translateX(-50%) scale(' + scale + ')';
+    var pageWidth = 595; // A4 width at 72dpi
+    var wrapper = document.querySelector('.cv-wrapper');
+    if (!wrapper) return;
+
+    var containerWidth = window.innerWidth;
+    var containerHeight = window.innerHeight;
+
+    var horizontalScale = (containerWidth - 40) / pageWidth;
+    var verticalScale = containerHeight / (842 + 40); // allow some margin
+    var scale = Math.min(horizontalScale, verticalScale, 1);
+
+    wrapper.style.transform = 'translateX(-50%) scale(' + scale + ')';
   }
+
   window.addEventListener('resize', adjustScale);
-  window.addEventListener('load', adjustScale);
+  window.addEventListener('load', function () {
+    var imgs = document.querySelectorAll('img');
+    var loaded = 0;
+    function check() {
+      loaded++;
+      if (loaded >= imgs.length) adjustScale();
+    }
+    if (imgs.length === 0) adjustScale();
+    imgs.forEach(function (img) {
+      if (img.complete) check();
+      else img.addEventListener('load', check);
+    });
+  });
 </script>
+
+
+
 `;
 
     html = html.replace('</head>', `${previewStyle}</head>`);
@@ -246,13 +276,14 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
 
     const photoPath = req.file ? req.file.path : null;
     let photoHtml = '';
-    if (photoPath) {
-      const photoData = fs.readFileSync(photoPath);
+    if (req.file) {
+      const photoData = fs.readFileSync(req.file.path);
       const photoBase64 = `data:image/${path
-        .extname(photoPath)
+        .extname(req.file.path)
         .slice(1)};base64,${photoData.toString('base64')}`;
-      photoHtml = `<img src="${photoBase64}" style="max-width:120px;border-radius:50%;" />`;
+      photoHtml = `<img class="profile-photo" src="${photoBase64}" />`;
     }
+
     if (!firstName || !lastName || !email) {
       return res
         .status(400)
@@ -369,13 +400,15 @@ app.post('/preview-cv', upload.single('photo'), async (req, res) => {
       extraEducation,
     } = req.body;
 
+    // ✅ Safe photo embedding
     let photoHtml = '';
     if (req.file) {
-      const photoData = fs.readFileSync(req.file.path);
+      const photoPath = req.file.path;
+      const photoData = fs.readFileSync(photoPath);
       const photoBase64 = `data:image/${path
-        .extname(req.file.path)
+        .extname(photoPath)
         .slice(1)};base64,${photoData.toString('base64')}`;
-      photoHtml = `<img src="${photoBase64}" style="max-width:120px;border-radius:50%;" />`;
+      photoHtml = `<img class="profile-photo" src="${photoBase64}" onload="if(window.adjustScale) adjustScale()" />`;
     }
 
     const html = loadTemplate(

@@ -1,10 +1,11 @@
 <script>
   import { cvData } from '$lib/stores/cvStore';
   import { createCV, fillRandom } from '$lib/utils/cvHelpers';
-  import { fly } from 'svelte/transition';
+  import { fly, slide } from 'svelte/transition';
   import { tick } from 'svelte';
 
   let showDropdown = false;
+  let showMenu = false;
   let isLoading = false;
   let isSuccess = false;
   let progress = 0;
@@ -20,16 +21,13 @@
     isSuccess = false;
     progress = 0;
 
-    // Animate the progress bar visually
     const interval = setInterval(() => {
       progress += Math.random() * 10;
       if (progress > 100) progress = 100;
     }, 200);
 
     try {
-      // 🧩 Actual CV generation/download
       await createCV(true);
-
       clearInterval(interval);
       progress = 100;
       await tick();
@@ -38,7 +36,6 @@
       console.error('CV download failed:', err);
     } finally {
       clearInterval(interval);
-      // Reset back to default state after delay
       setTimeout(() => {
         isLoading = false;
         isSuccess = false;
@@ -58,6 +55,10 @@
         {#if $cvData.template === 'Playful'}Playful{/if}
         {#if $cvData.template === 'modern'}Modern{/if}
         {#if $cvData.template === 'Vintage'}Vintage{/if}
+        {#if $cvData.template === 'ArmyGreen'}Army Green{/if}
+        {#if $cvData.template === 'Classic'}Classic{/if}
+        {#if $cvData.template === 'Dark'}Dark{/if}
+        {#if $cvData.template === 'Simplistic'}Simplistic{/if}
         ▾
       </button>
 
@@ -80,11 +81,34 @@
               on:click={() => setTemplate('Vintage')}>Vintage</button
             >
           </li>
+          <li>
+            <button
+              class="dropdown-item"
+              on:click={() => setTemplate('ArmyGreen')}>Army Green</button
+            >
+          </li>
+          <li>
+            <button
+              class="dropdown-item"
+              on:click={() => setTemplate('Classic')}>Classic</button
+            >
+          </li>
+          <li>
+            <button class="dropdown-item" on:click={() => setTemplate('Dark')}
+              >Dark</button
+            >
+          </li>
+          <li>
+            <button
+              class="dropdown-item"
+              on:click={() => setTemplate('Simplistic')}>Simplistic</button
+            >
+          </li>
         </ul>
       {/if}
     </div>
 
-    <!-- ✅ Fixed download button -->
+    <!-- ✅ CV Download Button -->
     <button
       class="cv-download-btn {isLoading ? 'loading' : ''} {isSuccess
         ? 'success'
@@ -131,15 +155,48 @@
           Lataa CV
         {/if}
       </span>
-
       <div class="progress-bar" style="width: {progress}%;"></div>
     </button>
   </div>
 
   <h1>Resumate</h1>
 
-  <button class="fill-btn" on:click={fillRandom}>Täyttö</button>
+  <div class="right-controls">
+    <button
+      class="hamburger"
+      on:click={() => (showMenu = !showMenu)}
+      aria-label="Menu"
+    >
+      <svg
+        width="26"
+        height="26"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </div>
 </header>
+
+<!-- ✅ Slide-down mobile menu -->
+{#if showMenu}
+  <nav class="mobile-menu" transition:slide>
+    <ul>
+      <li><button on:click={fillRandom}>Täytä esimerkkitiedoilla</button></li>
+      <li><button on:click={handleDownload}>Lataa CV</button></li>
+      <li>
+        <button on:click={() => alert('Tulossa pian!')}>Asetukset</button>
+      </li>
+    </ul>
+  </nav>
+{/if}
 
 {#if isLoading}
   <div class="loader-overlay"><div class="spinner"></div></div>

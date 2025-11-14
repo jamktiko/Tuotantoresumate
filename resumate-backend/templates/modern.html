@@ -10,128 +10,107 @@
 
 <body>
 
-  <!-- Wrapper joka sisältää kaikki sivut -->
-  <div class="multi-page">
-    <div class="a4-page">
-      <div class="container">
-        <section class="contact-section">
-          <div class="contact-info">
-            <h2>{{firstName}} {{lastName}}</h2>
-            <h3>{{title}}</h3>
+  <div class="a4-page">
+    <div class="container">
+      <section class="contact-section">
+        <div class="contact-info">
+          <h2>{{firstName}} {{lastName}}</h2>
+          <h3>{{title}}</h3>
 
-            <div class="info-row">
-              <div class="half">{{email}}</div>
-              <div class="half">{{phone}}</div>
-            </div>
-            <div class="info-row">
-              <div class="half">{{city}}</div>
-              <div class="half">{{postalCode}}</div>
-            </div>
-            <!-- ⬇️ Nämä tuodaan mukaan samaan lohkoon -->
-            <div class="info-row">
-              <div class="half">{{website}}</div>
-              <div class="half">{{linkedin}}</div>
-            </div>
+          <div class="info-row">
+            <div class="half">{{email}}</div>
+            <div class="half">{{phone}}</div>
           </div>
-
-
-          <div class="photo-placeholder">
-            {{photo}}
+          <div class="info-row">
+            <div class="half">{{city}}</div>
+            <div class="half">{{postalCode}}</div>
           </div>
-        </section>
+        </div>
 
-        <hr class="section-divider">
+        <div class="photo-placeholder">
+          {{photo}}
+        </div>
+      </section>
 
-        <div class="two-columns">
-          <!-- Vasen sarake -->
-          <div class="left-column">
-            <section>
-              <h3>Koulutus</h3>
-              <ul>
-                {{educations}}
-              </ul>
-            </section>
+      <hr class="section-divider">
 
-            <section>
-              <h3>Kielitaito</h3>
-              <p>{{language1}}</p>
-              <p>{{language2}}</p>
-              <p>{{language3}}</p>
-            </section>
+      <div class="two-columns">
 
-            <section class="extra-info-section">
-              <h3>Lisätiedot</h3>
-              {{extraInfo}}
-            </section>
+        <div class="left-column">
+          <section>
+            <h3>Koulutus</h3>
+            <p>{{educations}}</p>
+          </section>
 
-          </div>
+          <section>
+            <h3>Kielitaito</h3>
+            <p>{{language1}}</p>
+          </section>
 
-          <!-- Oikea sarake -->
-          <div class="right-column">
-            <section>
-              <h3>Minusta</h3>
-              <p>{{summary}}</p>
-            </section>
+          <section>
+            <h3>Lisätiedot</h3>
+            <p>{{extraInfo}}</p>
+          </section>
+        </div>
 
-            <section>
-              <h3>Työhistoria</h3>
-              <ul>
-                {{experiences}}
-              </ul>
-            </section>
+        <div class="right-column">
+          <section>
+            <h3>Minusta</h3>
+            <p>{{summary}}</p>
+          </section>
 
+          <section>
+            <h3>Työhistoria</h3>
+            <p>{{experiences}}</p>
+          </section>
 
-            <section>
-              <h3>Taidot</h3>
-              <ul>
-                {{skills}}
-              </ul>
-            </section>
-
-          </div>
+          <section>
+            <h3>Taidot</h3>
+            <p>{{skills}}</p>
+          </section>
         </div>
       </div>
     </div>
   </div>
 
   <style>
-    /* Perustyyli */
     body {
-      width: 210mm;
-      min-height: 297mm;
       font-family: "Arial", sans-serif;
       margin: 0;
       padding: 0;
-      background: transparent !important;
+      background: #eee;
       color: #000;
     }
 
-    .multi-page {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    /* Jokainen .a4-page on yksi sivu */
     .a4-page {
       width: 210mm;
       min-height: 297mm;
+      margin: 20px auto;
       background: #fff;
-      padding: 20mm;
-      margin-bottom: 20px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       box-sizing: border-box;
-      overflow: visible;
+      display: flex;
+      flex-direction: column;
     }
 
     .container {
       width: 100%;
-      max-width: 170mm;
+      height: 297mm;
       margin: 0 auto;
+      background: white;
+      padding: 20mm 25mm;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: 'Afacad', sans-serif;
     }
 
     h1 {
-      font-family: 'Afacad', sans-serif;
       font-size: 36px;
       color: #222;
       margin: 0;
@@ -139,18 +118,15 @@
 
     h2 {
       font-size: 28px;
-      font-family: 'Afacad', sans-serif;
       color: #00adb5;
       margin: 5px 0 0;
     }
 
     h3 {
       font-size: 20px;
-      font-family: 'Afacad', sans-serif;
       color: #00adb5;
       margin-bottom: 5px;
     }
-
 
     p,
     li {
@@ -208,11 +184,9 @@
     }
 
     hr.section-divider {
-      border: none;
       border-top: 2px solid #00adb5;
       margin: 20px 0;
       width: 100%;
-      box-sizing: border-box;
     }
 
     .two-columns {
@@ -241,23 +215,6 @@
 
     section {
       margin-bottom: 20px;
-    }
-
-    .extra-info-section h3 {
-      margin-bottom: 5px;
-      color: #000000;
-      font-size: 18px;
-    }
-
-    .extra-info-section p {
-      margin: 0 0 10px 0;
-      line-height: 1.4;
-    }
-
-    .extra-info-section hr {
-      border: none;
-      border-top: 1px solid #ccc;
-      margin: 10px 0;
     }
   </style>
 </body>

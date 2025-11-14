@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fi">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Tumma A4 Layout</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bradley+Hand+ITC&family=Raleway:wght@400;600&display=swap"
+    rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+
+  <div class="a4-page">
+    <header class="header">
+      <h1>{{firstName}} {{lastName}}</h1>
+      <h2>{{title}}</h2>
+    </header>
+    <div class="cv-container">
+
+      <div class="left-column">
+        <div class="photo">
+          {{photo}}
+        </div>
+        <div class="section contact-info">
+          <h3>Yhteystiedot</h3>
+          <p>{{email}}</p>
+          <p>{{phone}}</p>
+          <p>{{postalCode}}, {{city}}</p>
+          <p>{{website}}</p>
+          <p>{{linkedin}}</p>
+        </div>
+        <div class="section">
+          <h3>Kielitaito</h3>
+          <p>{{language1}}</p>
+        </div>
+        <div class="section">
+          <h3>Taidot</h3>
+          <p>{{skills}}</p>
+        </div>
+        <div class="section">
+          <h3>Lisätiedot</h3>
+          <p>{{extraInfo}}</p>
+        </div>
+      </div>
+
+      <div class="right-column">
+        <div class="section">
+          <h3>Minusta</h3>
+          <p>{{summary}}</p>
+        </div>
+
+        <div class="section">
+          <h3>Työkokemus</h3>
+          <p>{{experiences}}</p>
+        </div>
+        <div class="section">
+          <h3>Koulutus</h3>
+          <p>{{educations}}</p>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="section references">
+          <h3>Suosittelijat</h3>
+          <p>{{suosittelija1}}</p>
+          <p>{{suosittelija2}}</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <style>
+    body {
+      font-family: 'Raleway', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      color: #fff;
+    }
+
+    .a4-page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 20px auto;
+      background-color: #1c1c1c;
+      box-sizing: border-box;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      padding-top: 25mm;
+      padding-bottom: 10mm;
+      letter-spacing: 2px;
+      border-bottom: 1px solid #d4b996;
+    }
+
+    .header h1 {
+      font-size: 48px;
+      font-weight: 400;
+      color: #fff;
+      margin: 0;
+      text-align: center;
+    }
+
+    .header h2 {
+      font-size: 35px;
+      font-weight: 500;
+      color: #fff;
+      margin-top: 5px;
+      letter-spacing: 1px;
+      text-align: center;
+      margin-left: 30px;
+    }
+
+    .header h1,
+    .header h2 {
+      font-family: 'Bradley Hand ITC', cursive;
+      font-style: italic;
+    }
+
+    .cv-container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      margin-top: -60px;
+    }
+
+    .left-column {
+      width: 35%;
+      background-color: #1c1c1c;
+      padding: 5mm 20mm;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      border-right: 2px solid #d4b996;
+    }
+
+    .right-column {
+      width: 65%;
+      padding: 5mm 20mm;
+      box-sizing: border-box;
+      background-color: #1c1c1c;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .photo {
+      width: 140%;
+      height: 180px;
+      background-color: #222;
+      border: 2px solid #d4b996;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: -25px;
+    }
+
+    .photo img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .section h3 {
+      font-size: 18px;
+      color: #d4b996;
+      border-bottom: 1px solid #d4b996;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+    }
+
+    .experience-list,
+    .skills-list {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      color: #ddd;
+      line-height: 1.6;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #d4b996;
+      margin: 20px 0;
+      opacity: 0.7;
+    }
+
+    p {
+      margin: 3px 0;
+    }
+
+    .contact-info p,
+    .references p {
+      line-height: 1.6;
+    }
+  </style>
+</body>
+
+</html>
