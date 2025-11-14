@@ -190,9 +190,9 @@
   <nav class="mobile-menu" transition:slide>
     <ul>
       <li><button on:click={fillRandom}>Täytä esimerkkitiedoilla</button></li>
-      <li><button on:click={handleDownload}>Lataa CV</button></li>
+      <li><button on:click={handleDownload}>Profiili</button></li>
       <li>
-        <button on:click={() => alert('Tulossa pian!')}>Asetukset</button>
+        <button on:click={() => alert('Tulossa pian!')}>Dark Mode</button>
       </li>
     </ul>
   </nav>
