@@ -1,5 +1,6 @@
 <script>
   import './+page.css';
+
   import Header from '$lib/components/Header.svelte';
   import PersonalInfo from '$lib/components/PersonalInfo.svelte';
   import ExtraInfo from '$lib/components/ExtraInfo.svelte';
