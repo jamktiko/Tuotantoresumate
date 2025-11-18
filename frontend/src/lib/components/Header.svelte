@@ -93,11 +93,7 @@
               on:click={() => setTemplate('Classic')}>Classic</button
             >
           </li>
-          <li>
-            <button class="dropdown-item" on:click={() => setTemplate('Dark')}
-              >Dark</button
-            >
-          </li>
+
           <li>
             <button
               class="dropdown-item"
@@ -185,8 +181,13 @@
   </div>
 </header>
 
-<!-- ✅ Slide-down mobile menu -->
 {#if showMenu}
+  <button
+    class="menu-backdrop"
+    on:click={() => (showMenu = false)}
+    aria-label="Close menu"
+  ></button>
+
   <nav class="mobile-menu" transition:slide>
     <ul>
       <li><button on:click={fillRandom}>Täytä esimerkkitiedoilla</button></li>

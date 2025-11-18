@@ -120,14 +120,19 @@ small {
 /* ---------- Header / Nav ---------- */
 .main-header {
   position: fixed;
-  inset: 0 auto auto 0;
-  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+
   height: 72px;
   background: var(--header);
   color: #fff;
+
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between; /* left / logo / right */
+
+  padding: 0 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
   z-index: 100;
@@ -138,6 +143,8 @@ small {
   color: #e3f7f8;
   font-size: clamp(28px, 3vw, 40px);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  margin: 0 auto;
+  white-space: nowrap;
 }
 
 .main-header::after {
@@ -156,10 +163,14 @@ small {
   background-size: 200% 100%;
   animation: moveGradient 4s ease-in-out infinite;
   opacity: 0.4;
-  mix-blend-mode: screen; /* lets it merge visually with the header tone */
+  mix-blend-mode: screen;
   pointer-events: none;
 }
-
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 @keyframes moveGradient {
   0% {
     background-position: 0% 0%;
@@ -184,42 +195,18 @@ small {
   }
 }
 .left-controls {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
   display: flex;
+  align-items: center;
   gap: 12px;
-}
-.fill-btn {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 42px;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 999px;
-  color: #fff;
-  font-weight: 600;
-  background: var(--brand);
-  box-shadow: 0 0 2px 0 var(--brand-glow), var(--shadow-1);
-  cursor: pointer;
-  transition: transform var(--t-med), box-shadow var(--t-med),
-    background var(--t-med);
-}
-.fill-btn:hover {
-  transform: translateY(-50%) scale(1.04);
-  background: var(--brand-strong);
-  box-shadow: 0 0 4px 0 var(--brand-glow), var(--shadow-2);
+
+  position: static;
+  transform: none;
 }
 
-/* Dropdown (template selector) */
 .template-dropdown {
   position: relative;
 }
-/* === Accessible Theme Switcher === */
-/* === THEME SWITCHER BUTTON MENU (Accessible + Modern) === */
+
 .dropdown-toggle {
   background: linear-gradient(135deg, #04d4f0, #00adb5);
   color: #ffffff;
@@ -380,41 +367,39 @@ select:focus {
 
 /* ---------- CV Builder Layout ---------- */
 .page {
-  display: flex;
-  gap: var(--sp-8);
-  justify-content: center;
-  align-items: flex-start;
-  padding: calc(72px + 24px) 24px 32px; /* header height + spacing */
-  overflow: visible !important;
-  min-height: 0 !important;
+  display: grid;
+  grid-template-columns: 1fr 640px;
+  gap: 32px;
+  width: 100%;
+  padding: calc(72px + 24px) 24px 40px;
+  position: relative;
 }
 .left {
-  flex: 1;
-  max-width: 960px;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 20px;
   box-shadow: var(--shadow-1);
-  padding: 16px 28px 28px;
-  margin-right: 680px; /* = preview width + padding gap */
+  padding: 24px 28px 40px;
+
+  max-height: none;
+}
+.right-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  position: static; /* remove old absolute */
+  transform: none;
 }
 
 .right {
-  position: fixed;
-  top: 88px;
-  right: 32px;
-
-  width: 640px;
-
+  position: sticky;
+  top: 96px; /* sits under header */
+  height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
 
-  /* ⭐ THIS allows scrolling inside */
-  overflow: hidden;
-
-  /* ⭐ This is NOT the scroll container */
-  height: calc(100vh - 100px);
-
+  /* prevents overflow problems */
   min-height: 0;
 }
 
@@ -1153,15 +1138,11 @@ button.remove:hover {
 }
 
 .preview-frame {
-  width: 100%;
-  height: 100%;
-  border: none !important;
-  /* ⭐ KEY: iframe itself must scroll */
-  display: block;
-  overflow-x: hidden;
-  overflow-y: scroll; /* ← not auto — scroll ALWAYS allowed */
-
   flex-grow: 1;
+  width: 100%;
+  border: none !important;
+  overflow-y: auto;
+  overflow-x: hidden;
   min-height: 0;
 }
 
@@ -1454,9 +1435,8 @@ button.remove:hover {
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* Slide-down mobile menu */
 .mobile-menu {
-  position: absolute;
+  position: fixed;
   top: 72px;
   right: 0;
   width: 220px;
@@ -1464,7 +1444,7 @@ button.remove:hover {
   border: 1px solid var(--line);
   border-radius: 0 0 12px 12px;
   box-shadow: var(--shadow-2);
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .mobile-menu ul {
@@ -1494,8 +1474,26 @@ button.remove:hover {
   background: rgba(0, 173, 181, 0.1);
   color: var(--brand);
 }
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: default;
+
+  outline: none;
+  z-index: 1500;
+
+  appearance: none;
+}
+.menu-backdrop:focus {
+  outline: none;
+}
 
 .cv-download-btn {
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1660,33 +1658,68 @@ button.remove:hover {
 }
 
 /* ---------- Responsive for CV builder ---------- */
+
 @media (max-width: 1200px) {
   .page {
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: 1fr;
   }
+
+  .right {
+    position: static;
+    width: 100%;
+    height: auto;
+    margin-top: 24px;
+  }
+
+  .preview-frame {
+    height: auto;
+    max-height: 80vh;
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .page {
+    padding: calc(56px + 16px) 16px 24px;
+  }
+
   .left,
   .right {
-    width: 100%;
-    max-width: 100%;
-  }
-  .right {
-    order: 2;
-  }
-  .left {
-    order: 1;
+    border-radius: 16px;
+    padding: 20px;
   }
 }
 @media (max-width: 768px) {
   .main-header {
     height: auto;
-    padding: 10px;
+    padding: 10px 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
   }
-  .left-controls {
-    position: static;
-    transform: none;
-    margin-right: auto;
+
+  .main-header h1 {
+    order: -1; /* logo on its own row on top */
+    width: 100%;
+    text-align: center;
+    margin: 0 0 4px;
   }
+
+  .left-controls,
+  .right-controls {
+    width: 100%;
+    justify-content: center;
+  }
+}
+/* Prevent iOS zoom on form fields */
+@media (max-width: 520px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+@media (max-width: 768px) {
   .fill-btn {
     position: static;
     transform: none;
