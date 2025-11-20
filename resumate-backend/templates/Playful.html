@@ -13,11 +13,12 @@
 
   <div class="a4-page">
     <div class="container">
+
+      <!-- CONTACT -->
       <section class="contact-section">
-        <div class="photo-placeholder">
-          {{photo}}
-        </div>
-        <div class="contact-info" style="margin-left: 40px;">
+        <div class="photo-placeholder">{{photo}}</div>
+
+        <div class="contact-info">
           <h1>{{firstName}} {{lastName}}</h1>
           <h2>{{title}}</h2>
 
@@ -25,182 +26,184 @@
             <div class="half"><i class="fas fa-envelope"></i>{{email}}</div>
             <div class="half"><i class="fas fa-phone"></i>{{phone}}</div>
           </div>
+
           <div class="info-row">
             <div class="half"><i class="fas fa-map-marker-alt"></i>{{city}}</div>
             <div class="half"><i class="fas fa-home"></i>{{postalCode}}</div>
           </div>
+
           <div class="info-row">
             <div class="half"><i class="fas fa-globe"></i>{{website}}</div>
             <div class="half"><i class="fab fa-linkedin"></i>{{linkedin}}</div>
           </div>
         </div>
-
-
       </section>
 
-      <hr class="section-divider" />
+      <hr class="divider strong" />
+
+      <!-- MINUSTA -->
       <section>
         <h3>Minusta</h3>
         <p>{{summary}}</p>
       </section>
-      <hr class="divider" />
 
       <div class="sections-stack">
+
         <section>
           <h3>Koulutus</h3>
           <p>{{educations}}</p>
-
         </section>
-        <hr class="divider" />
+
         <section>
           <h3>Työhistoria</h3>
-          <ul>
-            {{experiences}}
-          </ul>
+          <ul>{{experiences}}</ul>
         </section>
-        <hr class="divider" />
 
         <section>
           <h3>Kielitaito</h3>
-          <p>{{language1}}</p>
-          <p>{{language2}}</p>
-          <p>{{language3}}</p>
+          <p>{{languages}}</p>
         </section>
-        <hr class="divider" />
+
         <section>
           <h3>Taidot</h3>
           <p>{{skills}}</p>
         </section>
-        <hr class="divider" />
 
         <section>
           <h3>Lisätiedot</h3>
           <p>{{extraInfo}}</p>
         </section>
 
+        <section>
+          <h3>Suosittelijat</h3>
+          <p>{{references}}</p>
+        </section>
+
       </div>
+
     </div>
   </div>
-  </div>
 
-  <!-- STYLES -->
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      background: rgb(255, 255, 255);
-      color: #2a2a2a;
+      background: #fff;
+      font-family: 'Poppins', sans-serif;
     }
 
     .a4-page {
       width: 210mm;
-      min-height: 297mm;
-
-      padding: 20mm;
-
+      height: 297mm;
+      background: white;
+      padding: 8mm;
       box-sizing: border-box;
+      display: flex;
+      overflow: hidden;
     }
 
     .container {
       width: 100%;
-      max-width: 170mm;
-      margin: 0 auto;
+      max-width: 186mm;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
 
+    /************ TEXT ************/
     h1 {
-      font-size: 26px;
-      margin-bottom: 5px;
-
-
+      font-size: 22px;
+      margin: 0 0 2px;
+      color: #cc6973;
+      text-transform: uppercase;
     }
 
     h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
-
+      font-size: 14px;
+      margin: 0 0 6px;
+      color: #cc6973;
+      text-transform: uppercase;
     }
 
     h3 {
-      font-size: 18px;
-      margin-bottom: 10px;
+      font-size: 14px;
+      margin: 4px 0 4px;
+      border-bottom: 2px solid #cc6973;
+      padding-bottom: 2px;
+      text-transform: uppercase;
     }
 
     p,
     li {
-      font-size: 15px;
-      line-height: 1.6;
-      margin: 0 0 10px 0;
+      font-size: 13px;
+      margin: 0 0 4px;
+      line-height: 1.35;
     }
 
+    /************ CONTACT ************/
     .contact-section {
       display: flex;
+      gap: 12px;
+      margin-bottom: 6px;
       align-items: center;
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-
-    .contact-info {
-      flex: 1;
-      min-width: 250px;
-      text-align: left;
-    }
-
-    .contact-info i {
-      margin-right: 8px;
-      color: #cc6973;
     }
 
     .photo-placeholder {
-      width: 200px;
-      height: 200px;
+      width: 105px;
+      height: 105px;
       border-radius: 50%;
       border: 3px solid #cc6973;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
-      color: #999;
-      text-align: center;
-      margin-left: -15px;
+      flex-shrink: 0;
     }
 
     .photo-placeholder img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 50%;
     }
 
     .info-row {
       display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 6px;
+      margin-bottom: 4px;
     }
 
     .half {
       flex: 1;
+      font-size: 13px;
     }
 
-    hr.section-divider {
-      border: none;
-      border-top: 2px solid #cc6973;
-      margin: 30px 0;
-    }
-
+    /************ DIVIDERS ************/
     hr.divider {
       border: none;
-      border-top: 2px solid #cc6973;
-      margin: 20px 0;
+      border-top: 1px solid #cc6973;
+      margin: 6px 0;
+      opacity: 0.7;
     }
 
+    hr.strong {
+      border-top: 2px solid #cc6973;
+      margin: 8px 0;
+    }
 
+    /************ STACK ************/
     section {
-      margin-bottom: 20px;
+      margin-bottom: 6px;
+      page-break-inside: avoid;
     }
 
     ul {
-      padding-left: 20px;
+      padding-left: 14px;
+    }
+
+    p:empty,
+    li:empty,
+    div:empty {
+      display: none;
     }
   </style>
 

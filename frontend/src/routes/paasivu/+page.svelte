@@ -10,7 +10,8 @@
   import LanguageSection from '$lib/components/LanguageSection.svelte';
   import SkillsSection from '$lib/components/SkillsSection.svelte';
   import ExtraSection from '$lib/components/ExtraSection.svelte';
-
+  import ReferencesSection from '$lib/components/ReferencesSection.svelte';
+  import { goto } from '$app/navigation';
   import { cvData } from '$lib/stores/cvStore';
   import { throttle, updatePreview } from '$lib/utils/cvHelpers';
 
@@ -37,6 +38,8 @@
         <LanguageSection />
         <hr class="section-divider" />
         <SkillsSection />
+        <hr class="section-divider" />
+        <ReferencesSection />
         <hr class="section-divider" />
         <ExtraSection />
       </form>

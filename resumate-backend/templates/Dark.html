@@ -12,16 +12,20 @@
 <body>
 
   <div class="a4-page">
+
     <header class="header">
       <h1>{{firstName}} {{lastName}}</h1>
       <h2>{{title}}</h2>
     </header>
+
     <div class="cv-container">
 
       <div class="left-column">
+
         <div class="photo">
           {{photo}}
         </div>
+
         <div class="section contact-info">
           <h3>Yhteystiedot</h3>
           <p>{{email}}</p>
@@ -30,21 +34,26 @@
           <p>{{website}}</p>
           <p>{{linkedin}}</p>
         </div>
+
         <div class="section">
           <h3>Kielitaito</h3>
-          <p>{{language1}}</p>
+          <p>{{languages}}</p>
         </div>
+
         <div class="section">
           <h3>Taidot</h3>
           <p>{{skills}}</p>
         </div>
+
         <div class="section">
           <h3>Lisätiedot</h3>
           <p>{{extraInfo}}</p>
         </div>
+
       </div>
 
       <div class="right-column">
+
         <div class="section">
           <h3>Minusta</h3>
           <p>{{summary}}</p>
@@ -54,6 +63,7 @@
           <h3>Työkokemus</h3>
           <p>{{experiences}}</p>
         </div>
+
         <div class="section">
           <h3>Koulutus</h3>
           <p>{{educations}}</p>
@@ -63,141 +73,174 @@
 
         <div class="section references">
           <h3>Suosittelijat</h3>
-          <p>{{suosittelija1}}</p>
-          <p>{{suosittelija2}}</p>
+          <p>{{references}}</p>
         </div>
 
       </div>
+
     </div>
+
   </div>
 
   <style>
+    /*************************************
+      GLOBAL
+    *************************************/
     body {
-      font-family: 'Raleway', sans-serif;
       margin: 0;
       padding: 0;
+      font-family: 'Raleway', sans-serif;
       background-color: #ffffff;
       color: #fff;
     }
 
+    /* FIXED A4 — stops shrinking & overflow */
     .a4-page {
-      width: 210mm;
-      min-height: 297mm;
-      margin: 20px auto;
-      background-color: #1c1c1c;
-      box-sizing: border-box;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+      width: 210mm !important;
+      height: 297mm !important;
+      min-height: 297mm !important;
+      max-height: 297mm !important;
+
       display: flex;
       flex-direction: column;
+
+      background: #1c1c1c;
+      overflow: hidden;
+      box-sizing: border-box;
     }
 
+    /*************************************
+      HEADER
+    *************************************/
     .header {
-      padding-top: 25mm;
-      padding-bottom: 10mm;
-      letter-spacing: 2px;
+      padding: 10mm 5mm 5mm 5mm;
+      text-align: center;
       border-bottom: 1px solid #d4b996;
+      background: #1c1c1c;
     }
 
     .header h1 {
-      font-size: 48px;
-      font-weight: 400;
-      color: #fff;
       margin: 0;
-      text-align: center;
-    }
-
-    .header h2 {
-      font-size: 35px;
-      font-weight: 500;
-      color: #fff;
-      margin-top: 5px;
-      letter-spacing: 1px;
-      text-align: center;
-      margin-left: 30px;
-    }
-
-    .header h1,
-    .header h2 {
+      font-size: 34px;
       font-family: 'Bradley Hand ITC', cursive;
       font-style: italic;
+      color: #fff;
     }
 
+    .header h2 {
+      margin: 3px 0 0;
+      font-size: 22px;
+      font-family: 'Bradley Hand ITC', cursive;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+
+    /*************************************
+      MAIN CONTENT
+    *************************************/
     .cv-container {
       display: flex;
-      width: 100%;
-      height: 100%;
-      margin-top: -60px;
+      flex: 1;
+      overflow: hidden;
     }
 
     .left-column {
       width: 35%;
-      background-color: #1c1c1c;
-      padding: 5mm 20mm;
+      padding: 12mm 10mm;
       box-sizing: border-box;
+      background-color: #1c1c1c;
+      border-right: 2px solid #d4b996;
       display: flex;
       flex-direction: column;
-      gap: 25px;
-      border-right: 2px solid #d4b996;
+      gap: 12px;
     }
 
     .right-column {
       width: 65%;
-      padding: 5mm 20mm;
+      padding: 12mm 12mm;
       box-sizing: border-box;
       background-color: #1c1c1c;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      gap: 12px;
     }
 
+    /*************************************
+      PHOTO
+    *************************************/
+    /* ---- FIXED AND PDF-SAFE PHOTO ---- */
+    /* ---- RECTANGULAR PHOTO (PDF-SAFE) ---- */
     .photo {
-      width: 140%;
-      height: 180px;
+      width: 100px;
+      height: 100px;
+      /* rectangular shape */
       background-color: #222;
       border: 2px solid #d4b996;
+
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-left: -25px;
+
+      overflow: hidden;
+
+      /* centers the image, no shifting */
+      margin: 0 auto 12px auto;
+      padding: 0;
+
+      border-radius: 0 !important;
+      /* force rectangle */
     }
 
     .photo img {
-      width: 100%;
-      height: 100%;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      display: block !important;
+
+      border-radius: 0 !important;
+      /* disable round image */
     }
 
-    .section h3 {
-      font-size: 18px;
+
+
+    /*************************************
+      SECTION HEADERS
+    *************************************/
+    h3 {
+      font-size: 15px;
       color: #d4b996;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      padding-bottom: 3px;
       border-bottom: 1px solid #d4b996;
-      margin-bottom: 10px;
-      padding-bottom: 6px;
     }
 
-    .experience-list,
-    .skills-list {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 16px;
-      color: #ddd;
-      line-height: 1.6;
+    /*************************************
+      TEXT
+    *************************************/
+    p {
+      margin: 2px 0;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .section {
+      page-break-inside: avoid;
     }
 
     .divider {
       border: none;
       border-top: 1px solid #d4b996;
-      margin: 20px 0;
-      opacity: 0.7;
+      margin: 10px 0;
+      opacity: 0.5;
     }
 
-    p {
-      margin: 3px 0;
-    }
-
-    .contact-info p,
-    .references p {
-      line-height: 1.6;
+    p:empty {
+      display: none;
     }
   </style>
+
 </body>
 
 </html>

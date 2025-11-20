@@ -12,54 +12,53 @@
 <body>
 
   <div class="a4-page">
+
     <div class="header">
       <div class="name-title">
         <h1>{{firstName}} {{lastName}}</h1>
         <h2>{{title}}</h2>
       </div>
-      <div class="photo">
-        {{photo}}
-      </div>
+      <div class="photo">{{photo}}</div>
     </div>
 
     <div class="content">
       <div class="left-column">
-        <div class="section">
+        <section>
           <h3>Minusta</h3>
           <p>{{summary}}</p>
-        </div>
-        <div class="section">
+        </section>
+
+        <section>
           <h3>Työkokemus</h3>
           <p>{{experiences}}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h3>Koulutus</h3>
           <p>{{educations}}</p>
-        </div>
+        </section>
       </div>
 
       <div class="right-column">
-        <div class="section">
+        <section>
           <h3>Taidot</h3>
           <p>{{skills}}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h3>Kielitaito</h3>
-          <p>{{language1}}</p>
-        </div>
+          <p>{{languages}}</p>
+        </section>
 
-        <div class="section">
+        <section>
           <h3>Lisätiedot</h3>
           <p>{{extraInfo}}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h3>Suosittelijat</h3>
-          <p>{{suosittelija1}}</p>
-          <p>{{suosittelija2}}</p>
-        </div>
+          <p>{{references}}</p>
+        </section>
       </div>
     </div>
 
@@ -70,6 +69,7 @@
       <div class="footer-item"><i class="fab fa-linkedin"></i> {{linkedin}}</div>
       <div class="footer-item"><i class="fas fa-map-marker-alt"></i> {{city}}, {{postalCode}}</div>
     </div>
+
   </div>
 
   <style>
@@ -77,80 +77,67 @@
       margin: 0;
       padding: 0;
       font-family: 'Poppins', sans-serif;
-      background-color: #f8f6f4;
+      background: #f8f6f4;
       color: #333;
     }
 
+    /*********** FIXED A4 PAGE ***********/
     .a4-page {
-      width: 210mm;
-      min-height: 297mm;
-
-      box-sizing: border-box;
-      padding: 0;
+      width: 210mm !important;
+      height: 297mm !important;
+      min-height: 297mm !important;
+      max-height: 297mm !important;
+      background: white;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      overflow: hidden;
     }
 
+    /*********** HEADER ***********/
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20mm 20mm 5mm 20mm;
-      background: none;
-      border: none;
-      box-shadow: none;
+      padding: 15mm;
     }
 
-    .header .photo {
-      width: 180px;
-      height: 180px;
+    .photo {
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       border: 2px solid #d4b996;
-      background-color: #eee;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: #eee;
       overflow: hidden;
-      margin-right: 25px;
-      margin-top: -15px;
     }
 
-    .header .photo img {
+    .photo img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
-    .header .name-title {
-      flex: 1;
-      margin-left: 50px;
-    }
-
-    .header h1 {
-      font-size: 36px;
-      font-weight: 600;
-      margin: 0;
-      margin-left: -50px;
-      margin-top: -15px;
-      color: #b47b67;
-      text-transform: uppercase;
-    }
-
-    .header h2 {
+    .name-title h1 {
       font-size: 22px;
-      font-weight: 400;
+      margin: 0;
       color: #b47b67;
-      margin-top: 5px;
       text-transform: uppercase;
-      letter-spacing: 2px;
     }
 
+    .name-title h2 {
+      font-size: 14px;
+      margin-top: 4px;
+      color: #b47b67;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /*********** CONTENT LAYOUT ***********/
     .content {
       display: flex;
-      padding: 15mm;
-      gap: 20mm;
       flex: 1;
+      padding: 10mm 15mm;
+      gap: 12mm;
+      box-sizing: border-box;
     }
 
     .left-column {
@@ -161,47 +148,42 @@
       width: 40%;
     }
 
+    /*********** SECTIONS ***********/
     h3 {
-      font-size: 22px;
+      font-size: 14px;
       font-weight: 600;
       text-transform: uppercase;
       color: #b47b67;
       border-bottom: 1px solid #b47b67;
-      margin-bottom: 8px;
+      margin: 0 0 5px 0;
       padding-bottom: 3px;
-      letter-spacing: 1px;
     }
 
     p {
-      margin: 4px 0;
-      font-size: 16px;
-      line-height: 1.6;
+      font-size: 12px;
+      line-height: 1.4;
+      margin: 2px 0 8px;
     }
 
+    /*********** FOOTER ***********/
     .footer-bar {
       border-top: 2px solid #d4b996;
-      background-color: #f0e8dc;
-      color: #333;
+      background: #f0e8dc;
+      padding: 8px 6px;
+      font-size: 12px;
       display: flex;
       justify-content: space-around;
-      align-items: center;
-      padding: 15px 10px;
-      font-size: 16px;
       flex-wrap: wrap;
     }
 
-    .footer-bar i {
-      margin-right: 3px;
-      color: #b47b67;
-    }
-
     .footer-item {
-      margin: 5px 10px;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
+      margin: 2px 4px;
     }
   </style>
+
 </body>
 
 </html>

@@ -4,41 +4,43 @@
 <head>
   <meta charset="UTF-8">
   <title>Vihreä</title>
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
 <body>
+
   <div class="a4-page">
     <div class="cv-container">
 
       <div class="left-column">
-        <div class="photo">
-          {{photo}}
-        </div>
+        <div class="photo">{{photo}}</div>
+
         <header class="header">
           <h1>{{firstName}} {{lastName}}</h1>
           <h2>{{title}}</h2>
-          <p>{{city}}</p1>
+          <p>{{city}}</p>
         </header>
+
         <section>
           <h3>Taidot</h3>
           <p>{{skills}}</p>
         </section>
+
         <section>
           <h3>Kielitaito</h3>
-          <p>{{language1}}</p>
-          <p>{{language2}}</p>
+          <p>{{languages}}</p>
         </section>
+
         <section>
           <h3>Suosittelijat</h3>
-          <p>{{suosittelija1}}</p>
-          <p>{{suosittelija2}}</p>
+          <p>{{references}}</p>
         </section>
       </div>
 
       <div class="right-column">
+
         <section>
           <h3>Esittely</h3>
           <p>{{summary}}</p>
@@ -58,6 +60,7 @@
           <h3>Lisätiedot</h3>
           <p>{{extraInfo}}</p>
         </section>
+
       </div>
 
     </div>
@@ -65,59 +68,60 @@
     <footer class="footer-bar">
       <div class="footer-item"><i class="fas fa-phone"></i> {{phone}}</div>
       <div class="footer-item"><i class="fas fa-envelope"></i> {{email}}</div>
-      <div class="footer-item"><i class="fas fa-globe"></i> {{verkkosivu}}</div>
+      <div class="footer-item"><i class="fas fa-globe"></i> {{website}}</div>
       <div class="footer-item"><i class="fab fa-linkedin"></i> {{linkedin}}</div>
     </footer>
   </div>
 
   <style>
     body {
-      font-family: 'Merriweather', serif;
-      background-color: #f5f5f5;
       margin: 0;
       padding: 0;
+      font-family: 'Merriweather', serif;
+      background: #f5f5f5;
     }
 
     .a4-page {
-      width: 210mm;
-      min-height: 297mm;
-
+      width: 210mm !important;
+      height: 297mm !important;
+      min-height: 297mm !important;
+      max-height: 297mm !important;
+      background: white;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
     .cv-container {
       display: flex;
       flex: 1;
+      height: auto;
     }
 
     .left-column {
       width: 35%;
       background-color: #959987;
-      color: #fff;
-      padding: 25mm 10mm;
+      padding: 15mm 7mm 12mm;
       box-sizing: border-box;
+      color: #fff;
+      border-right: 2px solid #2a2a2a;
       display: flex;
       flex-direction: column;
       align-items: center;
-      border-right: 2px solid #2a2a2a;
     }
 
     .photo {
-      width: 200px;
-      height: 200px;
+      width: 120px;
+      height: 120px;
       background: #fcf9f4;
       border-radius: 50%;
       border: 2px solid #2a2a2a;
-      overflow: hidden;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #000;
-      text-align: center;
+      overflow: hidden;
     }
-
 
     .photo img {
       width: 100%;
@@ -127,79 +131,81 @@
 
     .header {
       text-align: center;
-      text-transform: uppercase;
+      margin-bottom: 12px;
     }
 
     .left-column h1 {
-      font-size: 28px;
+      font-size: 18px;
+      margin: 0;
     }
 
     .left-column h2 {
-      font-size: 20px;
+      font-size: 13px;
+      margin: 3px 0 0 0;
+    }
+
+    .left-column p {
+      font-size: 12px;
+      margin: 2px 0;
+    }
+
+    .left-column h3 {
+      font-size: 13px;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 3px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
     }
 
     .left-column section {
       width: 100%;
-      margin-bottom: 25px;
-    }
-
-    .left-column h3 {
-      font-size: 16px;
-      border-bottom: 2px solid #2a2a2a;
-      margin-bottom: 10px;
-      padding-bottom: 5px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .left-column p {
-      font-size: 16px;
-      line-height: 1.6;
-      margin: 5px 0;
+      margin-bottom: 15px;
     }
 
     .right-column {
       width: 65%;
-      padding: 25mm 20mm;
+      padding: 15mm 12mm 12mm;
       box-sizing: border-box;
       color: #2a2a2a;
     }
 
     .right-column section {
-      margin-bottom: 25px;
+      margin-bottom: 15px;
     }
 
     .right-column h3 {
-      font-size: 18px;
+      font-size: 15px;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 3px;
+      margin-bottom: 6px;
       text-transform: uppercase;
-      border-bottom: 2px solid #2a2a2a;
-      padding-bottom: 5px;
-      margin-bottom: 10px;
     }
 
     .right-column p {
-      font-size: 16px;
-      line-height: 1.6;
-      margin: 5px 0;
+      font-size: 13px;
+      line-height: 1.35;
+      margin: 2px 0;
     }
 
+    /****************************************
+      FOOTER
+    ****************************************/
     .footer-bar {
       border-top: 2px solid #2a2a2a;
-      background-color: #b2b6ae;
-      color: #2a2a2a;
+      background: #b2b6ae;
+      padding: 8px 10px;
+      font-size: 13px;
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
-      padding: 15px 10px;
-      font-size: 16px;
-    }
-
-    .footer-bar i {
-      margin-right: 6px;
     }
 
     .footer-item {
-      margin: 5px 10px;
+      margin: 3px 6px;
+    }
+
+    .footer-item i {
+      margin-right: 4px;
     }
   </style>
 </body>

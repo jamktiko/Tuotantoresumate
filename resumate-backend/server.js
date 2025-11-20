@@ -46,9 +46,6 @@ const parseJSON = (str) => {
   }
 };
 
-// ---------------------------------------------------------------------------
-// TEMPLATE LOADER
-// ---------------------------------------------------------------------------
 function loadTemplate(name, data, isPreview = false) {
   const tplName = name || 'default';
   let html = fs.readFileSync(
@@ -56,7 +53,6 @@ function loadTemplate(name, data, isPreview = false) {
     'utf-8'
   );
 
-  // ---------- LIST RENDERERS ----------
   const renderList = (arr, fields) =>
     Array.isArray(arr)
       ? arr
@@ -94,6 +90,35 @@ function loadTemplate(name, data, isPreview = false) {
         .join('')
     )
     .replace(
+      '{{languages}}',
+      (data.languages || [])
+        .map(
+          (l) => `
+<li>
+  <strong>${l.language || ''}</strong>
+  ${l.level !== undefined ? `(${levelLabels[l.level]})` : ''}
+</li>`
+        )
+        .join('')
+    )
+
+    .replace(
+      '{{references}}',
+      (data.references || [])
+        .map(
+          (r) => `
+<li>
+  <strong>${r.name || ''}</strong> – ${r.title || ''}<br>
+  ${r.company || ''}<br>
+  ${r.relation ? `<em>${r.relation}</em><br>` : ''}
+  ${r.phone ? `Puh: ${r.phone}<br>` : ''}
+  ${r.email ? `Email: ${r.email}<br>` : ''}
+</li>`
+        )
+        .join('')
+    )
+
+    .replace(
       '{{extraInfo}}',
       `${
         data.extraEducation
@@ -107,34 +132,46 @@ function loadTemplate(name, data, isPreview = false) {
        }`
     );
 
-  // ---------- SIMPLE FIELDS ----------
   for (const [k, v] of Object.entries(data)) {
-    if (!['experiences', 'educations', 'skills'].includes(k)) {
-      html = html.replace(new RegExp(`{{${k}}}`, 'g'), v || '');
+    if (
+      ![
+        'experiences',
+        'educations',
+        'skills',
+        'languages',
+        'references',
+      ].includes(k)
+    ) {
+      if (!v) {
+        html = html.replace(new RegExp(`<p>\\s*{{${k}}}\\s*</p>`, 'g'), '');
+        html = html.replace(new RegExp(`{{${k}}}`, 'g'), '');
+      } else {
+        html = html.replace(new RegExp(`{{${k}}}`, 'g'), v);
+      }
     }
   }
 
-  // ================= PREVIEW MODE =================
   if (isPreview) {
     const previewInjection = `
 <style>
-  /* Only control preview chrome – leave template layout alone */
   html, body {
     margin: 0 !important;
     padding: 0 !important;
     background: #f0f0f0 !important;
-    width: auto !important;
-    height: auto !important;
-    overflow: hidden; /* the outer wrapper will scroll */
+    width: 100%;
+    height: 100%;
+    overflow: hidden !important; /* only preview-root will scroll */
   }
 
   .preview-root {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     display: flex;
     justify-content: center;
+    align-items: flex-start;
+    padding: 20px 0; /* removes white top bar */
     box-sizing: border-box;
   }
 
@@ -145,12 +182,12 @@ function loadTemplate(name, data, isPreview = false) {
 
   .scale-box .a4-page {
     width: 210mm !important;
-    min-height: 297mm !important;
-    margin: 16px auto;
     background: white !important;
-    box-shadow: 0 0 15px rgba(0,0,0,0.25);
+    margin: 0 !important;
+    box-shadow: 0 0 12px rgba(0,0,0,0.25);
   }
 </style>
+
 
 <script>
   function scalePreview() {
@@ -191,43 +228,50 @@ function loadTemplate(name, data, isPreview = false) {
 `;
 
     html = html.replace('</head>', previewInjection + '</head>');
-    html = html
-      .replace(
-        '<body>',
-        "<body><div class='preview-root'><div class='scale-box'>"
-      )
-      .replace('</body>', '</div></div></body>');
+
+    html = html.replace(
+      /<body([^>]*)>/i,
+      "<body$1><div class='preview-root'><div class='scale-box'>"
+    );
+
+    html = html.replace(/<\/body>/i, '</div></div></body>');
 
     return html;
   }
 
-  // ================= PDF MODE =================
   const pdfInjection = `
 <style>
   @page {
     size: A4;
     margin: 0;
   }
+
   html, body {
     margin: 0;
     padding: 0;
   }
+
   .a4-page {
     width: 210mm !important;
-    min-height: 297mm !important;
-    box-sizing: border-box;
     margin: 0 auto;
+    box-sizing: border-box;
+    height: auto !important;
+    min-height: auto !important;
+    page-break-inside: auto;
+  }
+
+  /* Prevent ugly splits */
+  header, footer, section, .section,
+  div, p, h1, h2, h3, h4 {
     page-break-inside: avoid;
   }
 </style>
+
 `;
   html = html.replace('</head>', pdfInjection + '</head>');
   return html;
 }
 
-// ---------------------------------------------------------------------------
-// DATA EXTRACTION
-// ---------------------------------------------------------------------------
 function extractData(req) {
   const fields = [
     'title',
@@ -252,13 +296,11 @@ function extractData(req) {
   parsed.educations = parseJSON(req.body.educations);
   parsed.skills = parseJSON(req.body.skills);
   parsed.languages = parseJSON(req.body.languages);
+  parsed.references = parseJSON(req.body.references);
 
   return parsed;
 }
 
-// ---------------------------------------------------------------------------
-// PDF CREATION
-// ---------------------------------------------------------------------------
 app.post('/create-cv', upload.single('photo'), async (req, res) => {
   try {
     const data = extractData(req);
@@ -298,9 +340,6 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
   }
 });
 
-// ---------------------------------------------------------------------------
-// PREVIEW
-// ---------------------------------------------------------------------------
 app.post('/preview-cv', upload.single('photo'), async (req, res) => {
   try {
     const data = extractData(req);
@@ -324,5 +363,4 @@ app.post('/preview-cv', upload.single('photo'), async (req, res) => {
   }
 });
 
-// ---------------------------------------------------------------------------
 app.listen(4000, () => console.log('API running on http://localhost:4000'));

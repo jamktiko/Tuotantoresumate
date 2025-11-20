@@ -4,29 +4,33 @@
 <head>
   <meta charset="UTF-8">
   <title>Moniulotteinen CV</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
 <body>
+
   <div class="a4-page">
+
+    <!-- TOP -->
     <div class="top-section">
       <div class="photo-box">
         {{photo}}
       </div>
+
       <div class="contact-box">
         <h1>{{firstName}} {{lastName}}</h1>
         <h2>{{title}}</h2>
-        <section>
-          <p>{{summary}}</p>
-        </section>
+        <p>{{summary}}</p>
       </div>
     </div>
 
-    <div class="main-content">
+    <!-- CONTENT -->
+    <div class="content-area">
+
       <div class="left-column">
-        <h3><i class="fas fa-address-card"></i>Yhteystiedot</h3>
+        <h3><i class="fas fa-address-card"></i> Yhteystiedot</h3>
         <div class="info-section">
           <div class="info-single"><i class="fas fa-envelope"></i>{{email}}</div>
           <div class="info-single"><i class="fas fa-phone"></i>{{phone}}</div>
@@ -38,204 +42,144 @@
 
         <section>
           <h3><i class="fas fa-language"></i> Kielitaito</h3>
-          <p>{{language1}}</p>
+          <p>{{languages}}</p>
         </section>
 
         <section>
-          <h3><i class="fas fa-cogs"></i>Osaaminen</h3>
+          <h3><i class="fas fa-cogs"></i> Osaaminen</h3>
           <p>{{skills}}</p>
-
         </section>
       </div>
+
       <div class="right-column">
         <section>
-          <h3><i class="fas fa-graduation-cap"></i>Koulutus</h3>
+          <h3><i class="fas fa-graduation-cap"></i> Koulutus</h3>
           <p>{{educations}}</p>
         </section>
 
         <section>
-          <h3><i class="fas fa-briefcase"></i>Työhistoria</h3>
-          <ul>
-            {{experiences}}
-          </ul>
+          <h3><i class="fas fa-briefcase"></i> Työhistoria</h3>
+          <ul>{{experiences}}</ul>
         </section>
+
         <section>
-          <h3><i class="fas fa-info-circle"></i>Lisätiedot</h3>
+          <h3><i class="fas fa-info-circle"></i> Lisätiedot</h3>
           <p>{{extraInfo}}</p>
         </section>
 
         <section>
-          <h3>Suosittelijat</h3>
-          <div class="suosittelijat-wrapper">
-            <div class="suosittelija">
-              <h4>{{suosittelija1}}</h4>
-              <p>suosittelijanTiedot</p>
-            </div>
-            <div class="suosittelija">
-              <h4>{{suosittelija2}}</h4>
-              <p>suosittelijanTiedot</p>
-            </div>
-          </div>
+          <h3><i class="fas fa-users"></i> Suosittelijat</h3>
+          <p>{{references}}</p>
         </section>
-
       </div>
+
     </div>
-  </div>
+
   </div>
 
   <style>
     body {
-      font-family: 'Inter', sans-serif;
       margin: 0;
       padding: 0;
       background: #f3f3f3;
-      color: #2a2a2a;
+      font-family: 'Inter', sans-serif;
     }
 
+    /* EXACT SAME LOGIC AS VIHREÄ */
     .a4-page {
-      width: 210mm;
-      min-height: 297mm;
-
-      box-sizing: border-box;
+      width: 210mm !important;
+      height: 297mm !important;
+      min-height: 297mm !important;
+      max-height: 297mm !important;
+      background: white;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
+      box-sizing: border-box;
     }
 
+    /* TOP SECTION WITHOUT FIXED HEIGHT */
     .top-section {
       display: flex;
       background: #ddd0d1;
-      padding: 20mm;
-      gap: 30px;
-      height: 50mm;
+      padding: 12mm;
+      gap: 20px;
       border-bottom: 2px solid #2a2a2a;
-
+      box-sizing: border-box;
     }
 
+    /* FIX IMAGE SHAPE */
     .photo-box {
-      width: 200px;
-      height: 230px;
-      min-width: 200px;
-      max-width: 200px;
-      min-height: 230px;
-      max-height: 230px;
-      border: 5px solid #b39e9f;
+      width: 120px;
+      height: 120px;
+      border: 4px solid #b39e9f;
+      background: #fff;
+      overflow: hidden;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
-      color: #2a2a2a;
-      background-color: #fff;
-      margin-top: -25px;
-      margin-left: -25px;
     }
 
     .photo-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      border-radius: 0 !important;
     }
 
-    .info-section {
-      display: block;
-      /* estää flex-rakenteen */
-    }
-
-    .info-single {
-      margin-bottom: 10px;
-      font-size: 16px;
-      display: block;
-    }
-
-    .info-single i {
-      margin-right: 8px;
-      color: #2a2a2a;
-    }
-
-    h1 {
-      font-size: 30px;
-      margin: 0 0 10px 0;
-      margin-top: -25px;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
-    }
-
-    h2 {
-      font-size: 25px;
-      color: #2a2a2a;
-      margin-bottom: 20px;
-    }
-
-    .info-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-
-
-    .contact-box i {
-      margin-right: 8px;
-      color: #2a2a2a;
-    }
-
-    .main-content {
-      display: flex;
+    /* CONTENT FLEX SAME AS VIHREÄ */
+    .content-area {
       flex: 1;
-      align-items: stretch;
+      display: flex;
+      box-sizing: border-box;
     }
 
     .left-column {
-      width: 40%;
-      background-color: #b39e9f;
-      padding: 10mm 10mm;
+      width: 38%;
+      background: #b39e9f;
+      padding: 12mm;
       box-sizing: border-box;
+      color: white;
       border-right: 2px solid #2a2a2a;
-
     }
 
     .right-column {
-      width: 60%;
-      background-color: #ffffff;
-      padding: 10mm 10mm;
+      width: 62%;
+      padding: 12mm;
+      background: #fff;
       box-sizing: border-box;
     }
 
-    .suosittelijat-wrapper {
-      display: flex;
-      gap: 30px;
-      justify-content: space-between;
-      flex-wrap: nowrap;
-    }
-
-    .suosittelija {
-      flex: 1;
-    }
-
     h3 {
-      font-size: 18px;
-      margin-bottom: 8px;
-      color: #2a2a2a;
-      border-bottom: 1px solid #2a2a2a;
-      padding-bottom: 4px;
-      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: 15px;
+      border-bottom: 1px solid currentColor;
+      margin-bottom: 6px;
+      padding-bottom: 2px;
+      font-weight: 600;
     }
-
 
     p,
     li {
-      font-size: 16px;
-      line-height: 1.6;
-      margin-bottom: 8px;
+      font-size: 14px;
+      margin: 4px 0;
+      line-height: 1.4;
     }
 
     ul {
-      padding-left: 20px;
+      padding-left: 18px;
     }
 
-    section {
-      margin-bottom: 20px;
+    /* Remove empty lines */
+    p:empty,
+    div:empty,
+    span:empty,
+    li:empty {
+      display: none !important;
     }
   </style>
+
 </body>
 
 </html>

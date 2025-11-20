@@ -13,6 +13,7 @@ export const cvData = writable({
   driverslicense: '',
   website: '',
   linkedin: '',
+  references: [],
 
   // content
   summary: '',

@@ -3,6 +3,7 @@
   import { createCV, fillRandom } from '$lib/utils/cvHelpers';
   import { fly, slide } from 'svelte/transition';
   import { tick } from 'svelte';
+  import { goto } from '$app/navigation';
 
   let showDropdown = false;
   let showMenu = false;
@@ -91,6 +92,11 @@
             <button
               class="dropdown-item"
               on:click={() => setTemplate('Classic')}>Classic</button
+            >
+          </li>
+          <li>
+            <button class="dropdown-item" on:click={() => setTemplate('Dark')}
+              >Dark</button
             >
           </li>
 
@@ -191,7 +197,10 @@
   <nav class="mobile-menu" transition:slide>
     <ul>
       <li><button on:click={fillRandom}>Täytä esimerkkitiedoilla</button></li>
-      <li><button on:click={handleDownload}>Profiili</button></li>
+      <li>
+        <button on:click={() => goto('/profiilisivu')}>Profiili</button>
+      </li>
+
       <li>
         <button on:click={() => alert('Tulossa pian!')}>Dark Mode</button>
       </li>

@@ -118,33 +118,44 @@ small {
 }
 
 /* ---------- Header / Nav ---------- */
+/* ---------- Header / Nav (viewport-centered logo) ---------- */
 .main-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
 
-  height: 72px;
+  height: 70px;
   background: var(--header);
   color: #fff;
 
   display: flex;
   align-items: center;
-  justify-content: space-between; /* left / logo / right */
-
+  justify-content: space-between;
   padding: 0 20px;
+
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
-  z-index: 100;
+  z-index: 1000;
+
+  width: 100%;
 }
 
 .main-header h1 {
-  font-family: 'Sansita Swashed', cursive;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+
   color: #e3f7f8;
-  font-size: clamp(28px, 3vw, 40px);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-  margin: 0 auto;
   white-space: nowrap;
+  margin: 0;
+
+  font-family: 'Sansita Swashed', sans-serif;
+  font-size: 42px;
+  font-weight: 200;
+
+  pointer-events: none; /* optional: prevents blocking clicks */
 }
 
 .main-header::after {
