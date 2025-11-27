@@ -1,5 +1,20 @@
-body {
-  background: linear-gradient(to top, #00acb51e, #eeeeee);
+:root {
+  --brand: #00adb5;
+  --brand-strong: #0199a0;
+  --brand-glow: #00d1da;
+
+  --bg: #eeeeee;
+
+  --header: #171b20;
+  --card: #ffffff;
+  --card-muted: #dfdfdf;
+
+  --ink: #1b1d1f;
+  --muted: #5f6b73;
+
+  --line: rgba(0, 0, 0, 0.08);
+
+  --font: 'Afacad', sans-serif;
 }
 
 html,
@@ -11,7 +26,6 @@ body {
 
 * {
   box-sizing: border-box;
-  max-width: 100%;
 }
 img,
 iframe,

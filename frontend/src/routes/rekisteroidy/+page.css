@@ -1,191 +1,180 @@
-.container {
-  display: flex;
-  min-height: 100vh;
-  justify-content: center; /* Vaakasuuntainen keskitys */
-  margin-bottom: 1.5rem;
+/* ============================
+   REGISTER PAGE – Fully Scoped
+   ============================ */
+
+/* Full-page background for auth screens */
+.login-page,
+.reset-page,
+.rekisteroidy-page {
+  position: relative;
   width: 100%;
+  min-height: 100vh;
+  background: var(--bg); /* matches pääsivu */
 }
 
-/* Vasen puoli - lomake */
-.left-side {
+/* Layout container */
+.rekisteroidy-page .container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  justify-content: center;
+  background: var(--bg);
+}
+
+/* Left Panel */
+.rekisteroidy-page .left-side {
   width: 55%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 0 3rem;
-  background-color: transparent;
-  height: 100vh;
-  box-sizing: border-box;
 }
-.right-side {
+
+.rekisteroidy-page .left-side h1 {
+  font-family: var(--font);
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--ink);
+}
+
+/* Form */
+.rekisteroidy-page .left-side form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+/* Inputs */
+.rekisteroidy-page .left-side input {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 30px;
+  border: 1px solid var(--line);
+  background: #fafcfd;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.rekisteroidy-page .left-side input::placeholder {
+  color: #a3adb5;
+  font-weight: 500;
+}
+
+.rekisteroidy-page .left-side input:focus {
+  outline: none;
+  border-color: var(--brand);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 173, 181, 0.25);
+}
+
+/* Checkbox */
+.rekisteroidy-page .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.rekisteroidy-page .checkbox-label a {
+  color: var(--brand);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+/* Button */
+.rekisteroidy-page .left-side button {
+  width: 100%;
+  height: 48px;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(135deg, #04d4f0, #00adb5);
+  color: #fff;
+  font-weight: 700;
+  font-size: 20px;
+  font-family: var(--font);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 173, 181, 0.25);
+  transition: all 0.25s ease;
+}
+
+.rekisteroidy-page .left-side button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 173, 181, 0.35);
+}
+
+/* Login text */
+.rekisteroidy-page .login-text {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.rekisteroidy-page .login-text a {
+  color: var(--brand);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* Right Panel */
+.rekisteroidy-page .right-side {
   width: 45%;
   height: 100vh;
   overflow: hidden;
   position: relative;
-  border-top-left-radius: 48px;
-  border-bottom-left-radius: 48px;
-  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.25);
-}
-.right-side::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, #00acb51e, transparent); /* teal sävy */
-}
-
-.right-side img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block; /* poistaa ylimääräisen "inline spacingin" */
-  border-top-left-radius: 48px;
-  border-bottom-left-radius: 48px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-/* Otsikko */
-.left-side h1 {
-  font-family: 'Afacad', sans-serif;
-  font-weight: 600;
-  font-size: 32px;
-  margin-bottom: 2rem;
-  color: #000;
-  text-align: center;
-  width: 100%;
-}
-
-/* Lomake */
-.left-side form {
-  display: flex;
-  flex-direction: column;
-  max-width: 400px;
-  margin: 0 auto;
-  gap: 1rem;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Inputit */
-.left-side input {
-  width: 100%;
-  padding: 0.5rem 1rem;
-  border: 1px solid #393e46;
-  border-radius: 24px;
-  font-family: 'Afacad', sans-serif;
-  font-weight: 600;
-  font-size: 16px;
-  color: #000;
-  background-color: transparent;
-  box-sizing: border-box;
-}
-
-/* Placeholder */
-.left-side input::placeholder {
-  font-family: 'Afacad', sans-serif;
-  font-weight: 100;
-  font-size: 16px;
-  color: #515151;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center; /* Keskittää checkboxin ja tekstin pystysuunnassa */
-  gap: 0.5rem; /* Etäisyys checkboxin ja tekstin välillä */
-  margin-top: 0.5rem;
-  font-family: 'Afacad', sans-serif;
-  font-size: 16px;
-}
-
-.checkbox-label input {
-  margin: 0; /* Poistaa oletusmarginaalin */
-  width: 15px; /* Mahdollistaa yhtenäisen koon */
-  height: 15px; /* Mahdollistaa yhtenäisen koon */
-  vertical-align: middle; /* Keskittää checkbox pystysuunnassa */
-}
-
-.checkbox-label span {
-  display: inline-block;
-}
-.checkbox-label a {
-  color: #007bff;
-  text-decoration: underline;
-  font-family: 'Afacad', sans-serif;
-  font-size: 16px;
-}
-
-/* Painike */
-.left-side button {
-  width: 100%;
-  height: 45px;
-  background-color: #00adb5;
-  color: #fff;
-  font-family: 'Afacad', sans-serif;
-  font-size: 22px;
-  font-weight: 700;
-  border: none;
-  border-radius: 24px;
-  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Kirjaudu sisään teksti */
-.login-text {
-  margin-top: 1.5rem;
-  font-family: 'Afacad', sans-serif;
-  font-size: 16px;
-  text-align: center;
+/* No overlay */
+.rekisteroidy-page .right-side::after {
+  display: none;
 }
 
-.login-text a {
-  color: #007bff;
-  text-decoration: underline;
-  font-family: 'Afacad', sans-serif;
-  font-size: 16px;
+/* Image — FIXED (no clipping) */
+.rekisteroidy-page .right-side img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Good for photos */
+  object-position: center;
+  display: block;
 }
 
-.background-shapes {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: 0;
-  pointer-events: none;
+/* For SVGs — detect via class */
+.rekisteroidy-page .right-side img.illustration {
+  width: 85%;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
 }
 
-.circle {
-  position: absolute;
-  top: -80px;
-  left: -80px;
-  width: 250px;
-  height: 250px;
-  border-radius: 50%;
-  background: #e0e0e0;
-}
-.triangle {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 300px; /* koko kolmion leveys */
-  height: 300px; /* koko kolmion korkeus */
-  background: #757d8a;
-  clip-path: polygon(0 100%, 100% 100%, 0 0);
-  z-index: 0;
-}
-/* Responsiivisuus */
+/* Responsive */
 @media (max-width: 768px) {
-  .container {
+  .rekisteroidy-page .container {
     flex-direction: column;
   }
 
-  .left-side,
-  .right-side {
+  .rekisteroidy-page .left-side,
+  .rekisteroidy-page .right-side {
     width: 100%;
     height: 50vh;
   }
 
-  .left-side {
-    padding: 2rem;
+  .rekisteroidy-page .right-side img {
+    object-fit: contain;
+    height: auto;
+    width: 85%;
   }
 }

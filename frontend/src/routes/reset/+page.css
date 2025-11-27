@@ -1,150 +1,167 @@
-/* Sama tyyli kuin etusivulla */
-.container {
-  display: flex;
-  height: 100vh;
-  overflow: hidden;
-  justify-content: center;
-  margin-bottom: 0;
+/* ============================
+   RESET PAGE – Fully Scoped
+   ============================ */
+
+/* Full-page background for auth screens */
+.login-page,
+.reset-page,
+.rekisteroidy-page {
+  position: relative;
   width: 100%;
+  min-height: 100vh;
+  background: var(--bg); /* matches pääsivu */
 }
 
-.left-side {
+/* Layout container */
+.reset-page .container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  justify-content: center;
+}
+
+/* Left Panel */
+.reset-page .left-side {
   width: 55%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 0 3rem;
-  background-color: transparent;
-  height: 100vh;
-  box-sizing: border-box;
 }
 
-.right-side {
-  width: 45%;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
-}
-.right-side::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-}
-.right-side img {
-  width: 100%; /* Kuva täyttää divin leveyden */
-  max-height: 80%; /* Kuva ei kasva yli 80% divin korkeudesta */
-  object-fit: contain; /* Säilyttää kuvasuhteen */
-  display: block;
-  margin: 0 auto; /* Keskittää kuvan vaakasuunnassa */
-  transform: translateY(70px); /* Siirtää kuvaa 20px alaspäin */
-}
-
-.left-side h1 {
-  font-family: 'Afacad', sans-serif;
-  font-weight: 600;
+.reset-page .left-side h1 {
+  font-family: var(--font);
   font-size: 32px;
-  margin-bottom: 2rem;
-  color: #000;
+  font-weight: 700;
   text-align: center;
-  width: 100%;
-  position: relative;
-  top: -35px;
+  margin-bottom: 1.5rem;
+  color: var(--ink);
 }
 
-.left-side form {
+/* Form */
+.reset-page .left-side form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 380px;
   margin: 0 auto;
-  position: relative;
-  top: -35px;
 }
 
-.left-side input {
+/* Inputs */
+.reset-page .left-side input {
   width: 100%;
-  padding: 0.5rem 1rem;
-  border: 1px solid #393e46;
-  border-radius: 24px;
-  font-family: 'Afacad', sans-serif;
+  padding: 14px 18px;
+  border-radius: 30px;
+  border: 1px solid var(--line);
+  background: #fafcfd;
   font-size: 16px;
-  color: #000;
-  background-color: transparent;
+  font-weight: 600;
+  transition: all 0.25s ease;
 }
 
-.left-side input::placeholder {
-  color: #515151;
+.reset-page .left-side input::placeholder {
+  color: #a3adb5;
+  font-weight: 500;
 }
 
-.left-side button {
+.reset-page .left-side input:focus {
+  outline: none;
+  border-color: var(--brand);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 173, 181, 0.25);
+}
+
+/* Button */
+.reset-page .left-side button {
   width: 100%;
-  height: 45px;
-  background-color: #00adb5;
-  color: #fff;
-  font-family: 'Afacad', sans-serif;
-  font-size: 22px;
-  font-weight: 700;
+  height: 48px;
+  border-radius: 30px;
   border: none;
-  border-radius: 24px;
-  cursor: pointer;
+
+  background: linear-gradient(135deg, #04d4f0, #00adb5);
+  color: #fff;
+  font-weight: 700;
+  font-size: 20px;
+  font-family: var(--font);
+
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 10px; /* Siirtää nappia hieman oikealle */
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(0, 173, 181, 0.25);
+  transition: all 0.25s ease;
 }
 
-.login-text {
-  margin-top: 1.5rem;
-  font-family: 'Afacad', sans-serif;
-  font-size: 16px;
+.reset-page .left-side button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 173, 181, 0.35);
+}
+
+/* Login text */
+.reset-page .login-text {
+  margin-top: 1rem;
   text-align: center;
-  position: relative;
-  top: -35px;
+  font-size: 15px;
+  color: var(--muted);
 }
 
-.login-text a {
-  color: #007bff;
+.reset-page .login-text a {
+  color: var(--brand);
+  font-weight: 600;
   text-decoration: underline;
 }
 
-.background-shapes {
+/* Right Panel */
+.reset-page .right-side {
+  width: 45%;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Optional soft overlay */
+.reset-page .right-side::after {
+  content: '';
   position: absolute;
   inset: 0;
-  overflow: hidden;
-  z-index: 0;
-  pointer-events: none;
+  background: linear-gradient(to top, rgba(0, 173, 181, 0.18), transparent);
 }
 
-.circle {
-  position: absolute;
-  top: -80px;
-  left: -80px;
-  width: 250px;
-  height: 250px;
-  border-radius: 50%;
-  background: #e0e0e0;
-}
-.triangle {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 300px;
-  height: 300px;
-  background: #757d8a;
-  clip-path: polygon(0 100%, 100% 100%, 0 0);
+/* Image – FULL HERO */
+.reset-page .right-side img {
+  width: 85%;
+  height: auto;
+  object-fit: contain; /* SVG should NOT be cropped */
+  object-position: center; /* center the illustration */
+  display: block;
 }
 
+/* BACKGROUND SHAPES REMOVED ENTIRELY */
+.reset-page .background-shapes,
+.reset-page .circle,
+.reset-page .triangle {
+  display: none !important;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .container {
+  .reset-page .container {
     flex-direction: column;
   }
-  .left-side,
-  .right-side {
+
+  .reset-page .left-side,
+  .reset-page .right-side {
     width: 100%;
     height: 50vh;
   }
-  .left-side {
-    padding: 2rem;
+
+  .reset-page .right-side img {
+    transform: translateY(20px);
   }
 }

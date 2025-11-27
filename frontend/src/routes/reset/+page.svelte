@@ -24,45 +24,33 @@
   };
 </script>
 
-<div class="container">
-  <!-- Vasemman puolen lomake -->
-  <div class="left-side">
-    <h1>Unohtuiko salasana?</h1>
+<div class="reset-page">
+  <div class="container">
+    <div class="left-side">
+      <h1>Unohtuiko salasana?</h1>
 
-    <form on:submit|preventDefault={lahetaReset} class="space-y-4">
-      <input
-        type="email"
-        placeholder="Sähköpostiosoite"
-        bind:value={sahkoposti}
-        class="w-full border rounded-full px-4 py-2"
-      />
+      <form on:submit|preventDefault={lahetaReset} class="space-y-4">
+        <input
+          type="email"
+          placeholder="Sähköpostiosoite"
+          bind:value={sahkoposti}
+        />
 
-      {#if viesti}
-        <p class="text-sm text-green-600">{viesti}</p>
-      {/if}
+        {#if viesti}
+          <p class="text-sm text-green-600">{viesti}</p>
+        {/if}
 
-      <button
-        type="submit"
-        class="w-full bg-teal-500 text-white py-2 rounded-full"
-      >
-        Lähetä palautuslinkki
-      </button>
-    </form>
+        <button type="submit">Lähetä palautuslinkki</button>
+      </form>
 
-    <p class="login-text">
-      Muistitko salasanan? <a href="../" class="text-blue-600"
-        >Kirjaudu sisään</a
-      >
-    </p>
+      <p class="login-text">
+        Muistitko salasanan?
+        <a href="/">Kirjaudu sisään</a>
+      </p>
+    </div>
+
+    <div class="right-side">
+      <img src="../src/lib/assets/forgot.svg" alt="Forgot password icon" />
+    </div>
   </div>
-
-  <!-- Oikean puolen kuva -->
-  <div class="right-side">
-    <img src="../src/lib/assets/forgot.svg" alt="Forgot password icon" />
-  </div>
-</div>
-
-<div class="background-shapes">
-  <div class="circle"></div>
-  <div class="triangle"></div>
 </div>

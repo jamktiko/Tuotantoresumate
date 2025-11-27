@@ -1,87 +1,45 @@
 <script>
-  import { onMount } from 'svelte';
-  import './+page.css'; // 👉 Tuodaan tyylit globaalisti (helppo tapa)
+  import './+page.css';
 
-  let user = { name: 'Testikäyttäjä', email: 'testi@example.com' };
-  let cvs = [];
+  let name = '';
+  let email = '';
+  let password = '';
+  let agree = false;
 
-  onMount(async () => {
-    try {
-      const res = await fetch('http://localhost:4000/my-cvs', {
-        credentials: 'include',
-      });
-      const data = await res.json();
-      cvs = data || [];
-    } catch (err) {
-      console.error('CV:n haku epäonnistui:', err);
-    }
-  });
-
-  function logout() {
-    fetch('http://localhost:4000/logout', {
-      method: 'POST',
-      credentials: 'include',
-    });
-    window.location.href = '/login';
-  }
-
-  function openCV(cv) {
-    window.open(`http://localhost:4000${cv.pdfPath}`, '_blank');
-  }
-
-  function editCV(cv) {
-    localStorage.setItem('editCV', JSON.stringify(cv));
-    window.location.href = '/';
-  }
-
-  function createNewCV() {
-    localStorage.removeItem('editCV');
-    window.location.href = '/paasivu';
-  }
+  const register = () => {
+    console.log('Registering...');
+  };
 </script>
 
-<!-- ✅ Yksi ylimääräinen wrapper-luokka, jotta CSS pysyy eristettynä -->
-<div class="profile-page">
-  <header class="main-header">
-    <h1>Resumate – Profiili</h1>
-    <button class="logout-btn" on:click={logout}>Kirjaudu ulos</button>
-  </header>
+<div class="rekisteroidy-page">
+  <div class="container">
+    <div class="left-side">
+      <h1>Luo tili</h1>
 
-  <div class="page">
-    <div class="left">
-      <div class="profile-info">
-        <div class="avatar">{user.name.charAt(0)}</div>
-        <div class="profile-text">
-          <h2 class="username">{user.name}</h2>
-          <p class="email">{user.email}</p>
-        </div>
-      </div>
+      <form on:submit|preventDefault={register}>
+        <input type="text" placeholder="Nimi" bind:value={name} />
+        <input type="email" placeholder="Sähköpostiosoite" bind:value={email} />
+        <input type="password" placeholder="Salasana" bind:value={password} />
 
-      <hr class="section-divider" />
+        <label class="checkbox-label">
+          <input type="checkbox" bind:checked={agree} />
+          <span>
+            Hyväksyn <a href="/terms">käyttöehdot</a>
+          </span>
+        </label>
 
-      <h2>Omat CV:t</h2>
+        <button type="submit">Rekisteröidy</button>
 
-      <div class="cv-gallery">
-        <button class="cv-template new-cv" on:click={createNewCV}>
-          <div class="cv-thumb empty">
-            <div class="plus-icon">＋</div>
-          </div>
-          <p>Uusi CV</p>
-        </button>
+        <p class="login-text">
+          Onko sinulla jo tili? <a href="/">Kirjaudu sisään</a>
+        </p>
+      </form>
+    </div>
 
-        {#each cvs as cv}
-          <div class="cv-template">
-            <button class="cv-thumb" on:click={() => openCV(cv)}>
-              <h4>{cv.title}</h4>
-            </button>
-            <p>{new Date(cv.createdAt).toLocaleDateString('fi-FI')}</p>
-            <div class="cv-actions">
-              <button on:click={() => editCV(cv)}>Muokkaa</button>
-              <a href={`http://localhost:4000${cv.pdfPath}`} download>⬇️</a>
-            </div>
-          </div>
-        {/each}
-      </div>
+    <div class="right-side">
+      <img src="../src/lib/assets/kirjautumiskuva.jpg" alt="Kuva" />
     </div>
   </div>
+
+  <!-- Background shapes removed -->
 </div>
