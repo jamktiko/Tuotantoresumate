@@ -1,27 +1,25 @@
-/* ============================
-   RESET PAGE – Fully Scoped
-   ============================ */
+/* ============================================
+   RESET PAGE — ACCESSIBLE + RESPONSIVE
+   ============================================ */
 
-/* Full-page background for auth screens */
-.login-page,
-.reset-page,
-.rekisteroidy-page {
+/* Full-page background */
+.reset-page {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  background: var(--bg); /* matches pääsivu */
+  background: var(--bg);
 }
 
-/* Layout container */
+/* Layout wrapper */
 .reset-page .container {
   display: flex;
   height: 100vh;
   width: 100%;
-  overflow: hidden;
   justify-content: center;
+  overflow: hidden;
 }
 
-/* Left Panel */
+/* LEFT SIDE */
 .reset-page .left-side {
   width: 55%;
   display: flex;
@@ -30,27 +28,29 @@
   padding: 0 3rem;
 }
 
-.reset-page .left-side h1 {
+.reset-page h1 {
   font-family: var(--font);
-  font-size: 32px;
   font-weight: 700;
+  font-size: 32px;
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.8rem;
   color: var(--ink);
 }
 
-/* Form */
-.reset-page .left-side form {
+/* Input groups (label + input) */
+.reset-page .input-group {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  max-width: 380px;
-  margin: 0 auto;
+  gap: 6px;
 }
 
-/* Inputs */
-.reset-page .left-side input {
+.reset-page label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.reset-page input {
   width: 100%;
   padding: 14px 18px;
   border-radius: 30px;
@@ -61,30 +61,35 @@
   transition: all 0.25s ease;
 }
 
-.reset-page .left-side input::placeholder {
+.reset-page input::placeholder {
   color: #a3adb5;
-  font-weight: 500;
 }
 
-.reset-page .left-side input:focus {
+.reset-page input:focus {
   outline: none;
   border-color: var(--brand);
-  background: #fff;
+  background: white;
   box-shadow: 0 0 0 3px rgba(0, 173, 181, 0.25);
 }
 
-/* Button */
-.reset-page .left-side button {
+/* Success/error text */
+.reset-page .feedback {
+  font-size: 14px;
+  margin-top: -4px;
+  color: var(--brand-strong);
+}
+
+/* SUBMIT BUTTON */
+.reset-page button {
   width: 100%;
   height: 48px;
   border-radius: 30px;
   border: none;
-
   background: linear-gradient(135deg, #04d4f0, #00adb5);
-  color: #fff;
-  font-weight: 700;
+  color: white;
   font-size: 20px;
-  font-family: var(--font);
+  font-weight: 700;
+  margin-top: 6px;
 
   display: flex;
   justify-content: center;
@@ -95,73 +100,61 @@
   transition: all 0.25s ease;
 }
 
-.reset-page .left-side button:hover {
+.reset-page button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(0, 173, 181, 0.35);
 }
 
-/* Login text */
+/* Bottom link */
 .reset-page .login-text {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   text-align: center;
-  font-size: 15px;
   color: var(--muted);
+  font-size: 15px;
 }
 
 .reset-page .login-text a {
   color: var(--brand);
   font-weight: 600;
-  text-decoration: underline;
 }
 
-/* Right Panel */
+/* RIGHT SIDE */
 .reset-page .right-side {
   width: 45%;
   height: 100vh;
-  overflow: hidden;
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Optional soft overlay */
-.reset-page .right-side::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0, 173, 181, 0.18), transparent);
-}
-
-/* Image – FULL HERO */
 .reset-page .right-side img {
-  width: 85%;
+  width: 80%;
+  max-width: 500px;
   height: auto;
-  object-fit: contain; /* SVG should NOT be cropped */
-  object-position: center; /* center the illustration */
-  display: block;
+  object-fit: contain; /* SVG behaves correctly */
 }
 
-/* BACKGROUND SHAPES REMOVED ENTIRELY */
-.reset-page .background-shapes,
-.reset-page .circle,
-.reset-page .triangle {
-  display: none !important;
-}
-
-/* Responsive */
+/* MOBILE RESPONSIVE */
 @media (max-width: 768px) {
   .reset-page .container {
     flex-direction: column;
+    height: auto;
   }
 
-  .reset-page .left-side,
+  .reset-page .left-side {
+    width: 100%;
+    height: auto;
+    padding: 2rem 1.6rem;
+  }
+
   .reset-page .right-side {
     width: 100%;
-    height: 50vh;
+    height: auto;
+    padding: 1rem 0;
   }
 
   .reset-page .right-side img {
-    transform: translateY(20px);
+    width: 60%;
+    margin: 0 auto;
   }
 }
