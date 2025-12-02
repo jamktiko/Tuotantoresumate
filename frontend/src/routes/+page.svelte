@@ -17,25 +17,32 @@
       <h1>Kirjaudu sisään</h1>
 
       <form on:submit|preventDefault={kirjaudu}>
-        <!-- Email -->
-        <input
-          type="email"
-          placeholder="Sähköpostiosoite"
-          bind:value={sahkoposti}
-        />
+        <div class="input-group">
+          <label for="email">Sähköpostiosoite</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="esimerkki@posti.com"
+            bind:value={sahkoposti}
+          />
+        </div>
 
-        <!-- Password -->
-        <input type="password" placeholder="Salasana" bind:value={salasana} />
+        <div class="input-group">
+          <label for="password">Salasana</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            bind:value={salasana}
+          />
+        </div>
 
-        <!-- Forgot password -->
         <div class="pwdreset">
           <a href="/reset">Unohtuiko salasana?</a>
         </div>
 
-        <!-- Login Button -->
         <button type="submit">Kirjaudu</button>
 
-        <!-- Register Link -->
         <p class="login-text">
           Ei vielä tiliä?
           <a href="/rekisteroidy">Luo tili</a>
@@ -43,7 +50,7 @@
       </form>
     </div>
 
-    <!-- Right: Illustration -->
+    <!-- Right Image -->
     <div class="right-side">
       <img src="../src/lib/assets/kirjautumiskuva.jpg" alt="Kirjautumiskuva" />
     </div>

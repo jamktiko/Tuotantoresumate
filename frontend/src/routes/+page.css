@@ -1,16 +1,16 @@
 /* ============================================
-   AUTH PAGE – CLEAN + FIXED (Resumate System)
+   AUTH PAGE – ORIGINAL DESKTOP KEPT INTACT
+   + RESPONSIVE FIXES (Resumate System)
    ============================================ */
 
 /* Main layout */
-/* Full-page background for auth screens */
 .login-page,
 .reset-page,
 .rekisteroidy-page {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  background: var(--bg); /* matches pääsivu */
+  background: var(--bg);
 }
 
 .container {
@@ -24,7 +24,7 @@
   z-index: 1;
 }
 
-/* Left (Form) */
+/* LEFT SIDE (FORM PANEL) — ORIGINAL */
 .left-side {
   width: 55%;
   display: flex;
@@ -32,7 +32,7 @@
   justify-content: center;
   padding: 0 3rem;
   position: relative;
-  z-index: 10; /* Ensures nothing overlays it */
+  z-index: 10;
 }
 
 .left-side h1 {
@@ -44,7 +44,6 @@
   color: var(--ink);
 }
 
-/* Form */
 .left-side form {
   max-width: 380px;
   width: 100%;
@@ -131,7 +130,7 @@
   text-decoration: underline;
 }
 
-/* Right side (Image panel) */
+/* RIGHT SIDE (IMAGE PANEL) — ORIGINAL DESKTOP */
 .login-page .right-side {
   width: 45%;
   height: 100vh;
@@ -161,19 +160,65 @@
   pointer-events: none !important;
 }
 
-/* RESPONSIVE */
+/* -----------------------------------------
+      RESPONSIVE FIXES
+   ----------------------------------------- */
+
+/* Mid-size screens (tablets, small laptops) */
+@media (max-width: 1100px) {
+  .left-side {
+    width: 60%;
+    padding: 0 2rem;
+  }
+
+  .left-side h1 {
+    font-size: 28px;
+  }
+
+  .left-side form {
+    max-width: 340px;
+  }
+
+  .login-page .right-side {
+    width: 40%;
+  }
+}
+
+/* Mobile layout */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
+    height: auto;
+    min-height: 100vh;
   }
 
-  .left-side,
-  .right-side {
+  .left-side {
     width: 100%;
-    height: 50vh;
+    padding: 2rem 1.5rem;
+    margin-top: 1rem;
   }
 
-  .right-side img {
-    transform: translateY(10px);
+  .left-side h1 {
+    font-size: 26px;
+  }
+
+  .left-side form {
+    max-width: 320px;
+  }
+
+  /* IMPORTANT: override desktop height using SAME selector */
+  .login-page .right-side {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    display: block;
+  }
+
+  .login-page .right-side img {
+    width: 100%;
+    height: 260px; /* fixed, non-crazy height */
+    object-fit: cover;
+    object-position: center;
+    display: block;
   }
 }
