@@ -21,13 +21,13 @@
   }
 </script>
 
-<header class="main-header">
-  <h1>Resumate – Profiili</h1>
-  <button class="logout-btn" on:click={logout}>Kirjaudu ulos</button>
-</header>
+<div class="profile-page">
+  <header class="main-header">
+    <h1>Resumate – Profiili</h1>
+    <button class="logout-btn" on:click={logout}>Kirjaudu ulos</button>
+  </header>
 
-<div class="page">
-  <div class="left">
+  <div class="page">
     <div class="profile-info">
       <div class="avatar">{user.name.charAt(0)}</div>
       <div class="profile-text">
@@ -41,7 +41,7 @@
     <h2>Omat CV:t</h2>
 
     <div class="cv-gallery">
-      <button class="cv-template new-cv" on:click={createNewCV}>
+      <button class="cv-template new-cv" type="button" on:click={createNewCV}>
         <div class="cv-thumb empty">
           <div class="plus-icon">＋</div>
         </div>
