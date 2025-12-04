@@ -22,12 +22,12 @@
 </script>
 
 <div class="profile-page">
-  <header class="main-header">
+  <header class="profile-header">
     <h1>Resumate – Profiili</h1>
     <button class="logout-btn" on:click={logout}>Kirjaudu ulos</button>
   </header>
 
-  <div class="page">
+  <div class="profile-content">
     <div class="profile-info">
       <div class="avatar">{user.name.charAt(0)}</div>
       <div class="profile-text">
@@ -40,9 +40,13 @@
 
     <h2>Omat CV:t</h2>
 
-    <div class="cv-gallery">
-      <button class="cv-template new-cv" type="button" on:click={createNewCV}>
-        <div class="cv-thumb empty">
+    <div class="profile-cv-gallery">
+      <button
+        class="profile-cv-template new-cv"
+        type="button"
+        on:click={createNewCV}
+      >
+        <div class="profile-cv-thumb empty">
           <div class="plus-icon">＋</div>
         </div>
         <p>Uusi CV</p>

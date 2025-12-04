@@ -1,3 +1,7 @@
+/* ============================================
+   PROFILE PAGE — FULLY ISOLATED + RESPONSIVE
+   ============================================ */
+
 .profile-page {
   background: var(--bg);
   min-height: 100vh;
@@ -6,7 +10,10 @@
   color: var(--ink);
 }
 
-.profile-page .main-header {
+/* -------------------------------
+   HEADER (renamed from .main-header)
+-------------------------------- */
+.profile-page .profile-header {
   width: 100%;
   height: 70px;
   background: var(--header);
@@ -23,11 +30,13 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.profile-page .main-header h1 {
+/* <<< FIX: force white header text so it isn't overridden by global h1 styles */
+.profile-page .profile-header h1 {
   margin: 0;
   font-family: 'Sansita Swashed', sans-serif;
   font-size: 42px;
   font-weight: 200;
+  color: #fff; /* important: beats global `h1 { color: var(--ink) }` */
 }
 
 /* Logout button */
@@ -40,11 +49,10 @@
   border: none;
   border-radius: 12px;
   color: #fff;
-
   cursor: pointer;
+
   font-size: 16px;
   font-weight: 700;
-
   font-family: 'Afacad', sans-serif;
 
   box-shadow: 0 4px 12px rgba(239, 107, 107, 0.25);
@@ -56,14 +64,18 @@
   box-shadow: 0 6px 18px rgba(239, 107, 107, 0.35);
 }
 
-.profile-page .page {
-  padding-top: 90px; /* space for header */
+/* -------------------------------
+   CONTENT AREA (was .page)
+-------------------------------- */
+.profile-page .profile-content {
+  padding-top: 90px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
+/* PROFILE INFO */
 .profile-page .profile-info {
   display: flex;
   align-items: center;
@@ -109,7 +121,7 @@
 }
 
 /* -------------------------------
-   CV GALLERY (same layout as screenshot)
+   CV TITLE & GALLERY (renamed)
 -------------------------------- */
 .profile-page h2 {
   margin-left: 50px;
@@ -117,7 +129,7 @@
   font-weight: 700;
 }
 
-.profile-page .cv-gallery {
+.profile-page .profile-cv-gallery {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
@@ -125,8 +137,10 @@
   margin-top: 1rem;
 }
 
-/* Card wrapper — now FULLY RESET so no extra borders appear */
-.profile-page .cv-template {
+/* -------------------------------
+   CV CARD WRAPPER (was .cv-template)
+-------------------------------- */
+.profile-page .profile-cv-template {
   width: 150px;
   text-align: center;
   border: none !important;
@@ -136,10 +150,10 @@
   margin: 0;
 }
 
-/* 🔥 FULL button reset for NEW CV + all CV wrapper buttons */
-.profile-page .cv-template.new-cv,
-.profile-page .cv-template button,
-.profile-page button.cv-template {
+/* Reset button styling on wrappers */
+.profile-page .profile-cv-template.new-cv,
+.profile-page .profile-cv-template button,
+.profile-page button.profile-cv-template {
   all: unset;
   display: block;
   width: 150px;
@@ -147,8 +161,10 @@
   cursor: pointer;
 }
 
-/* Thumbnail */
-.profile-page .cv-thumb {
+/* -------------------------------
+   CV THUMBNAIL (renamed from .cv-thumb)
+-------------------------------- */
+.profile-page .profile-cv-thumb {
   width: 100%;
   aspect-ratio: 3 / 4;
 
@@ -162,66 +178,67 @@
 
   box-shadow: var(--shadow-1);
   cursor: pointer;
-
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.profile-page .cv-thumb:hover {
+.profile-page .profile-cv-thumb:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-2);
 }
 
-/* New CV style */
-.profile-page .cv-thumb.empty {
+/* New CV dashed style */
+.profile-page .profile-cv-thumb.empty {
   border: 2px dashed var(--brand);
   background: rgba(0, 173, 181, 0.12);
 }
 
+/* + Icon */
 .profile-page .plus-icon {
   font-size: 2rem;
   font-weight: 700;
   color: var(--brand);
 }
 
-.profile-page .cv-template p {
+/* Caption under CV card */
+.profile-page .profile-cv-template p {
   margin-top: 0.5rem;
   font-size: 0.9rem;
   color: var(--muted);
 }
 
-/* Action buttons */
-.profile-page .cv-actions {
+/* -------------------------------
+   CV ACTION BUTTONS (renamed)
+-------------------------------- */
+.profile-page .profile-cv-actions {
   display: flex;
   justify-content: center;
   gap: 0.4rem;
   margin-top: 0.3rem;
 }
 
-.profile-page .cv-actions button,
-.profile-page .cv-actions a {
+.profile-page .profile-cv-actions button,
+.profile-page .profile-cv-actions a {
   background: var(--brand);
   color: #fff;
   border: none;
   padding: 4px 10px;
-
   border-radius: 8px;
   font-size: 0.8rem;
   cursor: pointer;
-
   transition: background 0.2s ease;
   text-decoration: none;
 }
 
-.profile-page .cv-actions button:hover,
-.profile-page .cv-actions a:hover {
+.profile-page .profile-cv-actions button:hover,
+.profile-page .profile-cv-actions a:hover {
   background: var(--brand-strong);
 }
 
 /* -------------------------------
-   RESPONSIVE
+   RESPONSIVENESS
 -------------------------------- */
 @media (max-width: 1024px) {
-  .profile-page .page {
+  .profile-page .profile-content {
     align-items: center;
     padding-bottom: 3rem;
   }
@@ -231,7 +248,7 @@
     text-align: left;
   }
 
-  .profile-page .cv-gallery {
+  .profile-page .profile-cv-gallery {
     margin-left: 0;
     width: 90%;
   }
@@ -242,13 +259,13 @@
 }
 
 @media (max-width: 600px) {
-  .profile-page .main-header {
+  .profile-page .profile-header {
     height: auto;
     padding: 0.5rem 0;
     flex-direction: column;
   }
 
-  .profile-page .main-header h1 {
+  .profile-page .profile-header h1 {
     font-size: clamp(22px, 5vw, 36px);
   }
 
@@ -264,13 +281,13 @@
     gap: 0.8rem;
   }
 
-  .profile-page .cv-gallery {
+  .profile-page .profile-cv-gallery {
     width: 100%;
     flex-direction: column;
     align-items: center;
   }
 
-  .profile-page .cv-thumb {
+  .profile-page .profile-cv-thumb {
     width: 160px;
   }
 
