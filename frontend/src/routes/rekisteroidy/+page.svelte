@@ -17,9 +17,38 @@
       <h1>Luo tili</h1>
 
       <form on:submit|preventDefault={register}>
-        <input type="text" placeholder="Nimi" bind:value={name} />
-        <input type="email" placeholder="Sähköpostiosoite" bind:value={email} />
-        <input type="password" placeholder="Salasana" bind:value={password} />
+        <div class="input-group">
+          <label for="name">Nimi</label>
+          <input
+            id="name"
+            type="text"
+            placeholder="Nimi"
+            bind:value={name}
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="email">Sähköpostiosoite</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="esimerkki@posti.com"
+            bind:value={email}
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="password">Salasana</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            bind:value={password}
+            required
+          />
+        </div>
 
         <div class="checkbox-row">
           <input id="agree" type="checkbox" bind:checked={agree} />
