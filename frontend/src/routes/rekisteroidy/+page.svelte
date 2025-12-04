@@ -21,12 +21,12 @@
         <input type="email" placeholder="Sähköpostiosoite" bind:value={email} />
         <input type="password" placeholder="Salasana" bind:value={password} />
 
-        <label class="checkbox-label">
-          <input type="checkbox" bind:checked={agree} />
-          <span>
+        <div class="checkbox-row">
+          <input id="agree" type="checkbox" bind:checked={agree} />
+          <label for="agree">
             Hyväksyn <a href="/terms">käyttöehdot</a>
-          </span>
-        </label>
+          </label>
+        </div>
 
         <button type="submit">Rekisteröidy</button>
 

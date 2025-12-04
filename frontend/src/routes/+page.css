@@ -1,9 +1,3 @@
-/* ============================================
-   AUTH PAGE – ORIGINAL DESKTOP KEPT INTACT
-   + RESPONSIVE FIXES (Resumate System)
-   ============================================ */
-
-/* Main layout */
 .login-page,
 .reset-page,
 .rekisteroidy-page {
@@ -24,7 +18,6 @@
   z-index: 1;
 }
 
-/* LEFT SIDE (FORM PANEL) — ORIGINAL */
 .left-side {
   width: 55%;
   display: flex;
@@ -116,7 +109,6 @@
   box-shadow: 0 6px 18px rgba(0, 173, 181, 0.35);
 }
 
-/* "Create account" text */
 .login-text {
   text-align: center;
   font-size: 15px;
@@ -130,7 +122,6 @@
   text-decoration: underline;
 }
 
-/* RIGHT SIDE (IMAGE PANEL) — ORIGINAL DESKTOP */
 .login-page .right-side {
   width: 45%;
   height: 100vh;
@@ -154,17 +145,11 @@
   display: none !important;
 }
 
-/* Completely remove old right-side overlay */
 .right-side::after {
   display: none !important;
   pointer-events: none !important;
 }
 
-/* -----------------------------------------
-      RESPONSIVE FIXES
-   ----------------------------------------- */
-
-/* Mid-size screens (tablets, small laptops) */
 @media (max-width: 1100px) {
   .left-side {
     width: 60%;
@@ -206,7 +191,6 @@
     max-width: 320px;
   }
 
-  /* IMPORTANT: override desktop height using SAME selector */
   .login-page .right-side {
     width: 100%;
     height: auto;
@@ -216,7 +200,7 @@
 
   .login-page .right-side img {
     width: 100%;
-    height: 260px; /* fixed, non-crazy height */
+    height: 260px;
     object-fit: cover;
     object-position: center;
     display: block;

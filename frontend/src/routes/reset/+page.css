@@ -1,8 +1,3 @@
-/* ============================================
-   RESET PAGE — ACCESSIBLE + RESPONSIVE
-   ============================================ */
-
-/* Full-page background */
 .reset-page {
   position: relative;
   width: 100%;
@@ -10,7 +5,6 @@
   background: var(--bg);
 }
 
-/* Layout wrapper */
 .reset-page .container {
   display: flex;
   height: 100vh;
@@ -19,7 +13,6 @@
   overflow: hidden;
 }
 
-/* LEFT SIDE */
 .reset-page .left-side {
   width: 55%;
   display: flex;
@@ -37,7 +30,6 @@
   color: var(--ink);
 }
 
-/* Input groups (label + input) */
 .reset-page .input-group {
   display: flex;
   flex-direction: column;
@@ -72,14 +64,12 @@
   box-shadow: 0 0 0 3px rgba(0, 173, 181, 0.25);
 }
 
-/* Success/error text */
 .reset-page .feedback {
   font-size: 14px;
   margin-top: -4px;
   color: var(--brand-strong);
 }
 
-/* SUBMIT BUTTON */
 .reset-page button {
   width: 100%;
   height: 48px;
@@ -105,7 +95,6 @@
   box-shadow: 0 6px 18px rgba(0, 173, 181, 0.35);
 }
 
-/* Bottom link */
 .reset-page .login-text {
   margin-top: 1.5rem;
   text-align: center;
@@ -118,7 +107,6 @@
   font-weight: 600;
 }
 
-/* RIGHT SIDE */
 .reset-page .right-side {
   width: 45%;
   height: 100vh;
@@ -134,7 +122,6 @@
   object-fit: contain; /* SVG behaves correctly */
 }
 
-/* MOBILE RESPONSIVE */
 @media (max-width: 768px) {
   .reset-page .container {
     flex-direction: column;

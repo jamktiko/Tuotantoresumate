@@ -1,15 +1,14 @@
-/* ============================
-   REGISTER PAGE – Fully Scoped
-   ============================ */
+/* ============================================
+   REGISTER PAGE — RESPONSIVE + ACCESSIBLE
+   ============================================ */
 
-/* Full-page background for auth screens */
 .login-page,
 .reset-page,
 .rekisteroidy-page {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  background: var(--bg); /* matches pääsivu */
+  background: var(--bg);
 }
 
 /* Layout container */
@@ -22,7 +21,7 @@
   background: var(--bg);
 }
 
-/* Left Panel */
+/* LEFT PANEL (desktop defaults) */
 .rekisteroidy-page .left-side {
   width: 55%;
   display: flex;
@@ -40,7 +39,7 @@
   color: var(--ink);
 }
 
-/* Form */
+/* FORM */
 .rekisteroidy-page .left-side form {
   display: flex;
   flex-direction: column;
@@ -50,7 +49,7 @@
   margin: 0 auto;
 }
 
-/* Inputs */
+/* INPUTS */
 .rekisteroidy-page .left-side input {
   width: 100%;
   padding: 14px 18px;
@@ -74,22 +73,35 @@
   box-shadow: 0 0 0 3px rgba(0, 173, 181, 0.25);
 }
 
-/* Checkbox */
-.rekisteroidy-page .checkbox-label {
+/* CHECKBOX ROW */
+.rekisteroidy-page .checkbox-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 15px;
-  color: var(--ink);
+  gap: 10px;
+  margin: 0.5rem 0 0.5rem 2px;
 }
 
-.rekisteroidy-page .checkbox-label a {
+.rekisteroidy-page .checkbox-row input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.rekisteroidy-page .checkbox-row label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.rekisteroidy-page .checkbox-row label a {
   color: var(--brand);
   text-decoration: underline;
   font-weight: 600;
 }
 
-/* Button */
+/* BUTTON */
 .rekisteroidy-page .left-side button {
   width: 100%;
   height: 48px;
@@ -113,7 +125,7 @@
   box-shadow: 0 6px 18px rgba(0, 173, 181, 0.35);
 }
 
-/* Login text */
+/* TEXT BELOW BUTTON */
 .rekisteroidy-page .login-text {
   margin-top: 1rem;
   text-align: center;
@@ -127,7 +139,7 @@
   text-decoration: underline;
 }
 
-/* Right Panel */
+/* RIGHT PANEL — Desktop */
 .rekisteroidy-page .right-side {
   width: 45%;
   height: 100vh;
@@ -138,43 +150,87 @@
   align-items: center;
 }
 
-/* No overlay */
-.rekisteroidy-page .right-side::after {
-  display: none;
-}
-
-/* Image — FIXED (no clipping) */
 .rekisteroidy-page .right-side img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Good for photos */
-  object-position: center;
-  display: block;
+  object-fit: cover;
 }
 
-/* For SVGs — detect via class */
+/* SVG support */
 .rekisteroidy-page .right-side img.illustration {
   width: 85%;
   height: auto;
   object-fit: contain;
-  object-position: center;
 }
 
-/* Responsive */
+/* ============================================
+   RESPONSIVENESS
+   ============================================ */
+
+/* TABLETS – smoother scaling */
+@media (max-width: 1100px) {
+  .rekisteroidy-page .left-side {
+    width: 60%;
+    padding: 0 2rem;
+  }
+
+  .rekisteroidy-page .left-side h1 {
+    font-size: 28px;
+  }
+
+  .rekisteroidy-page .left-side form {
+    max-width: 340px;
+  }
+
+  .rekisteroidy-page .right-side {
+    width: 40%;
+  }
+}
+
 @media (max-width: 768px) {
   .rekisteroidy-page .container {
     flex-direction: column;
+    height: auto;
+    min-height: 100vh;
   }
 
-  .rekisteroidy-page .left-side,
+  .rekisteroidy-page .left-side {
+    width: 100%;
+    padding: 2rem 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .rekisteroidy-page .left-side h1 {
+    font-size: 26px;
+  }
+
+  .rekisteroidy-page .left-side form {
+    max-width: 320px;
+  }
+
+  /* RIGHT SIDE — MOBILE: FULL-WIDTH IMAGE LIKE LOGIN PAGE */
   .rekisteroidy-page .right-side {
     width: 100%;
-    height: 50vh;
+    height: auto;
   }
 
   .rekisteroidy-page .right-side img {
-    object-fit: contain;
-    height: auto;
-    width: 85%;
+    width: 100%;
+    height: 240px; /* <-- Match your login page’s mobile height */
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+}
+
+/* SMALL PHONES */
+@media (max-width: 480px) {
+  .rekisteroidy-page .checkbox-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .rekisteroidy-page .right-side img {
+    height: 200px; /* optional tweak for very small screens */
   }
 }

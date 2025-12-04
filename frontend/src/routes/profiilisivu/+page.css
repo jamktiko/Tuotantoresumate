@@ -1,6 +1,3 @@
-/* ============================================
-   PROFILE PAGE — SCOPED + THEMED (Resumate)
-   ============================================ */
 .profile-page {
   background: var(--bg);
   min-height: 100vh;
@@ -9,9 +6,6 @@
   color: var(--ink);
 }
 
-/* -------------------------------
-   HEADER — same style as main app
--------------------------------- */
 .profile-page .main-header {
   width: 100%;
   height: 70px;
@@ -62,9 +56,6 @@
   box-shadow: 0 6px 18px rgba(239, 107, 107, 0.35);
 }
 
-/* -------------------------------
-   PAGE WRAPPER
--------------------------------- */
 .profile-page .page {
   padding-top: 90px; /* space for header */
   width: 100%;
@@ -73,9 +64,6 @@
   align-items: flex-start;
 }
 
-/* -------------------------------
-   USER INFO SECTION
--------------------------------- */
 .profile-page .profile-info {
   display: flex;
   align-items: center;
