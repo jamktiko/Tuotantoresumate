@@ -125,4 +125,45 @@
     color: var(--header);
     display: block;
   }
+
+  :global(.dark) .reference-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-1);
+    color: var(--ink);
+  }
+
+  :global(.dark) .reference-card input {
+    background: var(--card-muted);
+    border-color: var(--line);
+    color: var(--ink);
+  }
+
+  :global(.dark) .reference-card input::placeholder {
+    color: var(--muted);
+  }
+
+  :global(.dark) .reference-card label {
+    color: var(--ink);
+  }
+
+  :global(.dark) .photo-delete-button {
+    background: rgba(239, 107, 107, 0.15);
+    border: 1px solid rgba(239, 107, 107, 0.25);
+    color: #d96b6b;
+  }
+
+  :global(.dark) .photo-delete-button:hover {
+    background: rgba(239, 107, 107, 0.25);
+  }
+
+  :global(.dark) .photo-button {
+    background: rgba(4, 212, 240, 0.15);
+    border: 1px solid rgba(4, 212, 240, 0.25);
+    color: var(--brand);
+  }
+
+  :global(.dark) .photo-button:hover {
+    background: rgba(4, 212, 240, 0.25);
+  }
 </style>
