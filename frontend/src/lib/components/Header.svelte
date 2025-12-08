@@ -227,3 +227,13 @@
 {#if isLoading}
   <div class="loader-overlay"><div class="spinner"></div></div>
 {/if}
+
+<style>
+  :global(.hamburger svg) {
+    stroke: #ffffff !important;
+  }
+
+  :global(.dark .hamburger svg) {
+    stroke: #ffffff !important;
+  }
+</style>

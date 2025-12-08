@@ -20,10 +20,6 @@
   --shadow-2: 0 10px 30px rgba(0, 0, 0, 0.12);
 }
 
-/* ============================================
-   DARK MODE
-============================================ */
-
 :root.dark {
   --bg: #0f1113;
   --ink: #f1f5f9;
@@ -42,10 +38,6 @@
   --shadow-1: 0 4px 16px rgba(0, 0, 0, 0.45);
   --shadow-2: 0 6px 22px rgba(0, 0, 0, 0.6);
 }
-
-/* ============================================
-   GLOBAL TEXT + INPUTS
-============================================ */
 
 :root.dark body {
   background: var(--bg);
@@ -79,10 +71,6 @@
   color: var(--muted);
 }
 
-/* ============================================
-   CARDS + SECTIONS
-============================================ */
-
 :root.dark .left,
 :root.dark .right,
 :root.dark .section,
@@ -104,10 +92,6 @@
   color: var(--ink);
 }
 
-/* ============================================
-   LABEL FIXES
-============================================ */
-
 :root.dark label,
 :root.dark .input-group label,
 :root.dark .extra-info label,
@@ -115,10 +99,6 @@
 :root.dark .photo-upload-group label {
   color: var(--ink);
 }
-
-/* ============================================
-   ACCORDIONS
-============================================ */
 
 :root.dark .extra-toggle {
   background: var(--card-muted);
@@ -129,10 +109,6 @@
 :root.dark .extra-toggle:hover {
   background: #2a2e33;
 }
-
-/* ============================================
-   DROPDOWNS
-============================================ */
 
 :root.dark .dropdown-menu,
 :root.dark .mobile-menu {
@@ -149,10 +125,6 @@
   color: var(--brand);
 }
 
-/* ============================================
-   TEXTAREAS / INPUTS IN CARDS
-============================================ */
-
 :root.dark .extra-info,
 :root.dark .summary-textarea,
 :root.dark textarea,
@@ -165,10 +137,6 @@
   color: var(--ink);
 }
 
-/* ============================================
-   HEADER
-============================================ */
-
 :root.dark .main-header,
 :root.dark .profile-header {
   background: var(--header);
@@ -180,14 +148,9 @@
   color: var(--ink);
 }
 
-/* ============================================
-   BUTTONS
-============================================ */
-
+/* only CTAs (theme dropdown + Lataa CV) get the strong gradient in dark */
 :root.dark .dropdown-toggle,
-:root.dark .cv-download-btn,
-:root.dark .photo-button,
-:root.dark button.add {
+:root.dark .cv-download-btn {
   background: linear-gradient(135deg, var(--brand), var(--brand-strong));
   color: #ffffff;
 }
@@ -196,18 +159,13 @@
   background: linear-gradient(135deg, #d95959, #c23b3b);
 }
 
-/* ============================================
-   “New CV” dashed card
-============================================ */
+/* NOTE: no dark override for .photo-button or button.add
+   → they keep their light-mode styles in dark mode too */
 
 :root.dark .profile-cv-thumb.empty {
   border-color: var(--brand);
   background: rgba(4, 212, 240, 0.1);
 }
-
-/* ============================================
-   ICON FIXES
-============================================ */
 
 :root.dark svg,
 :root.dark .chevron {
@@ -217,10 +175,6 @@
 :root.dark .plus-icon {
   color: var(--brand);
 }
-
-/* ============================================
-   PHOTO PLACEHOLDER
-============================================ */
 
 :root.dark .photo-preview-box {
   background: rgba(255, 255, 255, 0.05);
@@ -233,23 +187,16 @@
   opacity: 0.85;
 }
 
-/* ============================================
-   HAMBURGER BUTTON
-============================================ */
-
 .hamburger {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   width: 40px;
   height: 40px;
-
   background: transparent;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-
   transition: background 0.2s ease;
 }
 
@@ -269,24 +216,17 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* ============================================
-   MOBILE MENU (popover) – MATCHES DROPDOWN
-============================================ */
-
 .mobile-menu {
   position: absolute;
   top: 70px;
   right: 16px;
-
   width: 220px;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 8px 0;
-
   box-shadow: var(--shadow-2);
   z-index: 3000;
-
   animation: fadeIn 0.15s ease-out;
 }
 
@@ -311,27 +251,20 @@
   margin: 0;
 }
 
-/* 🔥 Menu items = same styling as .dropdown-item */
 .mobile-menu button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   width: 100%;
   padding: 10px 18px;
-
   background: transparent;
   border: none;
-
   font-family: var(--font);
   font-size: 15px;
   font-weight: 600;
-
   color: var(--ink) !important;
   cursor: pointer;
-
   border-radius: 8px;
-
   transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 
@@ -353,20 +286,12 @@
   outline-offset: 2px;
 }
 
-/* ============================================
-   BACKDROP (transparent)
-============================================ */
-
 .menu-backdrop {
   position: fixed;
   inset: 0;
   background: transparent;
   z-index: 2500;
 }
-
-/* ============================================
-   BASE RESET
-============================================ */
 
 html,
 body {

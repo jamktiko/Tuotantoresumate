@@ -154,13 +154,31 @@ function loadTemplate(name, data, isPreview = false) {
   if (isPreview) {
     const previewInjection = `
 <style>
+
+
+  /* Light mode (default) */
+  :root {
+    --preview-bg: #f0f0f0;      /* outside CV page */
+    --preview-text: #1b1d1f;
+  }
+
+  /* Dark mode (A4 page stays white!) */
+  :root.dark {
+    --preview-bg: #0f1113;      /* dark background around CV */
+    --preview-text: #f1f5f9;
+  }
+
+
   html, body {
     margin: 0 !important;
     padding: 0 !important;
-    background: #f0f0f0 !important;
+    background: var(--preview-bg) !important;  /* DARK MODE HERE */
+    color: var(--preview-text) !important;
+
     width: 100%;
     height: 100%;
-    overflow: hidden !important; /* only preview-root will scroll */
+    overflow: hidden !important;
+    font-family: 'Afacad', sans-serif;
   }
 
   .preview-root {
@@ -168,10 +186,12 @@ function loadTemplate(name, data, isPreview = false) {
     height: 100%;
     overflow-y: auto !important;
     overflow-x: hidden !important;
+
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 20px 0; /* removes white top bar */
+
+    padding: 20px 0;
     box-sizing: border-box;
   }
 
@@ -180,16 +200,18 @@ function loadTemplate(name, data, isPreview = false) {
     display: inline-block;
   }
 
+
   .scale-box .a4-page {
     width: 210mm !important;
-    background: white !important;
     margin: 0 !important;
+    background: white !important;     
     box-shadow: 0 0 12px rgba(0,0,0,0.25);
   }
 </style>
 
-
 <script>
+
+
   function scalePreview() {
     const box = document.querySelector('.scale-box');
     const page = document.querySelector('.scale-box .a4-page');
@@ -197,7 +219,6 @@ function loadTemplate(name, data, isPreview = false) {
 
     const A4_WIDTH_PX = 210 * 3.78;
     const available = window.innerWidth - 40;
-
     const scale = Math.min(available / A4_WIDTH_PX, 1);
 
     box.style.transform = 'scale(' + scale + ')';
