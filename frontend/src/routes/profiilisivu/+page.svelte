@@ -1,11 +1,29 @@
 <script>
+  import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
   import './+page.css';
   import { fetchCVs, logoutUser, openCV, editCV, createNewCV } from './api.js';
   import CVCard from './CVCard.svelte';
+  import { decodeToken } from '$lib/auth/decodeToken.js';
 
-  let user = { name: 'Testikäyttäjä', email: 'testi@example.com' };
+  if (!localStorage.getItem('idToken')) {
+    goto('/');
+  }
+
+  let user = { name: '', email: '' };
   let cvs = [];
+
+  // Hae token
+  const idToken = localStorage.getItem('idToken');
+
+  // Purkaa token ja hae email
+  if (idToken) {
+    const decoded = decodeToken(idToken);
+
+    user.email = decoded.email;
+
+    user.name = user.email.split('@')[0]; // väliaikainen nimi
+  }
 
   onMount(async () => {
     try {
@@ -16,8 +34,13 @@
   });
 
   async function logout() {
-    await logoutUser();
-    window.location.href = '/login';
+    // Poista Cogniton tokenit
+    localStorage.removeItem('idToken');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+
+    // Ohjaa kirjautumissivulle
+    window.location.href = '/';
   }
 </script>
 
