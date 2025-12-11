@@ -161,7 +161,7 @@ function loadTemplate(name, data, isPreview = false) {
     }
   }
 
-  // Esikatseluun liittyvä tyyli ja skriptit
+  // Esikatseluun liittyvät tyylit ja skriptit
   if (isPreview) {
     const previewInjection = `
 <style>
