@@ -1,13 +1,38 @@
 <script>
   import './+page.css';
+  import { goto } from '$app/navigation';
+  import { signUpUser } from '$lib/auth/cognitoClient.js';
 
   let name = '';
   let email = '';
   let password = '';
   let agree = false;
 
-  const register = () => {
-    console.log('Registering...');
+  let errorMessage = '';
+  let successMessage = '';
+
+  const register = async () => {
+    errorMessage = '';
+    successMessage = '';
+
+    if (!agree) {
+      errorMessage = 'Sinun tulee hyväksyä käyttöehdot.';
+      return;
+    }
+
+    try {
+      await signUpUser(email, password);
+
+      successMessage =
+        'Tili luotu! Tarkista sähköpostisi vahvistuskoodin saamiseksi.';
+
+      // ohjataan confirm-sivulle 2 sekunnin jälkeen
+      setTimeout(() => {
+        goto(`/varmistus?email=${email}`);
+      }, 1500);
+    } catch (err) {
+      errorMessage = err.message || 'Rekisteröinti epäonnistui';
+    }
   };
 </script>
 
@@ -17,6 +42,14 @@
       <h1>Luo tili</h1>
 
       <form on:submit|preventDefault={register}>
+        {#if errorMessage}
+          <p style="color:red; margin-bottom:10px;">{errorMessage}</p>
+        {/if}
+
+        {#if successMessage}
+          <p style="color:green; margin-bottom:10px;">{successMessage}</p>
+        {/if}
+
         <div class="input-group">
           <label for="name">Nimi</label>
           <input

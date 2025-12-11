@@ -1,12 +1,28 @@
 <script>
   import './+page.css';
   import { goto } from '$app/navigation';
+  import { loginUser } from '$lib/auth/cognitoClient.js';
 
   let sahkoposti = '';
   let salasana = '';
+  let errorMessage = '';
 
-  const kirjaudu = () => {
-    goto('/paasivu');
+  const kirjaudu = async () => {
+    errorMessage = '';
+
+    try {
+      const tokens = await loginUser(sahkoposti, salasana);
+
+      // Tallenna tokenit selaimeen
+      localStorage.setItem('idToken', tokens.idToken);
+      localStorage.setItem('accessToken', tokens.accessToken);
+      localStorage.setItem('refreshToken', tokens.refreshToken);
+
+      goto('/paasivu');
+    } catch (err) {
+      console.log('Cognito login error:', err);
+      errorMessage = err.message || 'Kirjautuminen epäonnistui';
+    }
   };
 </script>
 
@@ -17,6 +33,10 @@
       <h1>Kirjaudu sisään</h1>
 
       <form on:submit|preventDefault={kirjaudu}>
+        {#if errorMessage}
+          <p style="color:red; margin-bottom:10px;">{errorMessage}</p>
+        {/if}
+
         <div class="input-group">
           <label for="email">Sähköpostiosoite</label>
           <input
