@@ -15,6 +15,282 @@
   --line: rgba(0, 0, 0, 0.08);
 
   --font: 'Afacad', sans-serif;
+
+  --shadow-1: 0 6px 18px rgba(0, 0, 0, 0.08);
+  --shadow-2: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+:root.dark {
+  --bg: #0f1113;
+  --ink: #f1f5f9;
+  --muted: #9ba5b1;
+
+  --header: #0a0c0f;
+  --card: #181a1d;
+  --card-muted: #202226;
+
+  --line: rgba(255, 255, 255, 0.12);
+
+  --brand: #04d4f0;
+  --brand-strong: #00b5c0;
+  --brand-glow: #00faff;
+
+  --shadow-1: 0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-2: 0 6px 22px rgba(0, 0, 0, 0.6);
+}
+
+:root.dark body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+:root.dark h1,
+:root.dark h2,
+:root.dark h3,
+:root.dark h4,
+:root.dark label,
+:root.dark p,
+:root.dark span {
+  color: var(--ink);
+}
+
+:root.dark small {
+  color: var(--muted);
+}
+
+:root.dark input,
+:root.dark textarea,
+:root.dark select {
+  background: var(--card);
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+:root.dark input::placeholder,
+:root.dark textarea::placeholder {
+  color: var(--muted);
+}
+
+:root.dark .left,
+:root.dark .right,
+:root.dark .section,
+:root.dark .extra-section,
+:root.dark .cv-card,
+:root.dark .experience-card,
+:root.dark .education-card,
+:root.dark .skill-entry,
+:root.dark .language-entry,
+:root.dark .saved-cv-card,
+:root.dark .dashboard-hero,
+:root.dark .profile-cv-template,
+:root.dark .profile-cv-thumb,
+:root.dark .profile-cv-actions,
+:root.dark .extra-info {
+  background: var(--card);
+  border-color: var(--line);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+}
+
+:root.dark label,
+:root.dark .input-group label,
+:root.dark .extra-info label,
+:root.dark .summary-label,
+:root.dark .photo-upload-group label {
+  color: var(--ink);
+}
+
+:root.dark .extra-toggle {
+  background: var(--card-muted);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+:root.dark .extra-toggle:hover {
+  background: #2a2e33;
+}
+
+:root.dark .dropdown-menu,
+:root.dark .mobile-menu {
+  background: var(--card);
+  border-color: var(--line);
+}
+
+:root.dark .dropdown-item {
+  color: var(--ink);
+}
+
+:root.dark .dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--brand);
+}
+
+:root.dark .extra-info,
+:root.dark .summary-textarea,
+:root.dark textarea,
+:root.dark input,
+:root.dark select,
+:root.dark .education-card textarea,
+:root.dark .experience-card textarea {
+  background: var(--card-muted);
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+:root.dark .main-header,
+:root.dark .profile-header {
+  background: var(--header);
+  color: var(--ink);
+}
+
+:root.dark .main-header h1,
+:root.dark .profile-header h1 {
+  color: var(--ink);
+}
+
+/* only CTAs (theme dropdown + Lataa CV) get the strong gradient in dark */
+:root.dark .dropdown-toggle,
+:root.dark .cv-download-btn {
+  background: linear-gradient(135deg, var(--brand), var(--brand-strong));
+  color: #ffffff;
+}
+
+:root.dark button.remove {
+  background: linear-gradient(135deg, #d95959, #c23b3b);
+}
+
+/* NOTE: no dark override for .photo-button or button.add
+   → they keep their light-mode styles in dark mode too */
+
+:root.dark .profile-cv-thumb.empty {
+  border-color: var(--brand);
+  background: rgba(4, 212, 240, 0.1);
+}
+
+:root.dark svg,
+:root.dark .chevron {
+  stroke: var(--ink);
+}
+
+:root.dark .plus-icon {
+  color: var(--brand);
+}
+
+:root.dark .photo-preview-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(4px);
+}
+
+:root.dark .photo-preview-box svg {
+  filter: brightness(2.8);
+  opacity: 0.85;
+}
+
+.hamburger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.hamburger svg {
+  width: 24px;
+  height: 24px;
+  stroke: var(--ink);
+}
+
+.hamburger:hover,
+.hamburger:focus-visible {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+:root.dark .hamburger:hover,
+:root.dark .hamburger:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mobile-menu {
+  position: absolute;
+  top: 70px;
+  right: 16px;
+  width: 220px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 0;
+  box-shadow: var(--shadow-2);
+  z-index: 3000;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mobile-menu li {
+  margin: 0;
+}
+
+.mobile-menu button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink) !important;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.mobile-menu button:hover,
+.mobile-menu button:focus-visible {
+  background: rgba(0, 173, 181, 0.1);
+  color: var(--brand) !important;
+  transform: translateX(2px);
+}
+
+:root.dark .mobile-menu button:hover,
+:root.dark .mobile-menu button:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--brand) !important;
+}
+
+.mobile-menu button:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 2500;
 }
 
 html,
@@ -24,9 +300,12 @@ body {
   height: 100%;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
+
 img,
 iframe,
 video {
@@ -34,11 +313,13 @@ video {
   height: auto;
   display: block;
 }
+
 html {
   font-size: 100%;
 }
+
 body {
-  font-family: 'Afacad', sans-serif;
+  font-family: var(--font);
   font-size: 1rem;
   line-height: 1.5;
 }

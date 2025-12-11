@@ -1,16 +1,30 @@
 <script>
+  import { onMount } from 'svelte';
   import { cvData } from '$lib/stores/cvStore';
   import { createCV, fillRandom } from '$lib/utils/cvHelpers';
   import { fly, slide } from 'svelte/transition';
   import { tick } from 'svelte';
   import { goto } from '$app/navigation';
-
+  let dark = false;
   let showDropdown = false;
   let showMenu = false;
   let isLoading = false;
   let isSuccess = false;
   let progress = 0;
 
+  function toggleDarkMode() {
+    dark = !dark;
+    document.documentElement.classList.toggle('dark', dark);
+    localStorage.setItem('darkMode', dark);
+  }
+
+  onMount(() => {
+    const saved = localStorage.getItem('darkMode');
+    if (saved === 'true') {
+      dark = true;
+      document.documentElement.classList.add('dark');
+    }
+  });
   function setTemplate(t) {
     cvData.update((d) => ({ ...d, template: t }));
     showDropdown = false;
@@ -202,7 +216,9 @@
       </li>
 
       <li>
-        <button on:click={() => alert('Tulossa pian!')}>Dark Mode</button>
+        <button on:click={toggleDarkMode}>
+          {dark ? 'Light Mode' : 'Dark Mode'}
+        </button>
       </li>
     </ul>
   </nav>
@@ -211,3 +227,13 @@
 {#if isLoading}
   <div class="loader-overlay"><div class="spinner"></div></div>
 {/if}
+
+<style>
+  :global(.hamburger svg) {
+    stroke: #ffffff !important;
+  }
+
+  :global(.dark .hamburger svg) {
+    stroke: #ffffff !important;
+  }
+</style>

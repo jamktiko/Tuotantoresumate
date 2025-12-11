@@ -11,13 +11,47 @@
   import SkillsSection from '$lib/components/SkillsSection.svelte';
   import ExtraSection from '$lib/components/ExtraSection.svelte';
   import ReferencesSection from '$lib/components/ReferencesSection.svelte';
+
   import { goto } from '$app/navigation';
   import { cvData } from '$lib/stores/cvStore';
   import { throttle, updatePreview } from '$lib/utils/cvHelpers';
 
+  import { onMount } from 'svelte';
+
   let previewFrame;
+
+  // Update preview throttled when CV data changes
   const throttledPreview = throttle(() => updatePreview(previewFrame), 350);
   $: $cvData, previewFrame && throttledPreview();
+
+  /* ---------------------------------------------------
+        DARK MODE → SYNC INTO PREVIEW IFRAME
+  --------------------------------------------------- */
+
+  function syncPreviewTheme() {
+    if (!previewFrame?.contentDocument) return;
+
+    const appHtml = document.documentElement;
+    const iframeHtml = previewFrame.contentDocument.documentElement;
+
+    if (appHtml.classList.contains('dark')) {
+      iframeHtml.classList.add('dark');
+    } else {
+      iframeHtml.classList.remove('dark');
+    }
+  }
+
+  // When iframe loads, sync theme
+  function onPreviewLoad() {
+    syncPreviewTheme();
+  }
+
+  // Run browser-only code after mount (avoids SSR crash)
+  onMount(() => {
+    // Observe changes to <html class="dark">
+    const observer = new MutationObserver(syncPreviewTheme);
+    observer.observe(document.documentElement, { attributes: true });
+  });
 </script>
 
 <Header />
@@ -47,7 +81,11 @@
   </div>
 
   <div class="right">
-    <iframe bind:this={previewFrame} class="preview-frame" title="CV Preview"
+    <iframe
+      bind:this={previewFrame}
+      on:load={onPreviewLoad}
+      class="preview-frame"
+      title="CV Preview"
     ></iframe>
   </div>
 </div>
