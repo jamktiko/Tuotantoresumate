@@ -1,29 +1,35 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const puppeteer = require('puppeteer');
-const multer = require('multer');
-const cors = require('cors');
+// Tuodaan tarvittavat kirjastot
+const express = require('express'); // Web-palvelin
+const fs = require('fs'); // Tiedostojen käsittely
+const path = require('path'); // Polkujen käsittely
+const puppeteer = require('puppeteer'); // PDF:n generointi HTML:stä
+const multer = require('multer'); // Tiedostojen upload
+const cors = require('cors'); // CORS-tuki
 
+// Luodaan Express-sovellus
 const app = express();
-app.use(cors());
-app.use(express.json());
-app.use('/pdfs', express.static('pdfs'));
-app.use('/uploads', express.static('uploads'));
 
+// Middlewaret
+app.use(cors()); // Sallitaan CORS
+app.use(express.json()); // JSON-pyyntöjen käsittely
+app.use('/pdfs', express.static('pdfs')); // Staattiset PDF-tiedostot
+app.use('/uploads', express.static('uploads')); // Staattiset uploadit
+
+// Luodaan kansiot jos niitä ei ole
 ['pdfs', 'uploads', 'templates'].forEach((dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 });
 
-// Multer for images
+// Multer-konfiguraatio kuvien latausta varten
 const upload = multer({
   storage: multer.diskStorage({
-    destination: 'uploads/',
+    destination: 'uploads/', // kansio tallennukselle
     filename: (req, file, cb) =>
-      cb(null, Date.now() + path.extname(file.originalname)),
+      cb(null, Date.now() + path.extname(file.originalname)), // tiedostonimi timestamp + alkuperäinen pääte
   }),
 });
 
+// Kielitasojen ja taitotason labelit
 const levelLabels = [
   'Aloittelija',
   'Perustaso',
@@ -34,10 +40,12 @@ const levelLabels = [
 ];
 const skillLabels = ['Aloittelija', 'Keskitaso', 'Edistynyt', 'Ammattilainen'];
 
+// Funktiot tason muuntamiseen tekstiksi
 const levelToText = (l) => levelLabels[l] || '';
 const skillLevelToText = (l) =>
   !isNaN(l) ? skillLabels[+l] : skillLabels.includes(l) ? l : '';
 
+// JSON-parsinta turvallisesti
 const parseJSON = (str) => {
   try {
     return JSON.parse(str || '[]');
@@ -46,6 +54,7 @@ const parseJSON = (str) => {
   }
 };
 
+// HTML-templaten lataus ja datan renderöinti
 function loadTemplate(name, data, isPreview = false) {
   const tplName = name || 'default';
   let html = fs.readFileSync(
@@ -53,6 +62,7 @@ function loadTemplate(name, data, isPreview = false) {
     'utf-8'
   );
 
+  // Funktio listojen renderöintiin
   const renderList = (arr, fields) =>
     Array.isArray(arr)
       ? arr
@@ -62,13 +72,14 @@ function loadTemplate(name, data, isPreview = false) {
   <strong>${item[fields[0]] || ''}</strong>, ${item[fields[1]] || ''} (${
               item.city || ''
             })
-  ${item.startDate ? ` | ${item.startDate}` : ''} - ${item.endDate || ''}
-  ${item.description ? `<br>${item.description}` : ''}
+  ${item.startDate ? ` | ${item.startDate}` : ''} - ${item.endDate || ''}  
+  ${item.description ? `<br>${item.description}` : ''}  
 </li>`
           )
           .join('')
       : '';
 
+  // Korvataan template placeholderit datalla
   html = html
     .replace(
       '{{experiences}}',
@@ -96,12 +107,11 @@ function loadTemplate(name, data, isPreview = false) {
           (l) => `
 <li>
   <strong>${l.language || ''}</strong>
-  ${l.level !== undefined ? `(${levelLabels[l.level]})` : ''}
+  ${l.level !== undefined ? `(${levelLabels[l.level]})` : ''}  
 </li>`
         )
         .join('')
     )
-
     .replace(
       '{{references}}',
       (data.references || [])
@@ -117,7 +127,6 @@ function loadTemplate(name, data, isPreview = false) {
         )
         .join('')
     )
-
     .replace(
       '{{extraInfo}}',
       `${
@@ -132,6 +141,7 @@ function loadTemplate(name, data, isPreview = false) {
        }`
     );
 
+  // Muut datan kentät
   for (const [k, v] of Object.entries(data)) {
     if (
       ![
@@ -151,148 +161,65 @@ function loadTemplate(name, data, isPreview = false) {
     }
   }
 
+  // Esikatseluun liittyvä tyyli ja skriptit
   if (isPreview) {
     const previewInjection = `
 <style>
-
-
-  /* Light mode (default) */
-  :root {
-    --preview-bg: #f0f0f0;      /* outside CV page */
-    --preview-text: #1b1d1f;
-  }
-
-  /* Dark mode (A4 page stays white!) */
-  :root.dark {
-    --preview-bg: #0f1113;      /* dark background around CV */
-    --preview-text: #f1f5f9;
-  }
-
-
-  html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    background: var(--preview-bg) !important;  /* DARK MODE HERE */
-    color: var(--preview-text) !important;
-
-    width: 100%;
-    height: 100%;
-    overflow: hidden !important;
-    font-family: 'Afacad', sans-serif;
-  }
-
-  .preview-root {
-    width: 100%;
-    height: 100%;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-
-    padding: 20px 0;
-    box-sizing: border-box;
-  }
-
-  .scale-box {
-    transform-origin: top center;
-    display: inline-block;
-  }
-
-
-  .scale-box .a4-page {
-    width: 210mm !important;
-    margin: 0 !important;
-    background: white !important;     
-    box-shadow: 0 0 12px rgba(0,0,0,0.25);
-  }
+  :root { --preview-bg: #f0f0f0; --preview-text: #1b1d1f; }
+  :root.dark { --preview-bg: #0f1113; --preview-text: #f1f5f9; }
+  html, body { margin:0; padding:0; background: var(--preview-bg); color: var(--preview-text); width:100%; height:100%; overflow:hidden; font-family:'Afacad', sans-serif; }
+  .preview-root { width:100%; height:100%; overflow-y:auto; overflow-x:hidden; display:flex; justify-content:center; align-items:flex-start; padding:20px 0; box-sizing:border-box; }
+  .scale-box { transform-origin: top center; display:inline-block; }
+  .scale-box .a4-page { width:210mm; margin:0; background:white; box-shadow:0 0 12px rgba(0,0,0,0.25); }
 </style>
-
 <script>
-
-
   function scalePreview() {
     const box = document.querySelector('.scale-box');
     const page = document.querySelector('.scale-box .a4-page');
     if (!box || !page) return;
-
     const A4_WIDTH_PX = 210 * 3.78;
     const available = window.innerWidth - 40;
     const scale = Math.min(available / A4_WIDTH_PX, 1);
-
     box.style.transform = 'scale(' + scale + ')';
     box.style.height = (page.offsetHeight * scale) + 'px';
   }
-
   window.addEventListener('resize', scalePreview);
-
   window.addEventListener('load', function () {
     const imgs = Array.from(document.images || []);
     if (!imgs.length) return scalePreview();
-
     let loaded = 0;
     imgs.forEach(img => {
-      if (img.complete) {
-        if (++loaded >= imgs.length) scalePreview();
-      } else {
-        img.addEventListener('load', () => {
-          if (++loaded >= imgs.length) scalePreview();
-        });
-        img.addEventListener('error', () => {
-          if (++loaded >= imgs.length) scalePreview();
-        });
+      if (img.complete) { if (++loaded >= imgs.length) scalePreview(); }
+      else { img.addEventListener('load', () => { if (++loaded >= imgs.length) scalePreview(); });
+             img.addEventListener('error', () => { if (++loaded >= imgs.length) scalePreview(); });
       }
     });
   });
 </script>
 `;
-
     html = html.replace('</head>', previewInjection + '</head>');
-
     html = html.replace(
       /<body([^>]*)>/i,
       "<body$1><div class='preview-root'><div class='scale-box'>"
     );
-
     html = html.replace(/<\/body>/i, '</div></div></body>');
-
     return html;
   }
 
+  // PDF-tyylit
   const pdfInjection = `
 <style>
-  @page {
-    size: A4;
-    margin: 0;
-  }
-
-  html, body {
-    margin: 0;
-    padding: 0;
-  }
-
-  .a4-page {
-    width: 210mm !important;
-    margin: 0 auto;
-    box-sizing: border-box;
-    height: auto !important;
-    min-height: auto !important;
-    page-break-inside: auto;
-  }
-
-  /* Prevent ugly splits */
-  header, footer, section, .section,
-  div, p, h1, h2, h3, h4 {
-    page-break-inside: avoid;
-  }
+  @page { size:A4; margin:0; }
+  html, body { margin:0; padding:0; }
+  .a4-page { width:210mm; margin:0 auto; box-sizing:border-box; height:auto; min-height:auto; page-break-inside:auto; }
+  header, footer, section, .section, div, p, h1, h2, h3, h4 { page-break-inside:avoid; }
 </style>
-
 `;
   html = html.replace('</head>', pdfInjection + '</head>');
   return html;
 }
 
+// Funktio pyynnön datan käsittelyyn
 function extractData(req) {
   const fields = [
     'title',
@@ -312,20 +239,18 @@ function extractData(req) {
     'extraEducation',
   ];
   const parsed = Object.fromEntries(fields.map((f) => [f, req.body[f] || '']));
-
   parsed.experiences = parseJSON(req.body.experiences);
   parsed.educations = parseJSON(req.body.educations);
   parsed.skills = parseJSON(req.body.skills);
   parsed.languages = parseJSON(req.body.languages);
   parsed.references = parseJSON(req.body.references);
-
   return parsed;
 }
 
+// API endpoint PDF:n luomiselle
 app.post('/create-cv', upload.single('photo'), async (req, res) => {
   try {
     const data = extractData(req);
-
     const photo = req.file
       ? `<img src="data:image/png;base64,${fs
           .readFileSync(req.file.path)
@@ -345,15 +270,14 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
     const browser = await puppeteer.launch({ headless: 'new' });
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: 'networkidle0' });
-
     await page.pdf({
       path: pdfPath,
       printBackground: true,
       preferCSSPageSize: true,
       margin: { top: '0mm', right: '0mm', bottom: '0mm', left: '0mm' },
     });
-
     await browser.close();
+
     res.json({ pdfPath: `/pdfs/${fileName}` });
   } catch (err) {
     console.error('CV ERROR:', err);
@@ -361,10 +285,10 @@ app.post('/create-cv', upload.single('photo'), async (req, res) => {
   }
 });
 
+// API endpoint esikatselulle
 app.post('/preview-cv', upload.single('photo'), async (req, res) => {
   try {
     const data = extractData(req);
-
     const photoHtml = req.file
       ? `<img src="data:image/png;base64,${fs
           .readFileSync(req.file.path)
@@ -376,7 +300,6 @@ app.post('/preview-cv', upload.single('photo'), async (req, res) => {
       { ...data, photo: photoHtml },
       true
     );
-
     res.send(html);
   } catch (err) {
     console.error('Preview error:', err);
@@ -384,4 +307,5 @@ app.post('/preview-cv', upload.single('photo'), async (req, res) => {
   }
 });
 
+// Palvelin kuuntelee porttia 4000
 app.listen(4000, () => console.log('API running on http://localhost:4000'));
