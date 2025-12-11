@@ -1,6 +1,7 @@
 <script>
   import './+page.css';
 
+  // Tuodaan sivun komponentit
   import Header from '$lib/components/Header.svelte';
   import PersonalInfo from '$lib/components/PersonalInfo.svelte';
   import ExtraInfo from '$lib/components/ExtraInfo.svelte';
@@ -12,22 +13,31 @@
   import ExtraSection from '$lib/components/ExtraSection.svelte';
   import ReferencesSection from '$lib/components/ReferencesSection.svelte';
 
+  // Navigointifunktio
   import { goto } from '$app/navigation';
+
+  // CV-tiedot globaalista storesta
   import { cvData } from '$lib/stores/cvStore';
+
+  // Throttle ja esikatselun päivitys -utilsit
   import { throttle, updatePreview } from '$lib/utils/cvHelpers';
 
+  // Ajetaan koodi vasta komponentin mountin jälkeen
   import { onMount } from 'svelte';
 
-  let previewFrame;
+  let previewFrame; // Iframe-referenssi
 
-  // Update preview throttled when CV data changes
+  // Throttlattu esikatselun päivitysfunktio
   const throttledPreview = throttle(() => updatePreview(previewFrame), 350);
+
+  // Päivitä esikatselu aina kun cvData muuttuu
   $: $cvData, previewFrame && throttledPreview();
 
   /* ---------------------------------------------------
-        DARK MODE → SYNC INTO PREVIEW IFRAME
+        DARK MODE → TEEMAN SYNKRONOINTI IFRAMEEN
   --------------------------------------------------- */
 
+  // Synkronoi dark/light -tila pääsivusta iframeen
   function syncPreviewTheme() {
     if (!previewFrame?.contentDocument) return;
 
@@ -41,26 +51,30 @@
     }
   }
 
-  // When iframe loads, sync theme
+  // Ajetaan kun iframe lataa sisältönsä
   function onPreviewLoad() {
     syncPreviewTheme();
   }
 
-  // Run browser-only code after mount (avoids SSR crash)
+  // Ajetaan vain selaimessa — ei SSR:ssä
   onMount(() => {
-    // Observe changes to <html class="dark">
+    // Tarkkailee <html> attribuuttien muutoksia (dark-mode)
     const observer = new MutationObserver(syncPreviewTheme);
     observer.observe(document.documentElement, { attributes: true });
   });
 </script>
 
+<!-- Header-komponentti -->
 <Header />
 
 <div class="page">
   <div class="left">
     <main>
+      <!-- CV:n syöttölomake -->
       <form class="cv-form" on:submit|preventDefault>
         <div class="top-row"></div>
+
+        <!-- CV:n eri informaatio-osat -->
         <PersonalInfo />
         <ExtraInfo />
         <SummarySection />
